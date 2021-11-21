@@ -17,7 +17,7 @@ function Home() {
             </header>
 
             <main>
-                <h1>Home</h1>
+                <h1>MoveForward</h1>
             </main>
         </>
     )
