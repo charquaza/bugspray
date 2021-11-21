@@ -26,11 +26,7 @@
 }
 
 .signup-container form button {
-    margin-top: 30px;
-    background-color: rgb(84,188,124);
-}
-.signup-container form button:hover {
-    background-color: rgb(84,188,124);
+    margin-top: 16px;
 }
 
 @media (min-width: 600px) {
@@ -40,7 +36,3 @@
         gap: 18px;
     }
 }
-
-
-
-

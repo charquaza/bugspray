@@ -10,7 +10,7 @@ function App() {
   var theme = createTheme({
     palette: {
       primary: {
-        main: '#00ab55',
+        main: 'rgb(84,188,124)',
       },
       secondary: {
         main: '#f50057',
@@ -23,7 +23,7 @@ function App() {
       }
     },
     shape: {
-      borderRadius: 5,
+      borderRadius: 8,
     }
   });
 

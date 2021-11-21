@@ -21,13 +21,5 @@
 }
 
 .login-container form button {
-    margin-top: 30px;
-    background-color: rgb(84,188,124);
+    margin-top: 16px;
 }
-.login-container form button:hover {
-    background-color: rgb(84,188,124);
-}
-
-
-
-
