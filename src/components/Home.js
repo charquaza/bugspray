@@ -12,6 +12,10 @@ function Home() {
                         <li>
                             <Link to='log-in'>Log In</Link>
                         </li>
+                        {/* remove dashboard link after development */}
+                        <li>
+                            <Link to='dashboard'>Dashboard (only for development)</Link>
+                        </li>
                     </ul>
                 </nav>
             </header>

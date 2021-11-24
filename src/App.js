@@ -4,7 +4,9 @@ import Home from './components/Home';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import NotFound from './components/NotFound';
+import Dashboard from './components/Dashboard';
 import './styles/App.css';
+import './styles/Logo.css';
 
 function App() {
   var theme = createTheme({
@@ -34,6 +36,8 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='sign-up' element={<SignUp />} />
           <Route path='log-in' element={<LogIn />} />
+          {/* remove dashboard route after development */}
+          <Route path='dashboard' element={<Dashboard />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </ThemeProvider> 
