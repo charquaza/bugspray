@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import SearchBar from './SearchBar';
 import Sidebar from './Sidebar';
+import SearchBar from './SearchBar';
+import MessagesMenu from './MessagesMenu';
+import NotificationsMenu from './NotificationsMenu';
+import AccountMenu from './AccountMenu';
 import Logo from './Logo';
 import '../styles/Topbar.css';
 
@@ -14,9 +14,10 @@ function Topbar() {
         <header className='topbar-container'>
             <ul>
                 <li>
-                    <IconButton aria-label='menu'>
+                    <Sidebar />
+                    {/* <IconButton aria-label='menu'>
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton> */}
                 </li>
                 <li>
                     <Link to='/'>
@@ -32,20 +33,14 @@ function Topbar() {
             </ul>
                 
             <ul>
-                <li>
-                    <IconButton className='hide-mobile' aria-label='messages'>
-                        <MailOutlineIcon />
-                    </IconButton>
+                <li className='hide-mobile'>
+                    <MessagesMenu />
+                </li>
+                <li className='hide-mobile'>
+                    <NotificationsMenu />   
                 </li>
                 <li>
-                    <IconButton className='hide-mobile' aria-label='notifications'>
-                        <NotificationsNoneIcon />
-                    </IconButton>   
-                </li>
-                <li>
-                    <IconButton aria-label='user account'>
-                        <Avatar>User</Avatar>
-                    </IconButton>
+                    <AccountMenu />
                 </li>
             </ul>
         </header>

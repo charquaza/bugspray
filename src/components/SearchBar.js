@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 function SearchBar() {
     const Search = styled('div')(({ theme }) => ({
         display: 'none',
-        [theme.breakpoints.up(545)]: {
+        [theme.breakpoints.up(565)]: {
             display: 'block',
             position: 'relative',
             borderRadius: theme.shape.borderRadius,
@@ -21,7 +21,7 @@ function SearchBar() {
   
     const SearchIconWrapper = styled('div')(({ theme }) => ({
         display: 'none',
-        [theme.breakpoints.up(545)]: {
+        [theme.breakpoints.up(565)]: {
             padding: theme.spacing(0, 2),
             height: '100%',
             position: 'absolute',
@@ -34,7 +34,7 @@ function SearchBar() {
   
     const StyledInputBase = styled(InputBase)(({ theme }) => ({
         display: 'none',
-        [theme.breakpoints.up(545)]: {
+        [theme.breakpoints.up(565)]: {
             display: 'block',
             color: 'inherit',
             '& .MuiInputBase-input': {

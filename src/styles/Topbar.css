@@ -19,6 +19,14 @@
     list-style: none;
 }
 
+.topbar-container ul:nth-of-type(2) li {
+    margin: 0 5px;
+}
+
+.topbar-container ul:nth-of-type(2) li:last-of-type {
+    margin-left: 15px;
+}
+
 .topbar-container a {
     color: inherit;
     text-decoration: none;
@@ -41,7 +49,7 @@
     display: none;
 }
 
-@media (min-width: 400px) {
+@media (min-width: 425px) {
     .topbar-container .hide-mobile {
         display: block;
     }
