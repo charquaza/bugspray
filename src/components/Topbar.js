@@ -23,7 +23,7 @@ function Topbar(props) {
                         <MenuIcon />
                     </IconButton>
                 </li>
-                <li>
+                <li className='home-link-container'>
                     <Link to='/'>
                         <div className='logo-brand-container'>
                             <Logo />
