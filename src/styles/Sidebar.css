@@ -1,0 +1,8 @@
+.sidebar-container {
+    width: 240px;
+    min-height: calc(100vh - var(--topbar-height));
+    position: fixed;
+    z-index: 1;
+    background: rgb(228, 255, 238);
+    transition: transform 0.15s ease-in-out;
+}

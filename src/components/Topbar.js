@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Sidebar from './Sidebar';
 import SearchBar from './SearchBar';
 import MessagesMenu from './MessagesMenu';
 import NotificationsMenu from './NotificationsMenu';
@@ -9,15 +8,20 @@ import AccountMenu from './AccountMenu';
 import Logo from './Logo';
 import '../styles/Topbar.css';
 
-function Topbar() {
+function Topbar(props) {
+    function handleMenuIconClick() {
+        props.setSidebarOpen(prevState => !prevState);
+    }
+
     return (
         <header className='topbar-container'>
             <ul>
                 <li>
-                    <Sidebar />
-                    {/* <IconButton aria-label='menu'>
+                    <IconButton aria-label='menu'
+                        onClick={handleMenuIconClick}
+                    >
                         <MenuIcon />
-                    </IconButton> */}
+                    </IconButton>
                 </li>
                 <li>
                     <Link to='/'>

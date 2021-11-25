@@ -6,7 +6,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 56px;
+    height: var(--topbar-height);
     padding: 0 15px;
     background-color: rgb(84,188,124);
 }
