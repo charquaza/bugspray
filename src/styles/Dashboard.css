@@ -1,6 +1,6 @@
 .dashboard-container {
     --topbar-height: 56px;
-    --sidebar-width: 240px;
+    --sidebar-width: 210px;
     margin-top: 56px;
     position: relative;
 }
