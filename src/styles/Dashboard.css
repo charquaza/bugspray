@@ -1,7 +1,16 @@
 .dashboard-container {
     --topbar-height: 56px;
+    --sidebar-width: 240px;
     margin-top: 56px;
     position: relative;
+}
+
+.dashboard-container p {
+    margin: 0;
+}
+
+.dashboard-container main {
+    padding: 10px;
 }
 
 .dashboard-container .main-container aside {
@@ -21,8 +30,12 @@
 }
 
 @media (min-width: 992px) {
-    .dashboard-container .main-container {
-        display: flex;
+    .dashboard-container main.sidebarOpen {
+        padding-left: calc(10px + var(--sidebar-width));
+    }
+
+    .dashboard-container main.sidebarOpen::before {
+        display: none;
     }
 }
 

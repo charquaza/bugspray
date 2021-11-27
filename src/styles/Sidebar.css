@@ -1,5 +1,5 @@
 .sidebar-container {
-    width: 240px;
+    width: var(--sidebar-width);
     min-height: calc(100vh - var(--topbar-height));
     position: fixed;
     z-index: 1;
