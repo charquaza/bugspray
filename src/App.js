@@ -1,14 +1,17 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Home from './components/Home';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import NotFound from './components/NotFound';
 import Dashboard from './components/Dashboard';
+import LandingPage from './components/LandingPage';
 import './styles/App.css';
 import './styles/Logo.css';
 
 function App() {
+  const [currUser, setCurrUser] = useState(null);
+
   var theme = createTheme({
     palette: {
       primary: {
@@ -33,11 +36,20 @@ function App() {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={currUser 
+            ? <Navigate replace to='dashboard' /> 
+            : <LandingPage setCurrUser={setCurrUser} />} 
+          />
+          <Route path='dashboard' 
+            element={currUser ? <Dashboard setCurrUser={setCurrUser} /> 
+              : <Navigate replace to='/' />} 
+          >
+            <Route path=':view' 
+              element={<Dashboard setCurrUser={setCurrUser} />} 
+            />
+          </Route>
           <Route path='sign-up' element={<SignUp />} />
           <Route path='log-in' element={<LogIn />} />
-          {/* remove dashboard route after development */}
-          <Route path='dashboard' element={<Dashboard />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </ThemeProvider> 

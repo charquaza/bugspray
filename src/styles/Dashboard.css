@@ -17,7 +17,7 @@
     position: absolute;
 }
 
-.dashboard-container main.sidebarOpen::before {
+.dashboard-container main.sidebar-open::before {
     content: "";
     display: block;
     position: absolute;
@@ -30,11 +30,11 @@
 }
 
 @media (min-width: 992px) {
-    .dashboard-container main.sidebarOpen {
+    .dashboard-container main.sidebar-open {
         padding-left: calc(10px + var(--sidebar-width));
     }
 
-    .dashboard-container main.sidebarOpen::before {
+    .dashboard-container main.sidebar-open::before {
         display: none;
     }
 }

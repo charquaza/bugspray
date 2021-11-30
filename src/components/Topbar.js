@@ -44,7 +44,7 @@ function Topbar(props) {
                     <NotificationsMenu />   
                 </li>
                 <li>
-                    <AccountMenu />
+                    <AccountMenu setCurrUser={props.setCurrUser} />
                 </li>
             </ul>
         </header>

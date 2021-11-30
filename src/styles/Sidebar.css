@@ -6,3 +6,8 @@
     background: rgb(228, 255, 238);
     transition: transform 0.15s ease-in-out;
 }
+
+.sidebar-container a {
+    color: inherit;
+    text-decoration: none;
+}

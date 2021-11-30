@@ -9,7 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
-function AccountMenu() {
+function AccountMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -20,6 +20,10 @@ function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function handleLogOut() {
+    props.setCurrUser(null);
+  }
 
   return (
     <>
@@ -77,7 +81,7 @@ function AccountMenu() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

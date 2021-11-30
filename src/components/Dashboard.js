@@ -1,33 +1,56 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
+import HomeView from './HomeView';
+import ProjectsView from './ProjectsView';
+import TasksView from './TasksView';
+import TeamView from './TeamView';
+import InboxView from './InboxView';
+import NotificationsView from './NotificationsView';
+import AccountView from './AccountView';
 import '../styles/Dashboard.css';
 
-function Dashboard() {
+function Dashboard(props) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [currView, setCurrView] = useState('home');
+
+    var view = useParams().view;
+
+    var currViewComponent = (view === 'projects')
+        ? <ProjectsView />
+        : (view === 'tasks')
+        ? <TasksView />
+        : (view === 'team')
+        ? <TeamView /> 
+        : (view === 'inbox')
+        ? <InboxView />
+        : (view === 'notifications')
+        ? <NotificationsView />
+        : (view === 'account')
+        ? <AccountView />
+        : <HomeView />;
 
     function handleClick() {
-        //close sidebar if main element is clicked
+        //close sidebar when main element is clicked
         setSidebarOpen(false);
     }
 
     return (
-        //later: refactor Dashboard to be mounted as child of Home
         <div className='dashboard-container'>
-            <Topbar setSidebarOpen={setSidebarOpen} />
+            <Topbar setSidebarOpen={setSidebarOpen} setCurrUser={props.setCurrUser} />
 
             <div className='main-container'>
                 {sidebarOpen && 
                     <aside>
-                        <Sidebar />
+                        <Sidebar setCurrView={setCurrView} />
                     </aside>
                 }
 
-                <main className={sidebarOpen ? 'sidebarOpen' : undefined}
+                <main className={sidebarOpen ? 'sidebar-open' : undefined}
                     onClick={handleClick}
                 >
-                    <p>Welcome to the dashboard!</p>
-                    <p>This page is currently under construction.</p>
+                    {currViewComponent}
                 </main>
             </div>
         </div>
