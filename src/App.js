@@ -42,16 +42,22 @@ function App() {
             ? <Navigate replace to='dashboard' /> 
             : <LandingPage setCurrUser={setCurrUser} />} 
           />
-          <Route path='dashboard' 
-            element={currUser ? <Dashboard setCurrUser={setCurrUser} /> 
-              : <Navigate replace to='/' />} 
-          >
-            <Route path=':view' 
-              element={<Dashboard setCurrUser={setCurrUser} />} 
-            />
-          </Route>
-          <Route path='sign-up' element={<SignUp />} />
-          <Route path='log-in' element={<LogIn />} />
+          <Route path='dashboard' element={currUser 
+            ? <Dashboard setCurrUser={setCurrUser} /> 
+            : <Navigate replace to='/' />} 
+          />
+          <Route path='dashboard/:view' element={currUser 
+            ? <Dashboard setCurrUser={setCurrUser} /> 
+            : <Navigate replace to='/' />} 
+          />
+          <Route path='sign-up' element={currUser
+            ? <Navigate replace to='/dashboard' />
+            : <SignUp />} 
+          />
+          <Route path='log-in' element={currUser
+            ? <Navigate replace to='/dashboard' />
+            : <LogIn />} 
+          />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </ThemeProvider> 
