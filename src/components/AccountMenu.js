@@ -22,6 +22,8 @@ function AccountMenu(props) {
   };
 
   function handleLogOut() {
+    localStorage.removeItem('user');
+    
     props.setCurrUser(null);
   }
 

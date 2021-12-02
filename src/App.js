@@ -10,7 +10,9 @@ import './styles/App.css';
 import './styles/Logo.css';
 
 function App() {
-  const [currUser, setCurrUser] = useState(null);
+  const [currUser, setCurrUser] = useState(
+    JSON.parse(localStorage.getItem('user'))
+  );
 
   var theme = createTheme({
     palette: {

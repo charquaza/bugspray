@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 
 function LandingPage(props) {
+    function handleClick() {
+        var user = {};
+
+        localStorage.setItem('user', JSON.stringify(user));
+
+        props.setCurrUser(user);
+    }
+
     return (
         <>
             <header>
@@ -20,7 +28,7 @@ function LandingPage(props) {
                 <p>Welcome to the Landing Page!</p>
 
                 {/* development only */}
-                <button onClick={() => props.setCurrUser({})}>
+                <button onClick={handleClick}>
                     log in to dashboard (development only)
                 </button>
             </main>
