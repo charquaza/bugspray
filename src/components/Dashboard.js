@@ -9,11 +9,11 @@ import TeamView from './TeamView';
 import InboxView from './InboxView';
 import NotificationsView from './NotificationsView';
 import AccountView from './AccountView';
+import NotFound from './NotFound';
 import '../styles/Dashboard.css';
 
 function Dashboard(props) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [currView, setCurrView] = useState('home');
 
     var view = useParams().view;
 
@@ -29,7 +29,9 @@ function Dashboard(props) {
         ? <NotificationsView />
         : (view === 'account')
         ? <AccountView />
-        : <HomeView />;
+        : (view === undefined) 
+        ? <HomeView />
+        : <NotFound />;
 
     function handleClick() {
         //close sidebar when main element is clicked
@@ -43,7 +45,7 @@ function Dashboard(props) {
             <div className='main-container'>
                 {sidebarOpen && 
                     <aside>
-                        <Sidebar setCurrView={setCurrView} />
+                        <Sidebar />
                     </aside>
                 }
 

@@ -13,11 +13,11 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import '../styles/Sidebar.css';
 
-function Sidebar(props) {
+function Sidebar() {
     return (
         <nav className='sidebar-container'>
             <List>
-                <Link to='/'>
+                <Link to='/dashboard'>
                     <ListItem button key='Home'>
                         <ListItemIcon>
                             <HomeOutlinedIcon />
@@ -25,7 +25,7 @@ function Sidebar(props) {
                         <ListItemText primary='Home' />
                     </ListItem>
                 </Link>
-                <Link to='projects'>
+                <Link to='/dashboard/projects'>
                     <ListItem button key='Projects'>
                         <ListItemIcon>
                             <AccountTreeOutlinedIcon />
@@ -33,7 +33,7 @@ function Sidebar(props) {
                         <ListItemText primary='Projects' />
                     </ListItem>
                 </Link>
-                <Link to='tasks'>
+                <Link to='/dashboard/tasks'>
                     <ListItem button key='Tasks'>
                         <ListItemIcon>
                             <FormatListNumberedOutlinedIcon />
@@ -41,7 +41,7 @@ function Sidebar(props) {
                         <ListItemText primary='Tasks' />
                     </ListItem>
                 </Link>
-                <Link to='team'>
+                <Link to='/dashboard/team'>
                     <ListItem button key='Team'>
                         <ListItemIcon>
                             <PeopleAltOutlinedIcon />
@@ -52,7 +52,7 @@ function Sidebar(props) {
 
                 <Divider sx={{ margin: 1 }}/>
 
-                <Link to='inbox'>
+                <Link to='/dashboard/inbox'>
                     <ListItem button key='Inbox'>
                         <ListItemIcon>
                             <MailTwoToneIcon />
@@ -60,7 +60,7 @@ function Sidebar(props) {
                         <ListItemText primary='Inbox' />
                     </ListItem>
                 </Link>
-                <Link to='notifications'>
+                <Link to='/dashboard/notifications'>
                     <ListItem button key='Notifications'>
                         <ListItemIcon>
                             <NotificationsTwoToneIcon />
@@ -71,7 +71,7 @@ function Sidebar(props) {
 
                 <Divider sx={{ margin: 1 }}/>
 
-                <Link to='account'>
+                <Link to='/dashboard/account'>
                     <ListItem button key='My Account'>
                         <ListItemIcon>
                             <SettingsApplicationsIcon />
