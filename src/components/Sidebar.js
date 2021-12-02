@@ -13,10 +13,17 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import '../styles/Sidebar.css';
 
-function Sidebar() {
+function Sidebar(props) {
+    function handleClick(e) {
+        //close sidebar if a menu link is clicked
+        if (e.target.matches('a *')) {
+            props.setSidebarOpen(false);
+        }
+    }
+
     return (
         <nav className='sidebar-container'>
-            <List>
+            <List onClick={handleClick}>
                 <Link to='/dashboard'>
                     <ListItem button key='Home'>
                         <ListItemIcon>

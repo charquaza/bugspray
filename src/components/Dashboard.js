@@ -45,7 +45,7 @@ function Dashboard(props) {
             <div className='main-container'>
                 {sidebarOpen && 
                     <aside>
-                        <Sidebar />
+                        <Sidebar setSidebarOpen={setSidebarOpen} />
                     </aside>
                 }
 
