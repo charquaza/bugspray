@@ -46,7 +46,7 @@ function TeamView() {
         <div className='team-view'>
             <h1>Team</h1>
 
-            <div>
+            <div style={{ height: 400, width: '100%' }}>
                 <DataGrid 
                     rows={rows}
                     columns={columns}
