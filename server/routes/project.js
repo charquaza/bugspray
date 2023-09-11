@@ -11,3 +11,5 @@ router.put('/:id', controller.update);
 router.delete('/:id', controller.delete);
 
 router.use('/:id/tasks', taskRouter);
+
+module.exports = router;
