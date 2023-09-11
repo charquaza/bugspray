@@ -4,12 +4,12 @@ const { body, validationResult } = require('express-validator');
 exports.getAll = [
     function (req, res, next) {
         Member.find({})
-            .exec(function (err, members) {
+            .exec(function (err, memberList) {
                 if (err) {
                     return next(err);
                 }
 
-                res.json({ data: members });
+                res.json({ data: memberList });
             })
     }
 ];
