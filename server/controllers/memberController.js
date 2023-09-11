@@ -1,6 +1,19 @@
 const Member = require('../models/member');
 const { body, validationResult } = require('express-validator');
 
+exports.getAll = [
+    function (req, res, next) {
+        Member.find({})
+            .exec(function (err, members) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.json({ data: members });
+            })
+    }
+];
+
 exports.getById = [
     function (req, res, next) {
         Member.findById(req.params.id)
