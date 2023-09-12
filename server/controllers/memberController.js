@@ -15,7 +15,7 @@ exports.getAll = [
 exports.getById = [
     async function (req, res, next) {
         try {
-            let memberData = await Member.findById(req.params.id).exec();
+            let memberData = await Member.findById(req.params.memberId).exec();
 
             if (memberData === null) {
                 res.status(404).json({ errors: ['Member not found'] });
@@ -89,7 +89,7 @@ exports.update = [
 
             try {
                 let oldMemberData = await 
-                    Member.findByIdAndUpdate(req.params.id, fieldsToUpdate)
+                    Member.findByIdAndUpdate(req.params.memberId, fieldsToUpdate)
                     .exec();
                 
                 if (oldMemberData === null) {
@@ -107,7 +107,7 @@ exports.update = [
 exports.delete = [
     async function (req, res, next) {
         try {
-            let deletedMemberData = await Member.findByIdAndDelete(req.params.id).exec();
+            let deletedMemberData = await Member.findByIdAndDelete(req.params.memberId).exec();
 
             if (deletedMemberData === null) {
                 res.status(404).json({ errors: ['Member not found'] });
