@@ -2,32 +2,29 @@ const Member = require('../models/member');
 const { body, validationResult } = require('express-validator');
 
 exports.getAll = [
-    function (req, res, next) {
-        Member.find({})
-            .exec(function (err, memberList) {
-                if (err) {
-                    return next(err);
-                }
-
-                res.json({ data: memberList });
-            })
+    async function (req, res, next) {
+        try {
+            let memberList = await Member.find({}).exec();
+            res.json({ data: memberList });
+        } catch (err) {
+            return next(err);
+        }
     }
 ];
 
 exports.getById = [
-    function (req, res, next) {
-        Member.findById(req.params.id)
-            .exec(function (err, member) {
-                if (err) {
-                    return next(err);
-                }
+    async function (req, res, next) {
+        try {
+            let memberData = await Member.findById(req.params.id).exec();
 
-                if (member === null) {
-                    res.status(404).json({ errors: ['Member not found'] });
-                } else {
-                    res.json({ data: member });
-                }
-            });
+            if (memberData === null) {
+                res.status(404).json({ errors: ['Member not found'] });
+            } else {
+                res.json({ data: memberData });
+            }
+        } catch (err) {
+            return next(err);
+        }
     }
 ];
 
@@ -42,12 +39,12 @@ exports.create = [
         .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
         .escape(),
 
-    function (req, res, next) {
+    async function (req, res, next) {
         var validationErrors = validationResult(req);
 
         if (!validationErrors.isEmpty()) {
-            let errorMessages = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessages });
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            res.status(400).json({ errors: errorMessageList });
         } else {
             let newMember = new Member({
                 firstName: req.body.firstName,
@@ -56,13 +53,12 @@ exports.create = [
                 role: req.body.role
             });
 
-            newMember.save(function (err, member) {
-                if (err) {
-                    return next(err);
-                }
-
-                res.json({ data: member });
-            });
+            try {
+                let newMemberData = await newMember.save();
+                res.json({ data: newMemberData });
+            } catch (err) {
+                return next(err);
+            }
         }
     }
 ];
@@ -78,12 +74,12 @@ exports.update = [
         .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
         .escape(),
 
-    function (req, res, next) {
+    async function (req, res, next) {
         var validationErrors = validationResult(req);
 
         if (!validationErrors.isEmpty()) {
-            let errorMessages = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessages });
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            res.status(400).json({ errors: errorMessageList });
         } else {
             let fieldsToUpdate = {
                 firstName: req.body.firstName,
@@ -91,31 +87,35 @@ exports.update = [
                 role: req.body.role
             };
 
-            Member.findByIdAndUpdate(req.params.memberId, fieldsToUpdate)
-                .exec(function (err, member) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    res.json({ data: member });
-                });
+            try {
+                let oldMemberData = await 
+                    Member.findByIdAndUpdate(req.params.id, fieldsToUpdate)
+                    .exec();
+                
+                if (oldMemberData === null) {
+                    res.status(404).json({ errors: ['Member not found'] });
+                } else {
+                    res.json({ data: oldMemberData });
+                }
+            } catch (err) {
+                return next(err);
+            }
         }
     }
 ];
 
 exports.delete = [
-    function (req, res, next) {
-        Member.findByIdAndDelete(req.params.memberId)
-            .exec(function (err, member) {
-                if (err) {
-                    return next(err);
-                }
+    async function (req, res, next) {
+        try {
+            let deletedMemberData = await Member.findByIdAndDelete(req.params.id).exec();
 
-                if (member === null) {
-                    res.status(404).json({ errors: ['Member not found'] });
-                } else {
-                    res.json({ data: member });
-                }
-            });
+            if (deletedMemberData === null) {
+                res.status(404).json({ errors: ['Member not found'] });
+            } else {
+                res.json({ data: deletedMemberData });
+            }
+        } catch (err) {
+            return next(err);
+        }
     }
 ];
