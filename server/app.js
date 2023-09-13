@@ -33,7 +33,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.json({ errors: [ err ] });
+  res.json({ errors: [ err.message ] });
 });
 
 module.exports = app;
