@@ -65,7 +65,7 @@ exports.create = [
 
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessageList });
+            return res.status(400).json({ errors: errorMessageList });
         } 
 
         try {
@@ -73,14 +73,18 @@ exports.create = [
             let project = await Project.findById(req.body.project).exec();
 
             if (project === null) {
-                res.status(400).json({ errors: ['Cannot create task: project not found'] });
+                return res.status(400).json({ 
+                    errors: ['Cannot create task: project not found'] 
+                });
             }
 
             //check if creator exists
             let creator = await Member.findById(req.body.createdBy).exec();
 
             if (creator === null) {
-                res.status(400).json({ errors: ['Cannot create task: Creator not found'] });
+                return res.status(400).json({ 
+                    errors: ['Cannot create task: Creator not found'] 
+                });
             }
 
             //check if assignees exist
@@ -89,9 +93,9 @@ exports.create = [
             ).exec();
 
             if (assigneesCount !== req.body.assignees.length) {
-                res.status(400).json(
-                    { errors: ['Cannot create task: Assignee(s) not found'] }
-                );
+                return res.status(400).json({ 
+                    errors: ['Cannot create task: Assignee(s) not found'] 
+                });
             }
         
             //project, creator, and all assignees exist, proceed with task creation
@@ -145,7 +149,7 @@ exports.update = [
 
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessageList });
+            return res.status(400).json({ errors: errorMessageList });
         } 
 
         try {
@@ -153,14 +157,18 @@ exports.update = [
             let project = await Project.findById(req.body.project).exec();
 
             if (project === null) {
-                res.status(400).json({ errors: ['Cannot update task: project not found'] });
+                return res.status(400).json({ 
+                    errors: ['Cannot update task: project not found'] 
+                });
             }
 
             //check if creator exists
             let creator = await Member.findById(req.body.createdBy).exec();
 
             if (creator === null) {
-                res.status(400).json({ errors: ['Cannot update task: Creator not found'] });
+                return res.status(400).json({ 
+                    errors: ['Cannot update task: Creator not found'] 
+                });
             }
 
             //check if assignees exist
@@ -169,7 +177,7 @@ exports.update = [
             ).exec();
 
             if (assigneesCount !== req.body.assignees.length) {
-                res.status(400).json(
+                return res.status(400).json(
                     { errors: ['Cannot update task: Assignee(s) not found'] }
                 );
             }

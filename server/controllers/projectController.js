@@ -57,7 +57,7 @@ exports.create = [
 
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessageList });
+            return res.status(400).json({ errors: errorMessageList });
         } 
 
         try {
@@ -65,7 +65,9 @@ exports.create = [
             let leadMember = await Member.findById(req.body.lead).exec();
 
             if (leadMember === null) {
-                res.status(400).json({ errors: ['Cannot create project: Lead member not found'] });
+                return res.status(400).json({ 
+                    errors: ['Cannot create project: Lead member not found'] 
+                });
             }
 
             //check if team members exist
@@ -74,7 +76,7 @@ exports.create = [
             ).exec();
 
             if (teamMemberCount !== req.body.team.length) {
-                res.status(400).json(
+                return res.status(400).json(
                     { errors: ['Cannot create project: Team member(s) not found'] }
                 );
             }
@@ -122,7 +124,7 @@ exports.update = [
 
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessageList });
+            return res.status(400).json({ errors: errorMessageList });
         } 
 
         try {
@@ -130,7 +132,9 @@ exports.update = [
             let leadMember = await Member.findById(req.body.lead).exec();
 
             if (leadMember === null) {
-                res.status(400).json({ errors: ['Cannot update project: Lead member not found'] });
+                return res.status(400).json({ 
+                    errors: ['Cannot update project: Lead member not found'] 
+                });
             }
 
             //check if team members exist
@@ -139,7 +143,7 @@ exports.update = [
             ).exec();
 
             if (teamMemberCount !== req.body.team.length) {
-                res.status(400).json(
+                return res.status(400).json(
                     { errors: ['Cannot update project: Team member(s) not found'] }
                 );
             }
@@ -175,7 +179,9 @@ exports.delete = [
             let deletedProjectData = await Project.findByIdAndDelete(req.params.projectId).exec();
 
             if (deletedProjectData === null) {
-                res.status(404).json({ errors: ['Cannot delete project: Project not found'] });
+                return res.status(404).json({ 
+                    errors: ['Cannot delete project: Project not found'] 
+                });
             }
 
             //delete tasks that reference deleted project

@@ -47,7 +47,7 @@ exports.create = [
 
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessageList });
+            return res.status(400).json({ errors: errorMessageList });
         } 
 
         let newMember = new Member({
@@ -85,7 +85,7 @@ exports.update = [
 
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
-            res.status(400).json({ errors: errorMessageList });
+            return res.status(400).json({ errors: errorMessageList });
         } 
 
         let fieldsToUpdate = {
