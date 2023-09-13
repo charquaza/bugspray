@@ -7,8 +7,10 @@ exports.getAll = [
     async function (req, res, next) {
         try {
             let taskList = await Task.find({})
-                .populate('project').populate('createdBy')
-                .populate('assignees').exec();
+                .populate({ path: 'project', populate: { path: 'lead team' } })
+                .populate('createdBy')
+                .populate('assignees')
+                .exec();
             res.json({ data: taskList });
         } catch (err) {
             return next(err);
@@ -20,8 +22,10 @@ exports.getById = [
     async function (req, res, next) {
         try {
             let taskData = await Task.findById(req.params.taskId)
-                .populate('project').populate('createdBy')
-                .populate('assignees').exec();
+                .populate({ path: 'project', populate: { path: 'lead team' } })
+                .populate('createdBy')
+                .populate('assignees')
+                .exec();
 
             if (taskData === null) {
                 res.status(404).json({ errors: ['Task not found'] });
