@@ -99,7 +99,7 @@ exports.update = [
                     .exec();
                 
                 if (oldMemberData === null) {
-                    res.status(404).json({ errors: ['Member not found'] });
+                    res.status(404).json({ errors: ['Cannot update member: Member not found'] });
                 } else {
                     res.json({ data: oldMemberData });
                 }
@@ -116,7 +116,7 @@ exports.delete = [
             let deletedMemberData = await Member.findByIdAndDelete(req.params.memberId).exec();
 
             if (deletedMemberData === null) {
-                res.status(404).json({ errors: ['Member not found'] });
+                res.status(404).json({ errors: ['Cannot delete member: Member not found'] });
             } else {
                 res.json({ data: deletedMemberData });
             }
