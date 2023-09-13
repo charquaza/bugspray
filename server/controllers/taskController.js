@@ -93,7 +93,7 @@ exports.create = [
             try {
                 let assigneesCount = await Member.countDocuments(
                     { _id: { $in: req.body.assignees } }
-                );
+                ).exec();
 
                 if (assigneesCount !== req.body.assignees.length) {
                     res.status(400).json(
@@ -185,7 +185,7 @@ exports.update = [
             try {
                 let assigneesCount = await Member.countDocuments(
                     { _id: { $in: req.body.assignees } }
-                );
+                ).exec();
 
                 if (assigneesCount !== req.body.assignees.length) {
                     res.status(400).json(
