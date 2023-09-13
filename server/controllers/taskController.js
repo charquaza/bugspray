@@ -69,7 +69,7 @@ exports.create = [
         } else { 
             //check if project exists
             try {
-                let project = Project.findById(req.body.project).exec();
+                let project = await Project.findById(req.body.project).exec();
 
                 if (project === null) {
                     res.status(400).json({ errors: ['Cannot create task: project not found'] });
@@ -80,7 +80,7 @@ exports.create = [
 
             //check if creator exists
             try {
-                let creator = Member.findById(req.body.createdBy).exec();
+                let creator = await Member.findById(req.body.createdBy).exec();
 
                 if (creator === null) {
                     res.status(400).json({ errors: ['Cannot create task: Creator not found'] });
@@ -161,7 +161,7 @@ exports.update = [
         } else {
             //check if project exists
             try {
-                let project = Project.findById(req.body.project).exec();
+                let project = await Project.findById(req.body.project).exec();
 
                 if (project === null) {
                     res.status(400).json({ errors: ['Cannot update task: project not found'] });
@@ -172,7 +172,7 @@ exports.update = [
 
             //check if creator exists
             try {
-                let creator = Member.findById(req.body.createdBy).exec();
+                let creator = await Member.findById(req.body.createdBy).exec();
 
                 if (creator === null) {
                     res.status(400).json({ errors: ['Cannot update task: Creator not found'] });
