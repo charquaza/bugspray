@@ -1,5 +1,6 @@
 const Project = require('../models/project');
 const Member = require('../models/member');
+const Task = require('../models/task');
 const { body, validationResult } = require('express-validator');
 
 exports.getAll = [
@@ -60,7 +61,7 @@ exports.create = [
         } else { 
             //check if lead member exists
             try {
-                let leadMember = Member.findById(req.body.lead).exec();
+                let leadMember = await Member.findById(req.body.lead).exec();
 
                 if (leadMember === null) {
                     res.status(400).json({ errors: ['Cannot create project: Lead member not found'] });
@@ -73,7 +74,7 @@ exports.create = [
             try {
                 let teamMemberCount = await Member.countDocuments(
                     { _id: { $in: req.body.team } }
-                );
+                ).exec();
 
                 if (teamMemberCount !== req.body.team.length) {
                     res.status(400).json(
@@ -133,7 +134,7 @@ exports.update = [
         } else {
             //check if lead member exists
             try {
-                let leadMember = Member.findById(req.body.lead).exec();
+                let leadMember = await Member.findById(req.body.lead).exec();
 
                 if (leadMember === null) {
                     res.status(400).json({ errors: ['Cannot update project: Lead member not found'] });
@@ -146,7 +147,7 @@ exports.update = [
             try {
                 let teamMemberCount = await Member.countDocuments(
                     { _id: { $in: req.body.team } }
-                );
+                ).exec();
 
                 if (teamMemberCount !== req.body.team.length) {
                     res.status(400).json(
@@ -186,13 +187,17 @@ exports.update = [
 exports.delete = [
     async function (req, res, next) {
         try {
+            //delete project
             let deletedProjectData = await Project.findByIdAndDelete(req.params.projectId).exec();
 
             if (deletedProjectData === null) {
                 res.status(404).json({ errors: ['Cannot delete project: Project not found'] });
-            } else {
-                res.json({ data: deletedProjectData });
             }
+
+            //delete tasks that reference deleted project
+            let deletedTaskCount = await Task.deleteMany({ project: req.params.projectId }).exec();
+
+            res.json({ data: { deletedProjectData, deletedTaskCount } });
         } catch (err) {
             return next(err);
         }
