@@ -58,41 +58,41 @@ exports.create = [
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
             res.status(400).json({ errors: errorMessageList });
-        } else { 
-            try {
-                //check if lead member exists
-                let leadMember = await Member.findById(req.body.lead).exec();
+        } 
 
-                if (leadMember === null) {
-                    res.status(400).json({ errors: ['Cannot create project: Lead member not found'] });
-                }
+        try {
+            //check if lead member exists
+            let leadMember = await Member.findById(req.body.lead).exec();
 
-                //check if team members exist
-                let teamMemberCount = await Member.countDocuments(
-                    { _id: { $in: req.body.team } }
-                ).exec();
-
-                if (teamMemberCount !== req.body.team.length) {
-                    res.status(400).json(
-                        { errors: ['Cannot create project: Team member(s) not found'] }
-                    );
-                }
-
-                //lead and all team members exist, proceed with project creation
-                let newProject = new Project({
-                    name: req.body.name,
-                    dateCreated: Date.now(),
-                    status: req.body.status,
-                    priority: req.body.priority,
-                    lead: req.body.lead,
-                    team: req.body.team
-                });
-
-                let newProjectData = await newProject.save();
-                res.json({ data: newProjectData });
-            } catch (err) {
-                return next(err);
+            if (leadMember === null) {
+                res.status(400).json({ errors: ['Cannot create project: Lead member not found'] });
             }
+
+            //check if team members exist
+            let teamMemberCount = await Member.countDocuments(
+                { _id: { $in: req.body.team } }
+            ).exec();
+
+            if (teamMemberCount !== req.body.team.length) {
+                res.status(400).json(
+                    { errors: ['Cannot create project: Team member(s) not found'] }
+                );
+            }
+
+            //lead and all team members exist, proceed with project creation
+            let newProject = new Project({
+                name: req.body.name,
+                dateCreated: Date.now(),
+                status: req.body.status,
+                priority: req.body.priority,
+                lead: req.body.lead,
+                team: req.body.team
+            });
+
+            let newProjectData = await newProject.save();
+            res.json({ data: newProjectData });
+        } catch (err) {
+            return next(err);
         }
     }
 ];
@@ -123,47 +123,47 @@ exports.update = [
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
             res.status(400).json({ errors: errorMessageList });
-        } else { 
-            try {
-                //check if lead member exists
-                let leadMember = await Member.findById(req.body.lead).exec();
+        } 
 
-                if (leadMember === null) {
-                    res.status(400).json({ errors: ['Cannot update project: Lead member not found'] });
-                }
+        try {
+            //check if lead member exists
+            let leadMember = await Member.findById(req.body.lead).exec();
 
-                //check if team members exist
-                let teamMemberCount = await Member.countDocuments(
-                    { _id: { $in: req.body.team } }
-                ).exec();
-
-                if (teamMemberCount !== req.body.team.length) {
-                    res.status(400).json(
-                        { errors: ['Cannot update project: Team member(s) not found'] }
-                    );
-                }
-            
-                //lead and all team members exist, proceed with project update
-                let fieldsToUpdate = {
-                    name: req.body.name,
-                    status: req.body.status,
-                    priority: req.body.priority,
-                    lead: req.body.lead,
-                    team: req.body.team
-                };
-
-                let oldProjectData = await 
-                    Project.findByIdAndUpdate(req.params.projectId, fieldsToUpdate)
-                        .exec();
-                
-                if (oldProjectData === null) {
-                    res.status(404).json({ errors: ['Cannot update project: Project not found'] });
-                } else {
-                    res.json({ data: oldProjectData });
-                }
-            } catch (err) {
-                return next(err);
+            if (leadMember === null) {
+                res.status(400).json({ errors: ['Cannot update project: Lead member not found'] });
             }
+
+            //check if team members exist
+            let teamMemberCount = await Member.countDocuments(
+                { _id: { $in: req.body.team } }
+            ).exec();
+
+            if (teamMemberCount !== req.body.team.length) {
+                res.status(400).json(
+                    { errors: ['Cannot update project: Team member(s) not found'] }
+                );
+            }
+        
+            //lead and all team members exist, proceed with project update
+            let fieldsToUpdate = {
+                name: req.body.name,
+                status: req.body.status,
+                priority: req.body.priority,
+                lead: req.body.lead,
+                team: req.body.team
+            };
+
+            let oldProjectData = await 
+                Project.findByIdAndUpdate(req.params.projectId, fieldsToUpdate)
+                    .exec();
+            
+            if (oldProjectData === null) {
+                res.status(404).json({ errors: ['Cannot update project: Project not found'] });
+            } else {
+                res.json({ data: oldProjectData });
+            }
+        } catch (err) {
+            return next(err);
         }
     }
 ];

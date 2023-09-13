@@ -48,20 +48,20 @@ exports.create = [
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
             res.status(400).json({ errors: errorMessageList });
-        } else {
-            let newMember = new Member({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                dateJoined: Date.now(),
-                role: req.body.role
-            });
+        } 
 
-            try {
-                let newMemberData = await newMember.save();
-                res.json({ data: newMemberData });
-            } catch (err) {
-                return next(err);
-            }
+        let newMember = new Member({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            dateJoined: Date.now(),
+            role: req.body.role
+        });
+
+        try {
+            let newMemberData = await newMember.save();
+            res.json({ data: newMemberData });
+        } catch (err) {
+            return next(err);
         }
     }
 ];
@@ -86,26 +86,26 @@ exports.update = [
         if (!validationErrors.isEmpty()) {
             let errorMessageList = validationErrors.array().map(err => err.msg);
             res.status(400).json({ errors: errorMessageList });
-        } else {
-            let fieldsToUpdate = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                role: req.body.role
-            };
+        } 
 
-            try {
-                let oldMemberData = await 
-                    Member.findByIdAndUpdate(req.params.memberId, fieldsToUpdate)
-                    .exec();
-                
-                if (oldMemberData === null) {
-                    res.status(404).json({ errors: ['Cannot update member: Member not found'] });
-                } else {
-                    res.json({ data: oldMemberData });
-                }
-            } catch (err) {
-                return next(err);
+        let fieldsToUpdate = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            role: req.body.role
+        };
+
+        try {
+            let oldMemberData = await 
+                Member.findByIdAndUpdate(req.params.memberId, fieldsToUpdate)
+                .exec();
+            
+            if (oldMemberData === null) {
+                res.status(404).json({ errors: ['Cannot update member: Member not found'] });
+            } else {
+                res.json({ data: oldMemberData });
             }
+        } catch (err) {
+            return next(err);
         }
     }
 ];
