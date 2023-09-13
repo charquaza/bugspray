@@ -29,13 +29,16 @@ exports.getById = [
 ];
 
 exports.create = [
-    body('firstName').trim().notEmpty().withMessage('First name cannot be blank')
+    body('firstName').isString().withMessage('Invalid value for First Name').bail()
+        .trim().notEmpty().withMessage('First name cannot be blank')
         .isLength({ max: 100 }).withMessage('First name cannot be longer than 100 characters')
         .escape(),
-    body('lastName').trim().notEmpty().withMessage('Last name cannot be blank')
+    body('lastName').isString().withMessage('Invalid value for Last Name').bail()
+        .trim().notEmpty().withMessage('Last name cannot be blank')
         .isLength({ max: 100 }).withMessage('Last name cannot be longer than 100 characters')
         .escape(),
-    body('role').trim().notEmpty().withMessage('Role cannot be blank')
+    body('role').isString().withMessage('Invalid value for Role').bail()
+        .trim().notEmpty().withMessage('Role cannot be blank')
         .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
         .escape(),
 
@@ -64,13 +67,16 @@ exports.create = [
 ];
 
 exports.update = [
-    body('firstName').trim().notEmpty().withMessage('First name cannot be blank')
+    body('firstName').isString().withMessage('Invalid value for First Name').bail()
+        .trim().notEmpty().withMessage('First name cannot be blank')
         .isLength({ max: 100 }).withMessage('First name cannot be longer than 100 characters')
         .escape(),
-    body('lastName').trim().notEmpty().withMessage('Last name cannot be blank')
+    body('lastName').isString().withMessage('Invalid value for Last Name').bail()
+        .trim().notEmpty().withMessage('Last name cannot be blank')
         .isLength({ max: 100 }).withMessage('Last name cannot be longer than 100 characters')
         .escape(),
-    body('role').trim().notEmpty().withMessage('Role cannot be blank')
+    body('role').isString().withMessage('Invalid value for Role').bail()
+        .trim().notEmpty().withMessage('Role cannot be blank')
         .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
         .escape(),
 
