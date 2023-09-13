@@ -52,7 +52,6 @@ exports.create = [
         .escape(),
 
     async function (req, res, next) {
-        console.log(req.body.team);
         var validationErrors = validationResult(req);
 
         if (!validationErrors.isEmpty()) {
@@ -64,7 +63,7 @@ exports.create = [
                 let leadMember = Member.findById(req.body.lead).exec();
 
                 if (leadMember === null) {
-                    res.status(400).json({ errors: ['Lead member not found'] });
+                    res.status(400).json({ errors: ['Cannot create project: Lead member not found'] });
                 }
             } catch (err) {
                 return next(err);
@@ -72,13 +71,14 @@ exports.create = [
 
             //check if team members exist
             try {
-                for (let i = 0; i < req.body.team.length; i++) {
-                    let currId = req.body.team[i];
-                    let currMember = await Member.findById(currId).exec();
+                let teamMemberCount = await Member.countDocuments(
+                    { _id: { $in: req.body.team } }
+                );
 
-                    if (currMember === null) {
-                        res.status(400).json({ errors: ['Team member not found'] });
-                    }
+                if (teamMemberCount !== req.body.team.length) {
+                    res.status(400).json(
+                        { errors: ['Cannot create project: Team member(s) not found'] }
+                    );
                 }
             } catch (err) {
                 return next(err);
@@ -136,7 +136,7 @@ exports.update = [
                 let leadMember = Member.findById(req.body.lead).exec();
 
                 if (leadMember === null) {
-                    res.status(400).json({ errors: ['Lead member not found'] });
+                    res.status(400).json({ errors: ['Cannot update project: Lead member not found'] });
                 }
             } catch (err) {
                 return next(err);
@@ -144,13 +144,14 @@ exports.update = [
 
             //check if team members exist
             try {
-                for (let i = 0; i < req.body.team.length; i++) {
-                    let currId = req.body.team[i];
-                    let currMember = await Member.findById(currId).exec();
+                let teamMemberCount = await Member.countDocuments(
+                    { _id: { $in: req.body.team } }
+                );
 
-                    if (currMember === null) {
-                        res.status(400).json({ errors: ['Team member not found'] });
-                    }
+                if (teamMemberCount !== req.body.team.length) {
+                    res.status(400).json(
+                        { errors: ['Cannot update project: Team member(s) not found'] }
+                    );
                 }
             } catch (err) {
                 return next(err);
@@ -171,7 +172,7 @@ exports.update = [
                         .exec();
                 
                 if (oldProjectData === null) {
-                    res.status(404).json({ errors: ['Project not found'] });
+                    res.status(404).json({ errors: ['Cannot update project: Project not found'] });
                 } else {
                     res.json({ data: oldProjectData });
                 }
@@ -188,7 +189,7 @@ exports.delete = [
             let deletedProjectData = await Project.findByIdAndDelete(req.params.projectId).exec();
 
             if (deletedProjectData === null) {
-                res.status(404).json({ errors: ['Project not found'] });
+                res.status(404).json({ errors: ['Cannot delete project: Project not found'] });
             } else {
                 res.json({ data: deletedProjectData });
             }
