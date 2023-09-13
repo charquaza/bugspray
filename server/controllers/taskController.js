@@ -67,30 +67,22 @@ exports.create = [
             let errorMessageList = validationErrors.array().map(err => err.msg);
             res.status(400).json({ errors: errorMessageList });
         } else { 
-            //check if project exists
             try {
+                //check if project exists
                 let project = await Project.findById(req.body.project).exec();
 
                 if (project === null) {
                     res.status(400).json({ errors: ['Cannot create task: project not found'] });
                 }
-            } catch (err) {
-                return next(err);
-            }
 
-            //check if creator exists
-            try {
+                //check if creator exists
                 let creator = await Member.findById(req.body.createdBy).exec();
 
                 if (creator === null) {
                     res.status(400).json({ errors: ['Cannot create task: Creator not found'] });
                 }
-            } catch (err) {
-                return next(err);
-            }
-
-            //check if assignees exist
-            try {
+    
+                //check if assignees exist
                 let assigneesCount = await Member.countDocuments(
                     { _id: { $in: req.body.assignees } }
                 ).exec();
@@ -100,23 +92,19 @@ exports.create = [
                         { errors: ['Cannot create task: Assignee(s) not found'] }
                     );
                 }
-            } catch (err) {
-                return next(err);
-            }
             
-            //project, creator, and all assignees exist, proceed with task creation
-            let newTask = new Task({
-                title: req.body.title,
-                description: req.body.description,
-                project: req.body.project,
-                dateCreated: Date.now(),
-                createdBy: req.body.createdBy,
-                status: req.body.status,
-                priority: req.body.priority,
-                assignees: req.body.assignees
-            });
+                //project, creator, and all assignees exist, proceed with task creation
+                let newTask = new Task({
+                    title: req.body.title,
+                    description: req.body.description,
+                    project: req.body.project,
+                    dateCreated: Date.now(),
+                    createdBy: req.body.createdBy,
+                    status: req.body.status,
+                    priority: req.body.priority,
+                    assignees: req.body.assignees
+                });
 
-            try {
                 let newTaskData = await newTask.save();
                 res.json({ data: newTaskData });
             } catch (err) {
@@ -159,30 +147,22 @@ exports.update = [
             let errorMessageList = validationErrors.array().map(err => err.msg);
             res.status(400).json({ errors: errorMessageList });
         } else {
-            //check if project exists
             try {
+                //check if project exists
                 let project = await Project.findById(req.body.project).exec();
 
                 if (project === null) {
                     res.status(400).json({ errors: ['Cannot update task: project not found'] });
                 }
-            } catch (err) {
-                return next(err);
-            }
 
-            //check if creator exists
-            try {
+                //check if creator exists
                 let creator = await Member.findById(req.body.createdBy).exec();
 
                 if (creator === null) {
                     res.status(400).json({ errors: ['Cannot update task: Creator not found'] });
                 }
-            } catch (err) {
-                return next(err);
-            }
 
-            //check if assignees exist
-            try {
+                //check if assignees exist
                 let assigneesCount = await Member.countDocuments(
                     { _id: { $in: req.body.assignees } }
                 ).exec();
@@ -192,22 +172,18 @@ exports.update = [
                         { errors: ['Cannot update task: Assignee(s) not found'] }
                     );
                 }
-            } catch (err) {
-                return next(err);
-            }
             
-            //project, creator, and all assignees exist, proceed with task update
-            let fieldsToUpdate = {
-                title: req.body.title,
-                description: req.body.description,
-                project: req.body.project,
-                createdBy: req.body.createdBy,
-                status: req.body.status,
-                priority: req.body.priority,
-                assignees: req.body.assignees
-            };
+                //project, creator, and all assignees exist, proceed with task update
+                let fieldsToUpdate = {
+                    title: req.body.title,
+                    description: req.body.description,
+                    project: req.body.project,
+                    createdBy: req.body.createdBy,
+                    status: req.body.status,
+                    priority: req.body.priority,
+                    assignees: req.body.assignees
+                };
 
-            try {
                 let oldTaskData = await 
                     Task.findByIdAndUpdate(req.params.taskId, fieldsToUpdate)
                         .exec();
