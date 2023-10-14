@@ -78,7 +78,9 @@ exports.signUp = [
     },
 
     function (req, res, next) {
-        res.json({ user: req.user });
+        let memberDataCopy = { ...req.user._doc };
+        delete memberDataCopy.password;
+        res.json({ data: memberDataCopy });
     }
 ];
 
@@ -107,7 +109,9 @@ exports.logIn = [
     },
     
     function (req, res, next) {
-        res.json({ user: req.user });
+        let memberDataCopy = { ...req.user._doc };
+        delete memberDataCopy.password;
+        res.json({ data: memberDataCopy });
     }
 ];
 
@@ -126,7 +130,7 @@ exports.logOut = [
 exports.getAll = [
     async function (req, res, next) {
         try {
-            let memberList = await Member.find({}).exec();
+            let memberList = await Member.find({}, '-password').exec();
             res.json({ data: memberList });
         } catch (err) {
             return next(err);
@@ -137,7 +141,7 @@ exports.getAll = [
 exports.getById = [
     async function (req, res, next) {
         try {
-            let memberData = await Member.findById(req.params.memberId).exec();
+            let memberData = await Member.findById(req.params.memberId, '-password').exec();
 
             if (memberData === null) {
                 res.status(404).json({ errors: ['Member not found'] });
@@ -214,7 +218,9 @@ exports.update = [
             if (oldMemberData === null) {
                 res.status(404).json({ errors: ['Cannot update member: Member not found'] });
             } else {
-                res.json({ data: oldMemberData });
+                let memberDataCopy = { ...oldMemberData._doc };
+                delete memberDataCopy.password;
+                res.json({ data: memberDataCopy });
             }
         } catch (err) {
             return next(err);
@@ -230,7 +236,9 @@ exports.delete = [
             if (deletedMemberData === null) {
                 res.status(404).json({ errors: ['Cannot delete member: Member not found'] });
             } else {
-                res.json({ data: deletedMemberData });
+                let memberDataCopy = { ...deletedMemberData._doc }; //get POJO from Mongoose document
+                delete memberDataCopy.password;
+                res.json({ data: memberDataCopy });
             }
         } catch (err) {
             return next(err);

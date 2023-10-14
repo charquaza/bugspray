@@ -7,7 +7,7 @@ exports.getAll = [
     async function (req, res, next) {
         try {
             let projectList = await Project.find({})
-                .populate('lead').populate('team').exec();
+                .populate('lead', '-password').populate('team', '-password').exec();
             res.json({ data: projectList });
         } catch (err) {
             return next(err);
@@ -19,7 +19,7 @@ exports.getById = [
     async function (req, res, next) {
         try {
             let projectData = await Project.findById(req.params.projectId)
-                .populate('lead').populate('team').exec();
+                .populate('lead', '-password').populate('team', '-password').exec();
 
             if (projectData === null) {
                 res.status(404).json({ errors: ['Project not found'] });
