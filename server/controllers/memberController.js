@@ -105,6 +105,7 @@ exports.logIn = [
             }
         })(req, res, next);
     },
+    
     function (req, res, next) {
         res.json({ user: req.user });
     }

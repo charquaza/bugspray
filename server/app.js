@@ -6,7 +6,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
@@ -17,11 +19,22 @@ const Member = require('./models/member');
 const app = express();
 
 //Set up mongoose connection
-const mongoose = require('mongoose');
 const mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB)
   .catch((err) => console.error(err));
 mongoose.connection.on('error', (err) => console.error(err));
+
+//Set up connect-mongodb-session store
+const sessionStore = new MongoDBStore(
+  {
+    uri: mongoDB,
+    databaseName: 'bug_tracker',
+    collection: 'sessions',
+    expires: 1000 * 60 * 60 * 24 // 1 day in milliseconds
+  },
+  (err) => console.error(err)
+);
+sessionStore.on('error', (err) => console.error(err));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -56,7 +69,6 @@ passport.serializeUser((member, done) => {
 passport.deserializeUser(async (id, done) => {
   try {
     const member = await Member.findById(id);
-    //what to do if member === null?
     done(null, member);
   } catch(err) {
     done(err);
@@ -67,9 +79,12 @@ passport.deserializeUser(async (id, done) => {
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  },
+  store: sessionStore
 }));
-//app.use(passport.initialize());
 app.use(passport.session());
 
 //Set up router
