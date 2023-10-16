@@ -85,6 +85,11 @@ exports.signUp = [
 ];
 
 exports.logIn = [
+    body('username').isString().withMessage('Invalid value for Username').bail()
+        .trim().notEmpty().withMessage('Please enter a Username'),
+    body('password').isString().withMessage('Invalid value for Password').bail()
+        .trim().notEmpty().withMessage('Please enter a Password'),
+
     function (req, res, next) {
         //if a user is logged in, log out before proceeding with new log in
         if (req.user) {
@@ -94,6 +99,13 @@ exports.logIn = [
                 }
             });
         }
+
+        var validationErrors = validationResult(req);
+
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        } 
 
         passport.authenticate('local', function (err, user, info) {
             if (err) {
