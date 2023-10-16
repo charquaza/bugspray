@@ -21,7 +21,8 @@ const app = express();
 
 //Configure cors
 const corsOptions = {
-  origin: '*', //restrict to frontend domain after deployment
+  origin: 'http://localhost:3001', //restrict to frontend domain after deployment
+  credentials: true,
   optionsSuccessStatus: 200
 };
 
