@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
@@ -17,6 +18,12 @@ const indexRouter = require('./routes/index');
 const Member = require('./models/member');
 
 const app = express();
+
+//Configure cors
+const corsOptions = {
+  origin: '*', //restrict to frontend domain after deployment
+  optionsSuccessStatus: 200
+};
 
 //Set up mongoose connection
 const mongoDB = process.env.MONGODB_URI;
@@ -35,12 +42,6 @@ const sessionStore = new MongoDBStore(
   (err) => console.error(err)
 );
 sessionStore.on('error', (err) => console.error(err));
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 //Configure passport
 passport.use(
@@ -74,6 +75,14 @@ passport.deserializeUser(async (id, done) => {
     done(err);
   };
 });
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors(corsOptions));
 
 //Set up sessions and passport
 app.use(session({
