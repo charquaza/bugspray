@@ -91,6 +91,13 @@ exports.logIn = [
         .trim().notEmpty().withMessage('Please enter a Password'),
 
     function (req, res, next) {
+        var validationErrors = validationResult(req);
+
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        } 
+
         //if a user is logged in, log out before proceeding with new log in
         if (req.user) {
             req.logout(function (err) {
@@ -99,13 +106,6 @@ exports.logIn = [
                 }
             });
         }
-
-        var validationErrors = validationResult(req);
-
-        if (!validationErrors.isEmpty()) {
-            let errorMessageList = validationErrors.array().map(err => err.msg);
-            return res.status(400).json({ errors: errorMessageList });
-        } 
 
         passport.authenticate('local', function (err, user, info) {
             if (err) {
