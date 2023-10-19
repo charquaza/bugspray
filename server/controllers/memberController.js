@@ -3,6 +3,18 @@ const { body, validationResult } = require('express-validator');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 
+exports.getCurrUser = [
+    function (req, res, next) {
+        if (req.user) {
+            let memberDataCopy = { ...req.user._doc };
+            delete memberDataCopy.password;
+            res.json({ data: memberDataCopy });
+        } else {
+            res.status(404).json({});
+        }
+    }
+];
+
 exports.signUp = [
     body('firstName').isString().withMessage('Invalid value for First Name').bail()
         .trim().notEmpty().withMessage('First name cannot be blank')

@@ -3,6 +3,7 @@ const memberRouter = express.Router();
 const memberController = require('../controllers/memberController');
 
 memberRouter.get('/', memberController.getAll);
+memberRouter.get('/curr-user', memberController.getCurrUser);
 
 memberRouter.post('/sign-up', memberController.signUp);
 memberRouter.post('/log-in', memberController.logIn);
