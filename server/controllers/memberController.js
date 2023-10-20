@@ -141,12 +141,26 @@ exports.logIn = [
 
 exports.logOut = [
     function (req, res, next) {
+        if (!req.user) {
+            return res.status(200).end();
+        }
+
         req.logout(function (err) {
             if (err) {
                 return next(err);
             }
 
-            res.status(200).end();
+            // req.logout causes a new session object to be created
+            // (even if there is no authenticated user to log out),
+            // thus causing the new session to be stored
+            // even though it is devoid of any user info
+            req.session.destroy(function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200).end();
+            });
         });
     }
 ];
