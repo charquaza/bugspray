@@ -8,19 +8,23 @@ export default function ProjectsPage() {
 
     useEffect(() => {
         async function getProjectList() {
-            const fetchOptions = {
-                method: 'GET',
-                mode: 'cors',
-                credentials: 'include',
-                cache: 'no-store'
-            };
-            const fetchURL = apiURL + '/projects';
+            try {
+                const fetchOptions = {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    cache: 'no-store'
+                };
+                const fetchURL = apiURL + '/projects';
 
-            const res = await fetch(fetchURL, fetchOptions);
-            const data = await res.json();
-            const projectListData = data.data;
+                const res = await fetch(fetchURL, fetchOptions);
+                const data = await res.json();
+                const projectListData = data.data;
 
-            setProjectList(projectListData);
+                setProjectList(projectListData);
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         getProjectList();
@@ -35,7 +39,7 @@ export default function ProjectsPage() {
                 {
                     projectList.map((project) => {
                         return (
-                            <li key={project.id}>
+                            <li key={project._id}>
                                 <ul>
                                     <li>Name: {project.name}</li>
                                     <li>Date Created: {project.dateCreated}</li>
@@ -52,7 +56,7 @@ export default function ProjectsPage() {
                                             {
                                                 project.team.map((member) => {
                                                     return (
-                                                        <li key={member.id}>
+                                                        <li key={member._id}>
                                                             {member.firstName + ' ' + member.lastName}
                                                         </li>
                                                     );
