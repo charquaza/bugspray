@@ -13,7 +13,13 @@ export const metadata = {
 
 async function getUserData() {
    const cookieStore = cookies();
-   const sessionCookieValue = cookieStore.get(apiSessionCookieName).value;
+   const sessionCookie = cookieStore.get(apiSessionCookieName);
+
+   if (!sessionCookie) {
+      return false;
+   }
+
+   const sessionCookieValue = sessionCookie.value;
    
    try {
       var fetchOptions = {
