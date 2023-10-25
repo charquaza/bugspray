@@ -28,6 +28,12 @@ exports.signUp = [
         .trim().notEmpty().withMessage('Role cannot be blank')
         .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
         .escape(),
+    body('privilege').isString().withMessage('Invalid value for Privilege').bail()
+        .trim().notEmpty().withMessage('Privilege cannot be blank').bail()
+        .custom((value) => {
+            const allowedValues = [ 'admin', 'user' ];
+            return allowedValues.includes(value); 
+        }).withMessage('Invalid value for Privilege'),
     body('username').isString().withMessage('Invalid value for Username').bail()
         .trim().notEmpty().withMessage('Username cannot be blank')
         .isLength({ max: 100 }).withMessage('Username cannot be longer than 100 characters')
@@ -78,6 +84,7 @@ exports.signUp = [
                 lastName: req.body.lastName,
                 dateJoined: Date.now(),
                 role: req.body.role,
+                privilege: req.body.privilege,
                 username: req.body.username,
                 password: hashedPassword
             });
@@ -205,6 +212,12 @@ exports.update = [
         .trim().notEmpty().withMessage('Role cannot be blank')
         .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
         .escape(),
+    body('privilege').isString().withMessage('Invalid value for Privilege').bail()
+        .trim().notEmpty().withMessage('Privilege cannot be blank').bail()
+        .custom((value) => {
+            const allowedValues = [ 'admin', 'user' ];
+            return allowedValues.includes(value); 
+        }).withMessage('Invalid value for Privilege'),
     body('username').isString().withMessage('Invalid value for Username').bail()
         .trim().notEmpty().withMessage('Username cannot be blank')
         .isLength({ max: 100 }).withMessage('Username cannot be longer than 100 characters')
@@ -245,6 +258,7 @@ exports.update = [
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 role: req.body.role,
+                privilege: req.body.privilege,
                 username: req.body.username,
                 password: hashedPassword
             };

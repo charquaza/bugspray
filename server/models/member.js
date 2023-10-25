@@ -7,6 +7,7 @@ const MemberSchema = new Schema({
     lastName: { type: String, required: true, maxLength: 100 },
     dateJoined: { type: Date, required: true },
     role: { type: String, required: true, maxLength: 100 },
+    privilege: { type: String, required: true, enum: [ 'admin', 'user' ] },
     username: { type: String, required: true, maxLength: 100 },
     password: { type: String, required: true, maxLength: 100 }
 });

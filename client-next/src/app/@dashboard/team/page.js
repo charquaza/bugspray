@@ -47,6 +47,7 @@ export default function TeamPage() {
                                     <li>Username: {member.username}</li>
                                     <li>Date Joined: {member.dateJoined}</li>
                                     <li>Role: {member.role}</li>
+                                    <li>Privilege: {member.privilege}</li>
                                 </ul>
                             </li>
                         );

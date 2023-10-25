@@ -9,6 +9,7 @@ export default function SignUpPage() {
         firstName: '',
         lastName: '',
         role: '',
+        privilege: 'user',
         username: '', 
         password: '',
         confirmPassword: '' 
@@ -90,48 +91,72 @@ export default function SignUpPage() {
             <form onSubmit={ handleFormSubmit }>
                 <label>
                     First Name:
-                    <input type='text' name='firstName' value={inputValues.firstName} 
-                        onChange={ handleInputChange }>
+                    <input 
+                        type='text' name='firstName' value={inputValues.firstName} 
+                        onChange={ handleInputChange }
+                    >
                     </input>
                 </label>
                 <br/>
 
                 <label>
                     Last Name: 
-                    <input type='text' name='lastName' value={inputValues.lastName}
-                        onChange={ handleInputChange }>
+                    <input 
+                        type='text' name='lastName' value={inputValues.lastName}
+                        onChange={ handleInputChange }
+                    >
                     </input>
                 </label>
                 <br/>
 
                 <label>
                     Role: 
-                    <input type='text' name='role' value={inputValues.role}
-                        onChange={ handleInputChange }>
+                    <input 
+                        type='text' name='role' value={inputValues.role}
+                        onChange={ handleInputChange }
+                    >
                     </input>
                 </label>
                 <br/>
 
                 <label>
+                    Privilege: 
+                    <select 
+                        name='privilege' value={inputValues.privilege} 
+                        onChange={ handleInputChange }
+                    >
+                        <option value='user'>User</option>
+                        <option value='admin'>Admin</option>
+                    </select>
+                </label>
+                <br/>
+
+                <label>
                     Username: 
-                    <input type='text' name='username' value={inputValues.username}
-                        onChange={ handleInputChange }>
+                    <input 
+                        type='text' name='username' value={inputValues.username}
+                        onChange={ handleInputChange }
+                    >
                     </input>
                 </label>
                 <br/>
 
                 <label>
                     Password: 
-                    <input type='text' name='password' value={inputValues.password}
-                        onChange={ handleInputChange }>
+                    <input 
+                        type='text' name='password' value={inputValues.password}
+                        onChange={ handleInputChange }
+                    >
                     </input>
                 </label>
                 <br/>
 
                 <label>
                     Confirm Password: 
-                    <input type='text' name='confirmPassword' value={inputValues.confirmPassword}
-                        onChange={ handleInputChange }>
+                    <input 
+                        type='text' name='confirmPassword' value={inputValues.confirmPassword}
+                        onChange={ handleInputChange }
+                    >
                     </input>
                 </label>
                 <br/>
