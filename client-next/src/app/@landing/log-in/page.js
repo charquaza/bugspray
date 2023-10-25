@@ -7,6 +7,7 @@ import { apiURL } from '../../../../config.js';
 export default function LogInPage() {
     const [inputValues, setInputValues] = useState({ username: '', password: '' });
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [formErrors, setFormErrors] = useState([]);
     
     const router = useRouter();
 
@@ -36,10 +37,11 @@ export default function LogInPage() {
                     router.push('/');
                     router.refresh();
                 } else {
-                    console.error('Login failed: ' + data.errors);
+                    setFormErrors(data.errors);
                 }
             } catch (err) {
                 console.error('Login failed: ' + err);
+                setFormErrors('Network error: please try again later');
             }
 
             setFormSubmitted(false);
@@ -66,6 +68,20 @@ export default function LogInPage() {
     return (
         <main>
             <h1>Log In</h1>
+
+            {
+                formErrors.length > 0 &&
+                    <div>
+                        <p>Log in unsuccessful: </p>
+                        <ul>
+                            {
+                                formErrors.map((errMsg) => {
+                                    return <li key={errMsg}>{errMsg}</li>;
+                                })
+                            }
+                        </ul>
+                    </div>
+            }
 
             <form onSubmit={ handleFormSubmit }>
                 <label>
