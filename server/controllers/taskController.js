@@ -8,6 +8,8 @@ exports.getAll = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {
@@ -29,6 +31,8 @@ exports.getById = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {
@@ -55,6 +59,8 @@ exports.create = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     body('title').isString().withMessage('Invalid value for Title').bail()
@@ -142,6 +148,8 @@ exports.update = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     body('title').isString().withMessage('Invalid value for Title').bail()
@@ -235,6 +243,8 @@ exports.delete = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {

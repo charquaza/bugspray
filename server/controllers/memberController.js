@@ -177,6 +177,8 @@ exports.getAll = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {
@@ -194,6 +196,8 @@ exports.getById = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {
@@ -220,6 +224,8 @@ exports.update = [
         if (req.user._id !== req.params.memberId) {
             return res.status(403).end();
         }
+
+        return next();
     },
     
     body('firstName').isString().withMessage('Invalid value for First Name').bail()
@@ -311,6 +317,8 @@ exports.delete = [
         if (req.user._id !== req.params.memberId) {
             return res.status(403).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {

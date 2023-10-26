@@ -8,6 +8,8 @@ exports.getAll = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {
@@ -26,6 +28,8 @@ exports.getById = [
         if (!req.user) {
             return res.status(404).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {
@@ -53,6 +57,8 @@ exports.create = [
         if (req.user.privilege !== 'admin') {
             return res.status(403).end();
         }
+
+        return next();
     },
 
     body('name').isString().withMessage('Invalid value for Name').bail()
@@ -130,6 +136,8 @@ exports.update = [
         if (req.user.privilege !== 'admin') {
             return res.status(403).end();
         }
+
+        return next();
     },
 
     body('name').isString().withMessage('Invalid value for Name').bail()
@@ -213,6 +221,8 @@ exports.delete = [
         if (req.user.privilege !== 'admin') {
             return res.status(403).end();
         }
+
+        return next();
     },
 
     async function (req, res, next) {
