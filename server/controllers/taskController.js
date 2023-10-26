@@ -4,6 +4,12 @@ const Member = require('../models/member');
 const { body, validationResult } = require('express-validator');
 
 exports.getAll = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let taskList = await Task.find({})
@@ -19,6 +25,12 @@ exports.getAll = [
 ];
 
 exports.getById = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let taskData = await Task.findById(req.params.taskId)
@@ -39,6 +51,12 @@ exports.getById = [
 ];
 
 exports.create = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     body('title').isString().withMessage('Invalid value for Title').bail()
         .trim().notEmpty().withMessage('Title cannot be blank')
         .isLength({ max: 100 }).withMessage('Title cannot be longer than 100 characters')
@@ -120,6 +138,12 @@ exports.create = [
 ];
 
 exports.update = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     body('title').isString().withMessage('Invalid value for Title').bail()
         .trim().notEmpty().withMessage('Title cannot be blank')
         .isLength({ max: 100 }).withMessage('Title cannot be longer than 100 characters')
@@ -207,6 +231,12 @@ exports.update = [
 ];
 
 exports.delete = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let deletedTaskData = await Task.findByIdAndDelete(req.params.taskId).exec();

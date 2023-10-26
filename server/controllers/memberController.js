@@ -173,6 +173,12 @@ exports.logOut = [
 ];
 
 exports.getAll = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let memberList = await Member.find({}, '-password').exec();
@@ -184,6 +190,12 @@ exports.getAll = [
 ];
 
 exports.getById = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let memberData = await Member.findById(req.params.memberId, '-password').exec();
@@ -200,6 +212,16 @@ exports.getById = [
 ];
 
 exports.update = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+
+        if (req.user._id !== req.params.memberId) {
+            return res.status(403).end();
+        }
+    },
+    
     body('firstName').isString().withMessage('Invalid value for First Name').bail()
         .trim().notEmpty().withMessage('First name cannot be blank')
         .isLength({ max: 100 }).withMessage('First name cannot be longer than 100 characters')
@@ -281,6 +303,16 @@ exports.update = [
 ];
 
 exports.delete = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+
+        if (req.user._id !== req.params.memberId) {
+            return res.status(403).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let deletedMemberData = await Member.findByIdAndDelete(req.params.memberId).exec();

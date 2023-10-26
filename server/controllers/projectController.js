@@ -4,6 +4,12 @@ const Task = require('../models/task');
 const { body, validationResult } = require('express-validator');
 
 exports.getAll = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let projectList = await Project.find({})
@@ -16,6 +22,12 @@ exports.getAll = [
 ];
 
 exports.getById = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             let projectData = await Project.findById(req.params.projectId)
@@ -33,6 +45,16 @@ exports.getById = [
 ];
 
 exports.create = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+
+        if (req.user.privilege !== 'admin') {
+            return res.status(403).end();
+        }
+    },
+
     body('name').isString().withMessage('Invalid value for Name').bail()
         .trim().notEmpty().withMessage('Name cannot be blank')
         .isLength({ max: 100 }).withMessage('Name cannot be longer than 100 characters')
@@ -100,6 +122,16 @@ exports.create = [
 ];
 
 exports.update = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+
+        if (req.user.privilege !== 'admin') {
+            return res.status(403).end();
+        }
+    },
+
     body('name').isString().withMessage('Invalid value for Name').bail()
         .trim().notEmpty().withMessage('Name cannot be blank')
         .isLength({ max: 100 }).withMessage('Name cannot be longer than 100 characters')
@@ -173,6 +205,16 @@ exports.update = [
 ];
 
 exports.delete = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).end();
+        }
+
+        if (req.user.privilege !== 'admin') {
+            return res.status(403).end();
+        }
+    },
+
     async function (req, res, next) {
         try {
             //delete project

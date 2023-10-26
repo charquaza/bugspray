@@ -30,7 +30,6 @@ export default function TeamPage() {
         getMemberList();
     }, []);
 
-
     return (
         <main>
             <h1>Team</h1>
