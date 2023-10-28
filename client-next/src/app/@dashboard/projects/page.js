@@ -19,9 +19,14 @@ export default function ProjectsPage() {
 
                 const res = await fetch(fetchURL, fetchOptions);
                 const data = await res.json();
-                const projectListData = data.data;
 
-                setProjectList(projectListData);
+                if (res.ok) {
+                    const projectListData = data.data;    
+                    setProjectList(projectListData);
+                } else {
+                    const errors = data.errors;
+                    console.log(errors);
+                }
             } catch (err) {
                 console.error(err);
             }

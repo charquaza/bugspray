@@ -19,9 +19,14 @@ export default function TeamPage() {
 
                 const res = await fetch(fetchURL, fetchOptions);
                 const data = await res.json();
-                const memberListData = data.data;
 
-                setMemberList(memberListData);
+                if (res.ok) {
+                    const memberListData = data.data;
+                    setMemberList(memberListData);
+                } else {
+                    const errors = data.errors;
+                    console.log(errors);
+                }
             } catch (err) {
                 console.error(err);
             }

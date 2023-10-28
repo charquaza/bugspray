@@ -19,9 +19,14 @@ export default function TasksPage() {
 
                 const res = await fetch(fetchURL, fetchOptions);
                 const data = await res.json();
-                const taskListData = data.data;
 
-                setTaskList(taskListData);
+                if (res.ok) {
+                    const taskListData = data.data;
+                    setTaskList(taskListData);
+                } else {
+                    const errors = data.errors;
+                    console.log(errors);
+                }
             } catch (err) {
                 console.error(err);
             }
