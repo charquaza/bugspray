@@ -41,7 +41,7 @@ export default function LogInPage() {
                 }
             } catch (err) {
                 console.error('Login failed: ' + err);
-                setFormErrors('Network error: please try again later');
+                setFormErrors([ 'Network error: please try again later' ]);
             }
 
             setFormSubmitted(false);

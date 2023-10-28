@@ -49,7 +49,7 @@ export default function SignUpPage() {
                 }
             } catch (err) {
                 console.error('Sign up failed: ' + err);
-                setFormErrors('Network error: please try again later');
+                setFormErrors([ 'Network error: please try again later' ]);
             }
 
             setFormSubmitted(false);
