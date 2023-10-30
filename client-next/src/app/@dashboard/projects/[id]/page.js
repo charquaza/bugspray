@@ -5,6 +5,11 @@ import { apiURL } from '../../../../../config.js';
 
 export default function ProjectDetailsPage({ params }) {
    const [project, setProject] = useState();
+   const [error, setError] = useState();
+
+   if (error) {
+      throw error;
+   }
 
    useEffect(() => {
       async function getProject() {
@@ -25,10 +30,10 @@ export default function ProjectDetailsPage({ params }) {
                setProject(projectData);
             } else {
                const errors = data.errors;
-               console.log(errors);
+               setError(errors);
             }
          } catch (err) {
-            console.error(err);
+            setError(error);
          }
       }
 
