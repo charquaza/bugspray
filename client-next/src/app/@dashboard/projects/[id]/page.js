@@ -30,10 +30,11 @@ export default function ProjectDetailsPage({ params }) {
                setProject(projectData);
             } else {
                const errors = data.errors;
-               setError(errors);
+               //construct new error using error message from server
+               setError(new Error(errors[0]));
             }
          } catch (err) {
-            setError(error);
+            setError(err);
          }
       }
 
