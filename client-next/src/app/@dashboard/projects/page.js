@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { apiURL } from '../../../../config.js';
 
 export default function ProjectsPage() {
@@ -46,7 +47,9 @@ export default function ProjectsPage() {
                         return (
                             <li key={project._id}>
                                 <ul>
-                                    <li>Name: {project.name}</li>
+                                    <li>Name:&nbsp; 
+                                        <Link href={'/projects/' + project._id}>{project.name}</Link>
+                                    </li>
                                     <li>Date Created: {project.dateCreated}</li>
                                     <li>Status: {project.status}</li>
                                     <li>Priority: {project.priority}</li>
