@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { apiURL } from '../../../../../config.js';
 
 export default function ProjectDetailsPage({ params }) {
@@ -11,8 +12,11 @@ export default function ProjectDetailsPage({ params }) {
    const [inputValues, setInputValues] = useState();
    const [formSubmitted, setFormSubmitted] = useState(false);
    const [formErrors, setFormErrors] = useState([]);
-   const [projectUpdated, setProjectUpdated] = useState(false);
+   const [updateProject, setUpdateProject] = useState(false);
+   const [deleteProject, setDeleteProject] = useState(false);
    const [error, setError] = useState();
+
+   const router = useRouter();
 
    if (error) {
       throw error;
@@ -21,7 +25,7 @@ export default function ProjectDetailsPage({ params }) {
    useEffect(function fetchProjectData() {
       //only run on initial render and 
       //after each successful update call to api
-      if (project && !projectUpdated) {
+      if (project && !updateProject) {
          return;
       }
 
@@ -41,7 +45,7 @@ export default function ProjectDetailsPage({ params }) {
             if (res.ok) {
                const projectData = data.data;
                setProject(projectData);
-               setProjectUpdated(false);
+               setUpdateProject(false);
             } else {
                const errors = data.errors;
                //construct new error using error message from server
@@ -58,7 +62,7 @@ export default function ProjectDetailsPage({ params }) {
    useEffect(function fetchAllMembers() {  
       //only run on initial render and 
       //after each successful update call to api
-      if (project && !projectUpdated) {
+      if (project && !updateProject) {
          return;
       }
       
@@ -84,7 +88,7 @@ export default function ProjectDetailsPage({ params }) {
 
                setMemberList(memberListData);
                setMemberMap(memberListMap);
-               setProjectUpdated(false);
+               setUpdateProject(false);
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));
@@ -128,7 +132,7 @@ export default function ProjectDetailsPage({ params }) {
             var data = await res.json();
 
             if (res.ok) {
-               setProjectUpdated(true);
+               setUpdateProject(true);
                setFormErrors([]); 
                setInUpdateMode(false);
             } else {
@@ -143,6 +147,39 @@ export default function ProjectDetailsPage({ params }) {
   
       sendFormData();
    }, [formSubmitted]);
+
+   useEffect(function requestProjectDelete() {
+      if (!deleteProject) {
+         return;
+      }
+
+      async function sendDeleteRequest() {
+         try {
+            const fetchOptions = {
+               method: 'DELETE',
+               mode: 'cors',
+               credentials: 'include',
+               cache: 'no-store'
+            };
+            const fetchURL = apiURL + '/projects/' + project._id;
+
+            const res = await fetch(fetchURL, fetchOptions);
+            const data = await res.json();
+
+            if (res.ok) {
+               router.push('/projects');
+            } else {
+               const errors = data.errors;
+               //construct new error using error message from server
+               setError(new Error(errors[0]));
+            }
+         } catch (err) {
+            setError(err);
+         }
+      }
+
+      sendDeleteRequest();
+   });
 
    function handleFormSubmit(e) {
       e.preventDefault();
@@ -240,6 +277,10 @@ export default function ProjectDetailsPage({ params }) {
 
          return { ...prevState, team: updatedTeam, selectedAddMemberId };
       });
+   }
+
+   function handleProjectDelete(e) {
+      setDeleteProject(true);
    }
 
    return (
@@ -394,7 +435,7 @@ export default function ProjectDetailsPage({ params }) {
 
                               <div>
                                  <button onClick={handleUpdateModeToggle}>Update</button>
-                                 <button>Delete</button>
+                                 <button onClick={handleProjectDelete}>Delete</button>
                               </div>
                         </>
                   }           
