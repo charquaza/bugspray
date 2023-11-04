@@ -11,6 +11,7 @@ export default function ProjectDetailsPage({ params }) {
    const [inputValues, setInputValues] = useState();
    const [formSubmitted, setFormSubmitted] = useState(false);
    const [formErrors, setFormErrors] = useState([]);
+   const [projectUpdated, setProjectUpdated] = useState(false);
    const [error, setError] = useState();
 
    if (error) {
@@ -18,6 +19,12 @@ export default function ProjectDetailsPage({ params }) {
    }
 
    useEffect(function fetchProjectData() {
+      //only run on initial render and 
+      //after each successful update call to api
+      if (project && !projectUpdated) {
+         return;
+      }
+
       async function getProject() {
          try {
             const fetchOptions = {
@@ -34,6 +41,7 @@ export default function ProjectDetailsPage({ params }) {
             if (res.ok) {
                const projectData = data.data;
                setProject(projectData);
+               setProjectUpdated(false);
             } else {
                const errors = data.errors;
                //construct new error using error message from server
@@ -45,12 +53,14 @@ export default function ProjectDetailsPage({ params }) {
       }
 
       getProject();
-   }, []);
+   });
 
-   useEffect(function fetchAllMembers() {
-      // if (!inUpdateMode) {
-      //    return;
-      // }
+   useEffect(function fetchAllMembers() {  
+      //only run on initial render and 
+      //after each successful update call to api
+      if (project && !projectUpdated) {
+         return;
+      }
       
       async function getMemberList() {
          try {
@@ -74,6 +84,7 @@ export default function ProjectDetailsPage({ params }) {
 
                setMemberList(memberListData);
                setMemberMap(memberListMap);
+               setProjectUpdated(false);
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));
@@ -84,8 +95,8 @@ export default function ProjectDetailsPage({ params }) {
       }
 
       getMemberList();
-  }, []);
-//when to update memberList?
+   });
+
    useEffect(function submitProjectUpdateForm() {
       if (!formSubmitted) {
          return;
@@ -94,12 +105,15 @@ export default function ProjectDetailsPage({ params }) {
       async function sendFormData() {
          try {
             var fetchBody = { ...inputValues };
-            fetchBody.lead = memberList[inputValues.lead]._id;
-            fetchBody.team = inputValues.team.map(member => member._id);
-            delete fetchBody.selectedAddMemberListIndex;
+            fetchBody.lead = fetchBody.lead._id;
+            //convert team map to array of id's
+            fetchBody.team = Array.from(fetchBody.team, ([memberId, member]) => {
+               return memberId;
+            });
+            delete fetchBody.selectedAddMemberId;
 
             var fetchOptions = {
-               method: 'POST',
+               method: 'PUT',
                headers: { 
                      'Content-Type': 'application/json',
                },
@@ -108,13 +122,14 @@ export default function ProjectDetailsPage({ params }) {
                credentials: 'include',
                cache: 'no-store'
             }
-            var fetchURL = apiURL + '/projects';
+            var fetchURL = apiURL + '/projects/' + project._id;
 
             var res = await fetch(fetchURL, fetchOptions);
             var data = await res.json();
 
             if (res.ok) {
-               setProject(data.data);
+               setProjectUpdated(true);
+               setFormErrors([]); 
                setInUpdateMode(false);
             } else {
                setFormErrors(data.errors);
@@ -138,35 +153,6 @@ export default function ProjectDetailsPage({ params }) {
       if (!inUpdateMode) {
          //Before rendering update form:
 
-         // //mark the current lead and team members in memberListCopy
-         // //then update memberList
-         // let memberListCopy = [ ...memberList ];
-         // const targetMembersMap = new Map(project.team.map(member => [ member._id, 'team' ]));
-         // targetMembersMap.set(project.lead._id, 'lead');
-
-         // let markCount = 0;
-
-         // for (let i = 0; i < memberListCopy.length; i++) {
-         //    if (markCount === targetMembersMap.size) {
-         //       break;
-         //    }
-
-         //    let currMember = memberListCopy[i];
-
-         //    if (targetMembersMap.has(currMember._id)) {
-         //       currMember.currAssignedRole = targetMembersMap.get(currMember._id);
-         //       markCount++;
-         //    }
-         // }
-
-         // setMemberList(memberListCopy);
-         // setInputValues({ 
-         //    ...project, 
-         //    lead: memberListCopy.findIndex(member => member._id === project.lead._id),
-         //    selectedAddMemberListIndex: memberListCopy.findIndex(member => !member.currAssignedRole)
-         // });
-         // setFormErrors([]);
-
          //initialize inputValues
          const teamList = project.team;
          const teamMap = new Map();
@@ -174,10 +160,9 @@ export default function ProjectDetailsPage({ params }) {
             teamMap.set(member._id, member);
          });
 
-         //keep track of which team member has been selected (not yet added)
+         //keep track of which team member is currently selected (not yet added)
          //since 'add' button cannot send info about which member is currently selected
          //selectedAddMember must be initialized to the first member that is not in team
-         //debugger;
          let selectedAddMemberId;
          for (const keyValPair of memberMap) {
             const memberId = keyValPair[0];
@@ -193,6 +178,7 @@ export default function ProjectDetailsPage({ params }) {
             team: teamMap,
             selectedAddMemberId
          });
+         //reset form errors
          setFormErrors([]);
       }
 
@@ -203,15 +189,6 @@ export default function ProjectDetailsPage({ params }) {
       var inputElem = e.target;
 
       if (inputElem.name === 'lead') {
-         // //remove 'currAssignedRole' property from removed lead in memberList
-         // //so that they show up as an option for lead or team
-         // let memberListCopy = [ ...memberList ];
-         // delete memberListCopy[inputValues.lead].currAssignedRole;
-
-         // memberListCopy[inputElem.value].currAssignedRole = 'lead';
-
-         // setMemberList(memberListCopy);
-
          setInputValues(prevState => {
             return { ...prevState, [inputElem.name]: memberMap.get(inputElem.value) };
          });   
@@ -223,18 +200,6 @@ export default function ProjectDetailsPage({ params }) {
    }
 
    function handleTeamMemberAdd(e) {
-      // let memberListCopy = [ ...memberList ];
-      // const memberToAdd = memberListCopy[prevState.selectedAddMemberListIndex];
-      // memberToAdd.currAssignedRole = 'team';
-
-      // setMemberList(memberListCopy);
-      // setInputValues(prevState => {
-      //    return { ...prevState, team: [ ...prevState.team, memberToAdd ] };
-      // });
-
-      //will adding the selectedMember cause an update to inputValues.selectedAddMemberId?
-      //if not, inputValues.selectedAddMemberId will contain the stale value of previously 
-      //added member, not the member that is currently selected      
       setInputValues(prevState => {
          const newMemberId = inputValues.selectedAddMemberId;
          const newMember = memberMap.get(newMemberId);
@@ -257,19 +222,6 @@ export default function ProjectDetailsPage({ params }) {
    }
 
    function handleTeamMemberRemove(e) {
-      // var indexToRemove = e.target.dataset.teamIndex;
-
-      // //remove 'currAssignedRole' property from removed team member in memberList
-      // //so that they show up as an option for lead or team
-      // let memberListCopy = [ ...memberList ];
-      // var removedMemberInList = memberListCopy.find(member => member._id === inputValues.team[indexToRemove]._id);
-      // delete removedMemberInList.currAssignedRole;
-
-      // setMemberList(memberListCopy);
-      // setInputValues(prevState => {
-      //    return { ...prevState, team: prevState.team.toSpliced(indexToRemove, 1) };
-      // });
-
       setInputValues(prevState => {
          const removedMemberId = e.target.dataset.teamMemberId;
          const updatedTeam = new Map(prevState.team);
