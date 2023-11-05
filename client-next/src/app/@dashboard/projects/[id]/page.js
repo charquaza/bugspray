@@ -10,10 +10,8 @@ export default function ProjectDetailsPage({ params }) {
    const [memberMap, setMemberMap] = useState();
    const [inUpdateMode, setInUpdateMode] = useState(false);
    const [inputValues, setInputValues] = useState();
-   const [formSubmitted, setFormSubmitted] = useState(false);
    const [formErrors, setFormErrors] = useState([]);
    const [updateProject, setUpdateProject] = useState(false);
-   const [deleteProject, setDeleteProject] = useState(false);
    const [error, setError] = useState();
 
    const router = useRouter();
@@ -101,92 +99,46 @@ export default function ProjectDetailsPage({ params }) {
       getMemberList();
    });
 
-   useEffect(function submitProjectUpdateForm() {
-      if (!formSubmitted) {
-         return;
-      }
-
-      async function sendFormData() {
-         try {
-            var fetchBody = { ...inputValues };
-            fetchBody.lead = fetchBody.lead._id;
-            //convert team map to array of id's
-            fetchBody.team = Array.from(fetchBody.team, ([memberId, member]) => {
-               return memberId;
-            });
-            delete fetchBody.selectedAddMemberId;
-
-            var fetchOptions = {
-               method: 'PUT',
-               headers: { 
-                     'Content-Type': 'application/json',
-               },
-               body: JSON.stringify(fetchBody),
-               mode: 'cors',
-               credentials: 'include',
-               cache: 'no-store'
-            }
-            var fetchURL = apiURL + '/projects/' + project._id;
-
-            var res = await fetch(fetchURL, fetchOptions);
-            var data = await res.json();
-
-            if (res.ok) {
-               setUpdateProject(true);
-               setFormErrors([]); 
-               setInUpdateMode(false);
-            } else {
-               setFormErrors(data.errors);
-            }
-         } catch (err) {
-            setError(err);
-         }
-
-         setFormSubmitted(false);
-      }
-  
-      sendFormData();
-   }, [formSubmitted]);
-
-   useEffect(function requestProjectDelete() {
-      if (!deleteProject) {
-         return;
-      }
-
-      async function sendDeleteRequest() {
-         try {
-            const fetchOptions = {
-               method: 'DELETE',
-               mode: 'cors',
-               credentials: 'include',
-               cache: 'no-store'
-            };
-            const fetchURL = apiURL + '/projects/' + project._id;
-
-            const res = await fetch(fetchURL, fetchOptions);
-            const data = await res.json();
-
-            if (res.ok) {
-               router.push('/projects');
-            } else {
-               const errors = data.errors;
-               //construct new error using error message from server
-               setError(new Error(errors[0]));
-            }
-         } catch (err) {
-            setError(err);
-         }
-      }
-
-      sendDeleteRequest();
-   });
-
-   function handleFormSubmit(e) {
+   async function handleFormSubmit(e) {
       e.preventDefault();
-      setFormSubmitted(true);
+
+      try {
+         var fetchBody = { ...inputValues };
+         fetchBody.lead = fetchBody.lead._id;
+         //convert team map to array of id's
+         fetchBody.team = Array.from(fetchBody.team, ([memberId, member]) => {
+            return memberId;
+         });
+         delete fetchBody.selectedAddMemberId;
+
+         var fetchOptions = {
+            method: 'PUT',
+            headers: { 
+                  'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(fetchBody),
+            mode: 'cors',
+            credentials: 'include',
+            cache: 'no-store'
+         }
+         var fetchURL = apiURL + '/projects/' + project._id;
+
+         var res = await fetch(fetchURL, fetchOptions);
+         var data = await res.json();
+
+         if (res.ok) {
+            setUpdateProject(true);
+            setFormErrors([]); 
+            setInUpdateMode(false);
+         } else {
+            setFormErrors(data.errors);
+         }
+      } catch (err) {
+         setError(err);
+      }
    }
 
-   function handleUpdateModeToggle() {
+   function handleUpdateModeToggle(e) {
       if (!inUpdateMode) {
          //Before rendering update form:
 
@@ -279,8 +231,29 @@ export default function ProjectDetailsPage({ params }) {
       });
    }
 
-   function handleProjectDelete(e) {
-      setDeleteProject(true);
+   async function handleProjectDelete(e) {
+      try {
+         const fetchOptions = {
+            method: 'DELETE',
+            mode: 'cors',
+            credentials: 'include',
+            cache: 'no-store'
+         };
+         const fetchURL = apiURL + '/projects/' + project._id;
+
+         const res = await fetch(fetchURL, fetchOptions);
+         const data = await res.json();
+
+         if (res.ok) {
+            router.push('/projects');
+         } else {
+            const errors = data.errors;
+            //construct new error using error message from server
+            setError(new Error(errors[0]));
+         }
+      } catch (err) {
+         setError(err);
+      }
    }
 
    return (
