@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { apiURL } from '../../../../config.js';
+import { apiURL } from '@/root/config.js';
 
 export default function ProjectsPage() {
     const [projectList, setProjectList] = useState([]);

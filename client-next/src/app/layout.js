@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { apiURL, apiSessionCookieName } from '../../config.js';
+import { apiURL, apiSessionCookieName } from '@/root/config.js';
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 

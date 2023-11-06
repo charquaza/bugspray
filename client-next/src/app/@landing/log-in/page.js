@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { apiURL } from '../../../../config.js';
+import { apiURL } from '@/root/config.js';
 
 export default function LogInPage() {
     const [inputValues, setInputValues] = useState({ username: '', password: '' });

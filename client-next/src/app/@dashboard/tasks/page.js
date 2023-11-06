@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { apiURL } from '../../../../config.js';
+import { apiURL } from '@/root/config.js';
 
 export default function TasksPage() {
     const [taskList, setTaskList] = useState([]);
