@@ -15,6 +15,7 @@ export default function ProjectDetailsPage({ params }) {
    const [inputValues, setInputValues] = useState();
    const [formErrors, setFormErrors] = useState([]);
    const [updateProject, setUpdateProject] = useState(false);
+   const [updateMemberList, setUpdateMemberList] = useState(false);
    const [error, setError] = useState();
 
    const router = useRouter();
@@ -58,12 +59,12 @@ export default function ProjectDetailsPage({ params }) {
       }
 
       getProject();
-   });
+   }, [project, updateProject, params.id]);
 
    useEffect(function fetchAllMembers() {  
       //only run on initial render and 
       //after each successful update call to api
-      if (project && !updateProject) {
+      if (memberList && !updateMemberList) {
          return;
       }
       
@@ -89,7 +90,7 @@ export default function ProjectDetailsPage({ params }) {
 
                setMemberList(memberListData);
                setMemberMap(memberListMap);
-               setUpdateProject(false);
+               setUpdateMemberList(false);
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));
@@ -100,7 +101,7 @@ export default function ProjectDetailsPage({ params }) {
       }
 
       getMemberList();
-   });
+   }, [memberList, updateMemberList]);
 
    async function handleFormSubmit(e) {
       e.preventDefault();
@@ -131,6 +132,7 @@ export default function ProjectDetailsPage({ params }) {
 
          if (res.ok) {
             setUpdateProject(true);
+            setUpdateMemberList(true);
             setFormErrors([]); 
             setInUpdateMode(false);
          } else {
@@ -152,9 +154,9 @@ export default function ProjectDetailsPage({ params }) {
             teamMap.set(member._id, member);
          });
 
-         //keep track of which team member is currently selected (not yet added)
+         //selectedAddMemberId keeps track of <select>.value (not yet added)
          //since 'add' button cannot send info about which member is currently selected
-         //selectedAddMember must be initialized to the first member that is not in team
+         //selectedAddMemberId must be initialized to the first member that is not in team
          let selectedAddMemberId;
          for (const keyValPair of memberMap) {
             const memberId = keyValPair[0];
@@ -302,10 +304,10 @@ export default function ProjectDetailsPage({ params }) {
                                           name='status' value={inputValues.status} 
                                           onChange={ handleInputChange }
                                     >
-                                          <option value='open'>Open</option>
-                                          <option value='inProgress'>In Progress</option>
-                                          <option value='complete'>Complete</option>
-                                          <option value='closed'>Closed</option>
+                                          <option value='Open'>Open</option>
+                                          <option value='In Progress'>In Progress</option>
+                                          <option value='Complete'>Complete</option>
+                                          <option value='Closed'>Closed</option>
                                     </select>
                                  </label>
                                  <br/>
@@ -316,9 +318,9 @@ export default function ProjectDetailsPage({ params }) {
                                           name='priority' value={inputValues.priority} 
                                           onChange={ handleInputChange }
                                     >
-                                          <option value='high'>High</option>
-                                          <option value='medium'>Medium</option>
-                                          <option value='low'>Low</option>
+                                          <option value='High'>High</option>
+                                          <option value='Medium'>Medium</option>
+                                          <option value='Low'>Low</option>
                                     </select>
                                  </label>
                                  <br/>
