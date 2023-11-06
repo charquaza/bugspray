@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
 export default function ProjectDetailsPage({ params }) {
-   const [user, setUser] = useState();
+   const user = useUserData();
+
    const [project, setProject] = useState();
    const [memberList, setMemberList] = useState(); 
    const [memberMap, setMemberMap] = useState();
@@ -20,35 +22,6 @@ export default function ProjectDetailsPage({ params }) {
    if (error) {
       throw error;
    }
-
-   useEffect(function fetchUserData() {
-      async function getUserData() {
-         try {
-            const fetchOptions = {
-               method: 'GET',
-               mode: 'cors',
-               credentials: 'include',
-               cache: 'no-store'
-            }
-            const fetchURL = apiURL + '/members/curr-user';
-      
-            const res = await fetch(fetchURL, fetchOptions);
-            const data = await res.json();
-            
-            if (res.ok) {
-               const userData = data.data;
-               setUser(userData);
-            } else {
-               const errors = data.errors;
-               setError(new Error(errors[0]));
-            }   
-         } catch (err) {
-            setError(err);
-         }
-      }
-
-      getUserData();
-   });
 
    useEffect(function fetchProjectData() {
       //only run on initial render and 
