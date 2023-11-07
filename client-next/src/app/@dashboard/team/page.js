@@ -123,105 +123,107 @@ export default function TeamPage() {
 
          {
             (user && user.privilege === 'admin') &&
-               showCreateForm 
-                  ?
-                     <>
-                        {
-                           formErrors.length > 0 &&
-                              <div>
-                                 <p>Member creation unsuccessful: </p>
-                                 <ul>
-                                       {
-                                          formErrors.map((errMsg) => {
-                                             return <li key={errMsg}>{errMsg}</li>;
-                                          })
-                                       }
-                                 </ul>
-                              </div>
-                        }
+               (
+                  showCreateForm 
+                     ?
+                        <>
+                           {
+                              formErrors.length > 0 &&
+                                 <div>
+                                    <p>Member creation unsuccessful: </p>
+                                    <ul>
+                                          {
+                                             formErrors.map((errMsg) => {
+                                                return <li key={errMsg}>{errMsg}</li>;
+                                             })
+                                          }
+                                    </ul>
+                                 </div>
+                           }
 
-                        <form onSubmit={ handleFormSubmit }>
-                           <label>
-                              First Name:
-                              <input 
-                                 type='text' name='firstName' value={inputValues.firstName} 
-                                 onChange={ handleInputChange }
-                              >
-                              </input>
-                           </label>
-                           <br/>
-
-                           <label>
-                              Last Name:
-                              <input 
-                                 type='text' name='lastName' value={inputValues.lastName} 
-                                 onChange={ handleInputChange }
-                              >
-                              </input>
-                           </label>
-                           <br/>
-
-                           <label>
-                              Role:
-                              <input 
-                                 type='text' name='role' value={inputValues.role} 
-                                 onChange={ handleInputChange }
-                              >
-                              </input>
-                           </label>
-                           <br/>
-
-                           <label>
-                              Privilege: 
-                              <select 
-                                    name='privilege' value={inputValues.privilege} 
+                           <form onSubmit={ handleFormSubmit }>
+                              <label>
+                                 First Name:
+                                 <input 
+                                    type='text' name='firstName' value={inputValues.firstName} 
                                     onChange={ handleInputChange }
-                              >
-                                 <option value='user'>User</option>
-                                 <option value='admin'>Admin</option>
-                              </select>
-                           </label>
-                           <br/>
+                                 >
+                                 </input>
+                              </label>
+                              <br/>
 
-                           <label>
-                              Username: 
-                              <input 
-                                 type='text' name='username' value={inputValues.username}
-                                 onChange={ handleInputChange }
-                              >
-                              </input>
-                           </label>
-                           <br/>
+                              <label>
+                                 Last Name:
+                                 <input 
+                                    type='text' name='lastName' value={inputValues.lastName} 
+                                    onChange={ handleInputChange }
+                                 >
+                                 </input>
+                              </label>
+                              <br/>
 
-                           <label>
-                              Password: 
-                              <input 
-                                 type='text' name='password' value={inputValues.password}
-                                 onChange={ handleInputChange }
-                              >
-                              </input>
-                           </label>
-                           <br/>
+                              <label>
+                                 Role:
+                                 <input 
+                                    type='text' name='role' value={inputValues.role} 
+                                    onChange={ handleInputChange }
+                                 >
+                                 </input>
+                              </label>
+                              <br/>
 
-                           <label>
-                              Confirm Password: 
-                              <input 
-                                 type='text' name='confirmPassword' value={inputValues.confirmPassword}
-                                 onChange={ handleInputChange }
-                              >
-                              </input>
-                           </label>
-                           <br/>
+                              <label>
+                                 Privilege: 
+                                 <select 
+                                       name='privilege' value={inputValues.privilege} 
+                                       onChange={ handleInputChange }
+                                 >
+                                    <option value='user'>User</option>
+                                    <option value='admin'>Admin</option>
+                                 </select>
+                              </label>
+                              <br/>
 
-                           <br/>
-                           <button type='submit'>Create</button>
-                           <button type='button' 
-                              onClick={handleCreateToggle}
-                           >Cancel</button>
-                        </form>
-                     </>
-                  :
-                     <button onClick={handleCreateToggle}>Create New Member</button>
+                              <label>
+                                 Username: 
+                                 <input 
+                                    type='text' name='username' value={inputValues.username}
+                                    onChange={ handleInputChange }
+                                 >
+                                 </input>
+                              </label>
+                              <br/>
+
+                              <label>
+                                 Password: 
+                                 <input 
+                                    type='text' name='password' value={inputValues.password}
+                                    onChange={ handleInputChange }
+                                 >
+                                 </input>
+                              </label>
+                              <br/>
+
+                              <label>
+                                 Confirm Password: 
+                                 <input 
+                                    type='text' name='confirmPassword' value={inputValues.confirmPassword}
+                                    onChange={ handleInputChange }
+                                 >
+                                 </input>
+                              </label>
+                              <br/>
+
+                              <br/>
+                              <button type='submit'>Create</button>
+                              <button type='button' 
+                                 onClick={handleCreateToggle}
+                              >Cancel</button>
+                           </form>
+                        </>
+                     :
+                        <button onClick={handleCreateToggle}>Create New Member</button>
+               )
          }
 
          {
@@ -233,7 +235,7 @@ export default function TeamPage() {
                            <li key={member._id}>
                               <ul>
                                  <li>
-                                    <Link href={'/members/' + member._id}>
+                                    <Link href={'/team/' + member._id}>
                                        {member.firstName} {member.lastName}
                                     </Link>
                                  </li>
