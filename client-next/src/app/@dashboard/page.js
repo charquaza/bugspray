@@ -1,54 +1,47 @@
 'use client'
 
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
 export default function Home() {
-    const [logoutRequested, setLogoutRequested] = useState(false);
+   const user = useUserData();
 
-    const router = useRouter();
+   const router = useRouter();
 
-    useEffect(() => {
-        if (!logoutRequested) {
-            return;
-        }
+   async function handleLogOut() {
+      try {
+         const fetchOptions = {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'include'
+         }
+         const fetchURL = apiURL + '/members/log-out';
+   
+         const res = await fetch(fetchURL, fetchOptions);
+   
+         if (res.ok) {
+            router.refresh();
+         } else {
+            const data = await res.json();
+            const errors = data.errors;
+            throw Error('Logout unsuccessful: ' + errors[0]);
+         }   
+      } catch (err) {
+         throw err;
+      }
+   }
 
-        async function logOut() {
-            try {
-                var fetchOptions = {
-                    method: 'POST',
-                    mode: 'cors',
-                    credentials: 'include'
-                }
-                var fetchURL = apiURL + '/members/log-out';
-        
-                var res = await fetch(fetchURL, fetchOptions);
-        
-                if (res.ok) {
-                    console.log('logout success');
-                    router.refresh();
-                } else {
-                    console.error('Logout unsuccessful: ' + err);
-                }    
-            } catch (err) {
-                console.error('Logout unsuccessful: ' + err);
-            }
-
-            setLogoutRequested(false);
-        }
-
-        logOut();
-    }, [logoutRequested]);
-
-    function handleLogOut() {
-        setLogoutRequested(true);
-    }
-
-    return (
-        <main>
-            <p>You are logged in. This is the dashboard.</p>
-            <button onClick={handleLogOut}>Log Out</button>
-        </main>
-    );
+   return (
+      <main>
+         {
+            user && 
+               <>
+                  <p>Welcome, { user.username }.</p>
+                  <p>This is the dashboard.</p>
+                  <button onClick={handleLogOut}>Log Out</button>
+               </>   
+         }
+      </main>
+   );
 }
