@@ -250,9 +250,9 @@ exports.update = [
         .trim().notEmpty().withMessage('Username cannot be blank')
         .isLength({ max: 100 }).withMessage('Username cannot be longer than 100 characters')
         .not().matches(/[<>&'"/]/).withMessage('Username cannot contain the following characters: <, >, &, \', ", /')
-        .bail().custom(async (value) => {
+        .bail().custom(async (value, { req }) => {
             try {
-                var member = await Member.findOne({ username: value }).exec();
+                var member = await Member.findOne({ username: value, _id: { $ne: req.params.memberId } }).exec();
             } catch (err) {
                 throw new Error('Error in checking uniqueness of username. Please try again later, or report the issue.');
             }
