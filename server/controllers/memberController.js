@@ -1,4 +1,6 @@
 const Member = require('../models/member');
+const Project = require('../models/project');
+const Task = require('../models/task');
 const { body, validationResult } = require('express-validator');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
@@ -322,7 +324,51 @@ exports.delete = [
     },
 
     async function (req, res, next) {
+        //if memberToDelete is lead or sole team member of any project
+        //or is the createdBy or sole assignee of any task
+        //prevent member delete until said roles are reassigned
         try {
+            const searchResults = await Promise.all([
+                Project.find({
+                    $or: [
+                        { lead: req.params.memberId },
+                        { team: 
+                            { 
+                                $elemMatch: { $eq: req.params.memberId }, 
+                                $size: 1 
+                            } 
+                        }
+                    ]
+                })
+                .exec(),
+
+                Task.find({
+                    $or: [
+                        { createdBy: req.params.memberId },
+                        { assignees: 
+                            { 
+                                $elemMatch: { $eq: req.params.memberId }, 
+                                $size: 1 
+                            } 
+                        }
+                    ]
+                })
+                .populate('project').exec()
+            ]);
+
+            if (searchResults[0].length > 0 || searchResults[1].length > 0) {
+                return res.status(400).json({ errors: 
+                    [ 
+                        'This member cannot be removed due to the following possibilities: ',
+                        'Member is the lead of a project(s)',
+                        'Member is the only team member of a project(s)',
+                        'Member is the creator of a task(s)',
+                        'Member is the only assignee of a task(s)',
+                        'Please reassign these roles before removing this member.'
+                    ] 
+                });
+            }
+
             let deletedMemberData = await Member.findByIdAndDelete(req.params.memberId).exec();
 
             if (deletedMemberData === null) {
