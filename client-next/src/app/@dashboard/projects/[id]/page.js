@@ -168,7 +168,10 @@ export default function ProjectDetailsPage({ params }) {
          }
 
          setInputValues({ 
-            ...project, 
+            name: project.name,
+            status: project.status,
+            priority: project.priority,
+            lead: project.lead,
             team: teamMap,
             selectedAddMemberId
          });
