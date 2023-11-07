@@ -1,4 +1,4 @@
-export default function LoadingProjectDetails() {
+export default function LoadingProjectList() {
     return (
         <main>
             <p>Loading...</p>
