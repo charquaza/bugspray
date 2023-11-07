@@ -314,7 +314,7 @@ exports.delete = [
             return res.status(404).end();
         }
 
-        if (req.user.privilege !== 'admin' && req.user._id !== req.params.memberId) {
+        if (req.user.privilege !== 'admin') {
             return res.status(403).end();
         }
 
