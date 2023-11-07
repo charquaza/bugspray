@@ -217,121 +217,123 @@ export default function ProjectsPage() {
 
          {
             (user && user.privilege === 'admin') &&
-               showCreateForm 
-                  ?
-                     <>
-                        {
-                           formErrors.length > 0 &&
-                              <div>
-                                 <p>Project creation unsuccessful: </p>
-                                 <ul>
-                                       {
-                                          formErrors.map((errMsg) => {
-                                             return <li key={errMsg}>{errMsg}</li>;
-                                          })
+               (
+                  showCreateForm 
+                     ?
+                        <>
+                           {
+                              formErrors.length > 0 &&
+                                 <div>
+                                    <p>Project creation unsuccessful: </p>
+                                    <ul>
+                                          {
+                                             formErrors.map((errMsg) => {
+                                                return <li key={errMsg}>{errMsg}</li>;
+                                             })
+                                          }
+                                    </ul>
+                                 </div>
+                           }
+
+                           <form onSubmit={ handleFormSubmit }>
+                              <label>
+                                 Name:
+                                 <input 
+                                    type='text' name='name' value={inputValues.name} 
+                                    onChange={ handleInputChange }
+                                 >
+                                 </input>
+                              </label>
+                              <br/>
+
+                              <label>
+                                 Status: 
+                                 <select 
+                                    name='status' value={inputValues.status} 
+                                    onChange={ handleInputChange }
+                                 >
+                                    <option value='Open'>Open</option>
+                                    <option value='In Progress'>In Progress</option>
+                                    <option value='Complete'>Complete</option>
+                                    <option value='Closed'>Closed</option>
+                                 </select>
+                              </label>
+                              <br/>
+
+                              <label>
+                                 Priority: 
+                                 <select 
+                                    name='priority' value={inputValues.priority} 
+                                    onChange={ handleInputChange }
+                                 >
+                                    <option value='High'>High</option>
+                                    <option value='Medium'>Medium</option>
+                                    <option value='Low'>Low</option>
+                                 </select>
+                              </label>
+                              <br/>
+
+                              <label>
+                                 Lead: 
+                                 <select 
+                                    name='lead' value={inputValues.lead} 
+                                    onChange={ handleInputChange }
+                                 >
+                                    { memberList && memberList.map((member, index) => {
+                                       return (
+                                          <option value={member._id} key={member._id}>
+                                             {`${member.firstName} ${member.lastName} (${member.username})`}
+                                          </option>
+                                       );
+                                    }) }
+                                 </select>
+                              </label>
+                              <br/>
+
+                              Team Members: 
+                              <ul>
+                                 { Array.from(inputValues.team, ([ memberId, member ]) => {
+                                    return (
+                                       <li key={memberId}>
+                                          {`${member.firstName} ${member.lastName} (${member.username})`}
+                                          <button type='button' data-team-member-id={memberId} onClick={handleTeamMemberRemove}>Remove</button>
+                                       </li>
+                                    );
+                                 }) }
+                              </ul>
+                              <label>
+                                 Add Members
+                                 <br/> 
+                                 <select 
+                                    name='selectedAddMemberId' value={inputValues.selectedAddMemberId} 
+                                    onChange={ handleInputChange }
+                                 >
+                                    { memberList && memberList.map((member, index) => {
+                                       if (inputValues.team.has(member._id)) {
+                                          return null;
                                        }
-                                 </ul>
-                              </div>
-                        }
 
-                        <form onSubmit={ handleFormSubmit }>
-                           <label>
-                              Name:
-                              <input 
-                                 type='text' name='name' value={inputValues.name} 
-                                 onChange={ handleInputChange }
-                              >
-                              </input>
-                           </label>
-                           <br/>
+                                       return (
+                                          <option value={member._id} key={member._id}>
+                                             {`${member.firstName} ${member.lastName} (${member.username})`}
+                                          </option>
+                                       );
+                                    }) }
+                                 </select>
+                                 <button type='button' onClick={handleTeamMemberAdd}>Add</button>
+                              </label>
+                              <br/>
 
-                           <label>
-                              Status: 
-                              <select 
-                                 name='status' value={inputValues.status} 
-                                 onChange={ handleInputChange }
-                              >
-                                 <option value='Open'>Open</option>
-                                 <option value='In Progress'>In Progress</option>
-                                 <option value='Complete'>Complete</option>
-                                 <option value='Closed'>Closed</option>
-                              </select>
-                           </label>
-                           <br/>
-
-                           <label>
-                              Priority: 
-                              <select 
-                                 name='priority' value={inputValues.priority} 
-                                 onChange={ handleInputChange }
-                              >
-                                 <option value='High'>High</option>
-                                 <option value='Medium'>Medium</option>
-                                 <option value='Low'>Low</option>
-                              </select>
-                           </label>
-                           <br/>
-
-                           <label>
-                              Lead: 
-                              <select 
-                                 name='lead' value={inputValues.lead} 
-                                 onChange={ handleInputChange }
-                              >
-                                 { memberList && memberList.map((member, index) => {
-                                    return (
-                                       <option value={member._id} key={member._id}>
-                                          {`${member.firstName} ${member.lastName} (${member.username})`}
-                                       </option>
-                                    );
-                                 }) }
-                              </select>
-                           </label>
-                           <br/>
-
-                           Team Members: 
-                           <ul>
-                              { Array.from(inputValues.team, ([ memberId, member ]) => {
-                                 return (
-                                    <li key={memberId}>
-                                       {`${member.firstName} ${member.lastName} (${member.username})`}
-                                       <button type='button' data-team-member-id={memberId} onClick={handleTeamMemberRemove}>Remove</button>
-                                    </li>
-                                 );
-                              }) }
-                           </ul>
-                           <label>
-                              Add Members
-                              <br/> 
-                              <select 
-                                 name='selectedAddMemberId' value={inputValues.selectedAddMemberId} 
-                                 onChange={ handleInputChange }
-                              >
-                                 { memberList && memberList.map((member, index) => {
-                                    if (inputValues.team.has(member._id)) {
-                                       return null;
-                                    }
-
-                                    return (
-                                       <option value={member._id} key={member._id}>
-                                          {`${member.firstName} ${member.lastName} (${member.username})`}
-                                       </option>
-                                    );
-                                 }) }
-                              </select>
-                              <button type='button' onClick={handleTeamMemberAdd}>Add</button>
-                           </label>
-                           <br/>
-
-                           <br/>
-                           <button type='submit'>Create</button>
-                           <button type='button' 
-                              onClick={handleCreateToggle}
-                           >Cancel</button>
-                        </form>
-                     </>
-                  :
-                     <button onClick={handleCreateToggle}>Create New Project</button>
+                              <br/>
+                              <button type='submit'>Create</button>
+                              <button type='button' 
+                                 onClick={handleCreateToggle}
+                              >Cancel</button>
+                           </form>
+                        </>
+                     :
+                        <button onClick={handleCreateToggle}>Create New Project</button>
+               )
          }
 
          {
