@@ -57,14 +57,14 @@ export default function ProjectsPage() {
       fetchProjectList();
    }, [projectList, updateProjectList]);
 
-   useEffect(function fetchAllMembers() {  
+   useEffect(function getAllMembers() {  
       //only run on initial render and 
       //after each successful create call to api
       if (memberList && !updateMemberList) {
          return;
       }
       
-      async function getMemberList() {
+      async function fetchMemberList() {
          try {
             const fetchOptions = {
                method: 'GET',
@@ -96,7 +96,7 @@ export default function ProjectsPage() {
          }
       }
 
-      getMemberList();
+      fetchMemberList();
    }, [memberList, updateMemberList]);
 
    function handleCreateToggle() {
