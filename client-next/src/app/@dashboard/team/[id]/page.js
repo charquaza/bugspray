@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
-export default function UserDetailsPage({ params }) {
+export default function MemberDetailsPage({ params }) {
    const user = useUserData();
 
    const [memberData, setMemberData] = useState();

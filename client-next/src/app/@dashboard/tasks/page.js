@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
 export default function TasksPage() {
@@ -392,7 +391,7 @@ export default function TasksPage() {
                         return (
                            <li key={task._id}>
                               <ul>
-                                 <li>Title: {task.title}</li>
+                                 <li>Title: <Link href={'/tasks/' + task._id}>{task.title}</Link></li>
                                  <li>Description: {task.description}</li>
                                  <li>Project: {task.project.name}</li>
                                  <li>Date Created: {task.dateCreated}</li>
