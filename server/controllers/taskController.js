@@ -70,9 +70,6 @@ exports.create = [
     body('description').isString().withMessage('Invalid value for Description').bail()
         .trim().notEmpty().withMessage('Description cannot be blank')
         .escape(),
-    body('createdBy').isString().withMessage('Invalid value for Creator').bail()
-        .trim().notEmpty().withMessage('Creator cannot be blank')
-        .escape(),
     body('status').isString().withMessage('Invalid value for Status').bail()
         .trim().notEmpty().withMessage('Status cannot be blank')
         .isLength({ max: 100 }).withMessage('Status cannot be longer than 100 characters')
@@ -103,15 +100,6 @@ exports.create = [
                 });
             }
 
-            //check if creator exists
-            let creator = await Member.findById(req.body.createdBy).exec();
-
-            if (creator === null) {
-                return res.status(400).json({ 
-                    errors: ['Cannot create task: Creator not found'] 
-                });
-            }
-
             //check if assignees exist
             let assigneesCount = await Member.countDocuments(
                 { _id: { $in: req.body.assignees } }
@@ -123,13 +111,13 @@ exports.create = [
                 });
             }
         
-            //project, creator, and all assignees exist, proceed with task creation
+            //project and all assignees exist, proceed with task creation
             let newTask = new Task({
                 title: req.body.title,
                 description: req.body.description,
                 project: req.params.projectId,
                 dateCreated: Date.now(),
-                createdBy: req.body.createdBy,
+                createdBy: req.user._id,
                 status: req.body.status,
                 priority: req.body.priority,
                 assignees: req.body.assignees
@@ -159,7 +147,12 @@ exports.update = [
     body('description').isString().withMessage('Invalid value for Description').bail()
         .trim().notEmpty().withMessage('Description cannot be blank')
         .escape(),
-    body('createdBy').isString().withMessage('Invalid value for Creator').bail()
+    body('createdBy')
+        .if((value, { req }) => {
+            //only admins can edit createdBy field; ignore field if user is not admin
+            return req.user.privilege === 'admin';
+        })
+        .isString().withMessage('Invalid value for Creator').bail()
         .trim().notEmpty().withMessage('Creator cannot be blank')
         .escape(),
     body('status').isString().withMessage('Invalid value for Status').bail()
@@ -192,13 +185,16 @@ exports.update = [
                 });
             }
 
-            //check if creator exists
-            let creator = await Member.findById(req.body.createdBy).exec();
+            //if user is admin
+            if (req.user.privilege === 'admin') {
+                //check if creator exists
+                let creator = await Member.findById(req.body.createdBy).exec();
 
-            if (creator === null) {
-                return res.status(400).json({ 
-                    errors: ['Cannot update task: Creator not found'] 
-                });
+                if (creator === null) {
+                    return res.status(400).json({ 
+                        errors: ['Cannot update task: Creator not found'] 
+                    });
+                }    
             }
 
             //check if assignees exist
@@ -217,11 +213,15 @@ exports.update = [
                 title: req.body.title,
                 description: req.body.description,
                 project: req.params.projectId,
-                createdBy: req.body.createdBy,
                 status: req.body.status,
                 priority: req.body.priority,
                 assignees: req.body.assignees
             };
+
+            //update createdBy field if user is admin
+            if (req.user.privilege === 'admin') {
+                fieldsToUpdate.createdBy = req.body.createdBy;
+            }
 
             let oldTaskData = await 
                 Task.findByIdAndUpdate(req.params.taskId, fieldsToUpdate)
