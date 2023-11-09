@@ -231,6 +231,11 @@ export default function TeamPage() {
                <ol>
                   {
                      memberList.map((member) => {
+                        //don't render self in list
+                        if (member._id === user._id) {
+                           return null;
+                        }
+
                         return (
                            <li key={member._id}>
                               <ul>
