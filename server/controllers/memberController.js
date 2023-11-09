@@ -223,7 +223,7 @@ exports.update = [
             return res.status(404).end();
         }
 
-        if (req.user.privilege !== 'admin' && req.user._id !== req.params.memberId) {
+        if (req.user.privilege !== 'admin' && req.user._id.toString() !== req.params.memberId) {
             return res.status(403).end();
         }
 
@@ -242,12 +242,6 @@ exports.update = [
         .trim().notEmpty().withMessage('Role cannot be blank')
         .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
         .escape(),
-    body('privilege').isString().withMessage('Invalid value for Privilege').bail()
-        .trim().notEmpty().withMessage('Privilege cannot be blank').bail()
-        .custom((value) => {
-            const allowedValues = [ 'admin', 'user' ];
-            return allowedValues.includes(value); 
-        }).withMessage('Invalid value for Privilege'),
     body('username').isString().withMessage('Invalid value for Username').bail()
         .trim().notEmpty().withMessage('Username cannot be blank')
         .isLength({ max: 100 }).withMessage('Username cannot be longer than 100 characters')
@@ -263,15 +257,50 @@ exports.update = [
                 throw new Error('Username is already in use. Please enter a different username');
             }
         }),
-    body('password').isString().withMessage('Invalid value for Password').bail()
-        .trim().notEmpty().withMessage('Password cannot be blank')
-        .isLength({ min: 8 }).withMessage('Password cannot be shorter than 8 characters')
-        .isLength({ max: 15 }).withMessage('Password cannot be longer than 15 characters')
+    body('newPassword')
+        .if((value) => {
+            //skip validation if newPassword field was omitted
+            return value !== undefined;
+        })
+        .isString().withMessage('Invalid value for New Password').bail()
+        .trim().notEmpty().withMessage('New Password cannot be blank')
+        .isLength({ min: 8 }).withMessage('New Password cannot be shorter than 8 characters')
+        .isLength({ max: 15 }).withMessage('New Password cannot be longer than 15 characters')
         .isStrongPassword({ minLength: 0, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 0 })
-        .withMessage('Password must contain at least 1 lowercase letter, 1 uppercase letter, and 1 number')
-        .not().matches(/[<>&'"/]/).withMessage('Password cannot contain the following characters: <, >, &, \', ", /'),
-    body('confirmPassword').custom((value, { req }) => value === req.body.password)
-        .withMessage('Passwords do not match'),
+        .withMessage('New Password must contain at least 1 lowercase letter, 1 uppercase letter, and 1 number')
+        .not().matches(/[<>&'"/]/).withMessage('New Password cannot contain the following characters: <, >, &, \', ", /'),
+    body('confirmNewPassword')
+        .if((value, { req }) => {
+            //skip validation if newPassword field was omitted
+            return req.body.newPassword !== undefined;
+        })
+        .custom((value, { req }) => value === req.body.newPassword)
+        .withMessage('New Passwords do not match'),
+
+    //fields to validate if curr user is update target
+    body('currPassword')
+        .if((value, { req }) => {
+            //ignore field if curr user is not update target
+            return req.user._id.toString() === req.params.memberId;
+        })
+        .custom(
+            (value, { req }) => {
+                const passwordsMatch = bcrypt.compareSync(value, req.user.password);
+                return passwordsMatch;
+            }).withMessage('Incorrect password'),
+    
+    //fields to validate if curr user is NOT update target
+    body('privilege')
+        .if((value, { req }) => {
+            //ignore field if curr user is update target
+            return req.user._id.toString() !== req.params.memberId;
+        })
+        .isString().withMessage('Invalid value for Privilege').bail()
+        .trim().notEmpty().withMessage('Privilege cannot be blank').bail()
+        .custom((value) => {
+            const allowedValues = [ 'admin', 'user' ];
+            return allowedValues.includes(value); 
+        }).withMessage('Invalid value for Privilege'),
 
     async function (req, res, next) {
         var validationErrors = validationResult(req);
@@ -282,16 +311,23 @@ exports.update = [
         } 
 
         try {
-            let hashedPassword = await bcrypt.hash(req.body.password, 10);
-
             let fieldsToUpdate = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 role: req.body.role,
-                privilege: req.body.privilege,
-                username: req.body.username,
-                password: hashedPassword
+                username: req.body.username
             };
+
+            //update password if new password has been provided
+            if (req.body.newPassword) {
+                let hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+                fieldsToUpdate.password = hashedPassword;
+            }
+
+            //allow update to privilege field only if currUser !=== targetMember
+            if (req.user._id.toString() !== req.params.memberId) {
+                fieldsToUpdate.privilege = req.body.privilege;
+            }
 
             let oldMemberData = await 
                 Member.findByIdAndUpdate(req.params.memberId, fieldsToUpdate)
