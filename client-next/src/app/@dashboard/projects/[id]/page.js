@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
@@ -393,10 +394,13 @@ export default function ProjectDetailsPage({ params }) {
                                  <li>Date Created: {project.dateCreated}</li>
                                  <li>Status: {project.status}</li>
                                  <li>Priority: {project.priority}</li>
-                                 <li>Lead: {
-                                       project.lead.firstName + ' ' +
-                                       project.lead.lastName
-                                    }
+                                 <li>Lead:&nbsp;
+                                    <Link href={'/team/' + project.lead._id}>
+                                       {
+                                          project.lead.firstName + ' ' +
+                                          project.lead.lastName
+                                       }
+                                    </Link>
                                  </li>
                                  <li>
                                     Team Members: 
@@ -405,7 +409,9 @@ export default function ProjectDetailsPage({ params }) {
                                           project.team.map((member) => {
                                              return (
                                                 <li key={member._id}>
-                                                   {member.firstName + ' ' + member.lastName}
+                                                   <Link href={'/team/' + member._id}>
+                                                      {member.firstName + ' ' + member.lastName}
+                                                   </Link>
                                                 </li>
                                              );
                                           })

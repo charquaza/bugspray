@@ -350,10 +350,13 @@ export default function ProjectsPage() {
                                  <li>Date Created: {project.dateCreated}</li>
                                  <li>Status: {project.status}</li>
                                  <li>Priority: {project.priority}</li>
-                                 <li>Lead: {
-                                       project.lead.firstName + ' ' +
-                                       project.lead.lastName
-                                    }
+                                 <li>Lead:&nbsp;
+                                    <Link href={'/team/' + project.lead._id}>
+                                       {
+                                          project.lead.firstName + ' ' +
+                                          project.lead.lastName
+                                       }
+                                    </Link>
                                  </li>
                                  <li>
                                     Team Members: 
@@ -362,7 +365,9 @@ export default function ProjectsPage() {
                                           project.team.map((member) => {
                                              return (
                                                 <li key={member._id}>
-                                                   {member.firstName + ' ' + member.lastName}
+                                                   <Link href={'/team/' + member._id}>
+                                                      {member.firstName + ' ' + member.lastName}
+                                                   </Link>
                                                 </li>
                                              );
                                           })

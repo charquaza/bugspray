@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
@@ -459,12 +460,19 @@ export default function TaskDetailsPage({ params }) {
                               <ul>
                                  <li>Title: {task.title}</li>
                                  <li>Description: {task.description}</li>
-                                 <li>Project: {task.project.name}</li>
+                                 <li>Project:&nbsp;
+                                    <Link href={'/projects/' + task.project._id}>
+                                       {task.project.name}
+                                    </Link>
+                                 </li>
                                  <li>Date Created: {task.dateCreated}</li>
-                                 <li>Created By: {
-                                    task.createdBy.firstName + ' ' + 
-                                    task.createdBy.lastName
-                                    }
+                                 <li>Created By:&nbsp;
+                                    <Link href={'/team/' + task.createdBy._id}>
+                                       {
+                                          task.createdBy.firstName + ' ' + 
+                                          task.createdBy.lastName
+                                       }
+                                    </Link>
                                  </li>
                                  <li>Status: {task.status}</li>
                                  <li>Priority: {task.priority}</li>
@@ -475,7 +483,9 @@ export default function TaskDetailsPage({ params }) {
                                           task.assignees.map((member) => {
                                              return (
                                                 <li key={member._id}>
-                                                   {member.firstName + ' ' + member.lastName}
+                                                   <Link href={'/team/' + member._id}>
+                                                      {member.firstName + ' ' + member.lastName}
+                                                   </Link>                                                
                                                 </li>
                                              );
                                           })

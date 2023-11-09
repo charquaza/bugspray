@@ -393,12 +393,19 @@ export default function TasksPage() {
                               <ul>
                                  <li>Title: <Link href={'/tasks/' + task._id}>{task.title}</Link></li>
                                  <li>Description: {task.description}</li>
-                                 <li>Project: {task.project.name}</li>
+                                 <li>Project:&nbsp;
+                                    <Link href={'/projects/' + task.project._id}>
+                                       {task.project.name}
+                                    </Link>
+                                 </li>
                                  <li>Date Created: {task.dateCreated}</li>
-                                 <li>Created By: {
-                                    task.createdBy.firstName + ' ' + 
-                                    task.createdBy.lastName
-                                    }
+                                 <li>Created By:&nbsp;
+                                    <Link href={'/team/' + task.createdBy._id}>
+                                       {
+                                          task.createdBy.firstName + ' ' + 
+                                          task.createdBy.lastName
+                                       }
+                                    </Link>
                                  </li>
                                  <li>Status: {task.status}</li>
                                  <li>Priority: {task.priority}</li>
@@ -409,7 +416,9 @@ export default function TasksPage() {
                                           task.assignees.map((member) => {
                                              return (
                                                 <li key={member._id}>
-                                                   {member.firstName + ' ' + member.lastName}
+                                                   <Link href={'/team/' + member._id}>
+                                                      {member.firstName + ' ' + member.lastName}
+                                                   </Link>                                                
                                                 </li>
                                              );
                                           })
