@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
+import TaskList from '@/app/_components/taskList';
 
 export default function ProjectDetailsPage({ params }) {
    const user = useUserData();
@@ -427,6 +428,8 @@ export default function ProjectDetailsPage({ params }) {
                                        <button onClick={handleProjectDelete}>Delete</button>
                                     </div>
                               }
+
+                              <TaskList projectId={project._id} />
                            </>
                   }           
                </>
