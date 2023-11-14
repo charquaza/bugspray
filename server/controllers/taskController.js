@@ -70,6 +70,9 @@ exports.create = [
     body('description').isString().withMessage('Invalid value for Description').bail()
         .trim().notEmpty().withMessage('Description cannot be blank')
         .escape(),
+    body('project').isString().withMessage('Invalid value for Project').bail()
+        .trim().notEmpty().withMessage('Project cannot be blank')
+        .escape(),
     body('status').isString().withMessage('Invalid value for Status').bail()
         .trim().notEmpty().withMessage('Status cannot be blank')
         .isLength({ max: 100 }).withMessage('Status cannot be longer than 100 characters')
@@ -92,7 +95,7 @@ exports.create = [
 
         try {
             //check if project exists
-            let project = await Project.findById(req.params.projectId).exec();
+            let project = await Project.findById(req.body.project).exec();
 
             if (project === null) {
                 return res.status(400).json({ 
@@ -115,7 +118,7 @@ exports.create = [
             let newTask = new Task({
                 title: req.body.title,
                 description: req.body.description,
-                project: req.params.projectId,
+                project: req.body.project,
                 dateCreated: Date.now(),
                 createdBy: req.user._id,
                 status: req.body.status,
@@ -147,6 +150,9 @@ exports.update = [
     body('description').isString().withMessage('Invalid value for Description').bail()
         .trim().notEmpty().withMessage('Description cannot be blank')
         .escape(),
+    body('project').isString().withMessage('Invalid value for Project').bail()
+        .trim().notEmpty().withMessage('Project cannot be blank')
+        .escape(),
     body('createdBy')
         .if((value, { req }) => {
             //only admins can edit createdBy field; ignore field if user is not admin
@@ -177,7 +183,7 @@ exports.update = [
 
         try {
             //check if project exists
-            let project = await Project.findById(req.params.projectId).exec();
+            let project = await Project.findById(req.body.project).exec();
 
             if (project === null) {
                 return res.status(400).json({ 
@@ -212,7 +218,7 @@ exports.update = [
             let fieldsToUpdate = {
                 title: req.body.title,
                 description: req.body.description,
-                project: req.params.projectId,
+                project: req.body.project,
                 status: req.body.status,
                 priority: req.body.priority,
                 assignees: req.body.assignees
