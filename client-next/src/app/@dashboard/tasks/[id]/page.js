@@ -43,7 +43,7 @@ export default function TaskDetailsPage({ params }) {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/projects/dummy-project-id/tasks/' + params.id;
+            const fetchURL = apiURL + '/tasks/' + params.id;
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
@@ -152,7 +152,6 @@ export default function TaskDetailsPage({ params }) {
          fetchBody.assignees = Array.from(fetchBody.assignees, ([memberId, member]) => {
             return memberId;
          });
-         delete fetchBody.project;  //api gets projectId from request URL
          delete fetchBody.selectedAddMemberId;
 
          var fetchOptions = {
@@ -165,7 +164,7 @@ export default function TaskDetailsPage({ params }) {
             credentials: 'include',
             cache: 'no-store'
          }
-         var fetchURL = apiURL + '/projects/' + inputValues.project + '/tasks/' + task._id;
+         var fetchURL = apiURL + '/tasks/' + task._id;
 
          var res = await fetch(fetchURL, fetchOptions);
          var data = await res.json();
@@ -287,7 +286,7 @@ export default function TaskDetailsPage({ params }) {
             credentials: 'include',
             cache: 'no-store'
          };
-         const fetchURL = apiURL + '/projects/' + task.project._id + '/tasks/' + task._id;
+         const fetchURL = apiURL + '/tasks/' + task._id;
 
          const res = await fetch(fetchURL, fetchOptions);
          const data = await res.json();

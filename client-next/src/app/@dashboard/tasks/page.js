@@ -36,7 +36,7 @@ export default function TasksPage() {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/projects/dummy-project-id/tasks';
+            const fetchURL = apiURL + '/tasks';
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
@@ -145,7 +145,6 @@ export default function TasksPage() {
          fetchBody.assignees = Array.from(fetchBody.assignees, ([memberId, member]) => {
             return memberId;
          });
-         delete fetchBody.project;  //api gets projectId from request URL
          delete fetchBody.selectedAddMemberId;
 
          var fetchOptions = {
@@ -158,7 +157,7 @@ export default function TasksPage() {
             credentials: 'include',
             cache: 'no-store'
          }
-         var fetchURL = apiURL + '/projects/' + inputValues.project + '/tasks';
+         var fetchURL = apiURL + '/tasks';
 
          var res = await fetch(fetchURL, fetchOptions);
          var data = await res.json();
