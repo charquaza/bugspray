@@ -13,8 +13,12 @@ exports.getAll = [
     },
 
     async function (req, res, next) {
+        const searchFilter = req.user.privilege === 'admin' 
+            ? {}
+            : { $or: [ { lead: req.user._id }, { team: req.user._id } ] };
+        
         try {
-            let projectList = await Project.find({})
+            let projectList = await Project.find(searchFilter)
                 .populate('lead', '-password').populate('team', '-password').exec();
             res.json({ data: projectList });
         } catch (err) {
