@@ -187,8 +187,8 @@ export default function TasksPage() {
             title: '',
             description: '',
             project: projectList[0]._id,
-            status: 'open',
-            priority: 'high',
+            status: 'Open',
+            priority: 'High',
             assignees: new Map(),
             selectedAddMemberId: memberList[0]._id
          });
