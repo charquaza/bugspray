@@ -8,13 +8,11 @@ export default function TaskList({ projectId }) {
    const [taskList, setTaskList] = useState();
    const [memberList, setMemberList] = useState(); 
    const [memberMap, setMemberMap] = useState();
-   const [projectList, setProjectList] = useState(); 
    const [showCreateForm, setShowCreateForm] = useState(false);
    const [inputValues, setInputValues] = useState();
    const [formErrors, setFormErrors] = useState([]);
    const [updateTaskList, setUpdateTaskList] = useState(false);
    const [updateMemberList, setUpdateMemberList] = useState(false);
-   const [updateProjectList, setUpdateProjectList] = useState(false);
    const [error, setError] = useState();
 
    if (error) {
@@ -101,48 +99,12 @@ export default function TaskList({ projectId }) {
       fetchMemberList();
    }, [memberList, updateMemberList]);
 
-   useEffect(function getAllProjects() {  
-      //only run on initial render and 
-      //after each successful create call to api
-      if (projectList && !updateProjectList) {
-         return;
-      }
-      
-      async function fetchProjectList() {
-         try {
-            const fetchOptions = {
-               method: 'GET',
-               mode:'cors',
-               credentials: 'include',
-               cache: 'no-store'
-            };
-            const fetchURL = apiURL + '/projects';
-
-            const res = await fetch(fetchURL, fetchOptions);
-            const data = await res.json();
-
-            if (res.ok) {
-               const projectListData = data.data;
-
-               setProjectList(projectListData);
-               setUpdateProjectList(false);
-            } else {
-               const errors = data.errors;
-               setError(new Error(errors[0]));
-            }
-         } catch (err) {
-            setError(err);
-         }
-      }
-
-      fetchProjectList();
-   }, [projectList, updateProjectList]);
-
    async function handleFormSubmit(e) {
       e.preventDefault();
 
       try {
          var fetchBody = { ...inputValues };
+         fetchBody.project = projectId;
          //convert assignees map to array of id's
          fetchBody.assignees = Array.from(fetchBody.assignees, ([memberId, member]) => {
             return memberId;
@@ -167,7 +129,6 @@ export default function TaskList({ projectId }) {
          if (res.ok) {
             setUpdateTaskList(true);
             setUpdateMemberList(true);
-            setUpdateProjectList(true);
             setFormErrors([]); 
             setShowCreateForm(false);
          } else {
@@ -188,7 +149,6 @@ export default function TaskList({ projectId }) {
          setInputValues({ 
             title: '',
             description: '',
-            project: projectList[0]._id,
             status: 'Open',
             priority: 'High',
             assignees: new Map(),
@@ -292,23 +252,6 @@ export default function TaskList({ projectId }) {
                               onChange={ handleInputChange }
                            >
                            </input>
-                        </label>
-                        <br/>
-
-                        <label>
-                           Project: 
-                           <select 
-                              name='project' value={inputValues.project} 
-                              onChange={ handleInputChange }
-                           >
-                              { projectList && projectList.map((project) => {
-                                 return (
-                                    <option value={project._id} key={project._id}>
-                                       {project.name}
-                                    </option>
-                                 );
-                              }) }
-                           </select>
                         </label>
                         <br/>
 
