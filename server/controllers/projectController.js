@@ -52,6 +52,14 @@ exports.getById = [
 
             if (projectData === null) {
                 res.status(404).json({ errors: ['Project not found'] });
+            } else if (
+                //don't send project data if 
+                //currUser is not admin, lead, or team member of project
+                req.user.privilege !== 'admin' &&
+                req.user._id.toString() !== projectData.lead._id.toString() &&
+                !projectData.team.some(member => req.user._id.toString() === member._id.toString())
+            ) {
+                res.status(404).json({ errors: ['Project not found'] });
             } else {
                 res.json({ data: projectData });
             }
