@@ -175,9 +175,9 @@ exports.create = [
 
       try {
          //check if project exists
-         let project = await Project.findById(req.body.project).exec();
+         let projectData = await Project.findById(req.body.project).exec();
 
-         if (project === null) {
+         if (projectData === null) {
             return res.status(400).json({ 
                errors: ['Cannot create task: project not found'] 
             });
@@ -277,9 +277,9 @@ exports.update = [
 
       try {
          //check if project exists
-         let project = await Project.findById(req.body.project).exec();
+         let projectData = await Project.findById(req.body.project).exec();
 
-         if (project === null) {
+         if (projectData === null) {
             return res.status(400).json({ 
                errors: ['Cannot update task: project not found'] 
             });
