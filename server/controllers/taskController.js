@@ -1,7 +1,7 @@
 const Task = require('../models/task');
 const Project = require('../models/project');
 const Member = require('../models/member');
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 
 exports.getAll = [
     async function checkPermissions(req, res, next) {
@@ -35,7 +35,16 @@ exports.getById = [
         return next();
     },
 
+    param('taskId').isString().withMessage('Invalid value for taskId').bail()
+        .trim().notEmpty().withMessage('taskId cannot be blank'),
+
     async function (req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+
         try {
             let taskData = await Task.findById(req.params.taskId)
                 .populate({ path: 'project', populate: { path: 'lead team', select: '-password' } })
@@ -173,6 +182,10 @@ exports.update = [
         .isArray({ min: 1 }).withMessage('Assignees cannot be empty')
         .escape(),
 
+    param('taskId').isString().withMessage('Invalid value for taskId').bail()
+        .trim().notEmpty().withMessage('taskId cannot be blank'),
+
+
     async function (req, res, next) {
         var validationErrors = validationResult(req);
 
@@ -253,7 +266,16 @@ exports.delete = [
         return next();
     },
 
+    param('taskId').isString().withMessage('Invalid value for taskId').bail()
+        .trim().notEmpty().withMessage('taskId cannot be blank'),
+
     async function (req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+
         try {
             let deletedTaskData = await Task.findByIdAndDelete(req.params.taskId).exec();
 

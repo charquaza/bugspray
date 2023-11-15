@@ -1,7 +1,7 @@
 const Member = require('../models/member');
 const Project = require('../models/project');
 const Task = require('../models/task');
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 
@@ -202,7 +202,16 @@ exports.getById = [
         return next();
     },
 
+    param('memberId').isString().withMessage('Invalid value for memberId').bail()
+        .trim().notEmpty().withMessage('memberId cannot be blank'),
+
     async function (req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+
         try {
             let memberData = await Member.findById(req.params.memberId, '-password').exec();
 
@@ -218,7 +227,16 @@ exports.getById = [
 ];
 
 exports.update = [
+    param('memberId').isString().withMessage('Invalid value for memberId').bail()
+        .trim().notEmpty().withMessage('memberId cannot be blank'),
+
     async function checkPermissions(req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+
         if (!req.user) {
             return res.status(404).end();
         }
@@ -359,7 +377,16 @@ exports.delete = [
         return next();
     },
 
+    param('memberId').isString().withMessage('Invalid value for memberId').bail()
+        .trim().notEmpty().withMessage('memberId cannot be blank'),
+
     async function (req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+
         //if memberToDelete is lead or sole team member of any project
         //or is the createdBy or sole assignee of any task
         //prevent member delete until said roles are reassigned

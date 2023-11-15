@@ -1,7 +1,7 @@
 const Project = require('../models/project');
 const Member = require('../models/member');
 const Task = require('../models/task');
-const { body, validationResult } = require('express-validator');
+const { body, param, validationResult } = require('express-validator');
 
 exports.getAll = [
     async function checkPermissions(req, res, next) {
@@ -36,7 +36,16 @@ exports.getById = [
         return next();
     },
 
+    param('projectId').isString().withMessage('Invalid value for projectId').bail()
+        .trim().notEmpty().withMessage('projectId cannot be blank'),
+
     async function (req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+
         try {
             let projectData = await Project.findById(req.params.projectId)
                 .populate('lead', '-password').populate('team', '-password').exec();
@@ -163,6 +172,9 @@ exports.update = [
         .isArray({ min: 1 }).withMessage('Team cannot be empty')
         .escape(),
 
+    param('projectId').isString().withMessage('Invalid value for projectId').bail()
+        .trim().notEmpty().withMessage('projectId cannot be blank'),
+
     async function (req, res, next) {
         var validationErrors = validationResult(req);
 
@@ -229,7 +241,16 @@ exports.delete = [
         return next();
     },
 
+    param('projectId').isString().withMessage('Invalid value for projectId').bail()
+        .trim().notEmpty().withMessage('projectId cannot be blank'),
+
     async function (req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+
         try {
             //delete project
             let deletedProjectData = await Project.findByIdAndDelete(req.params.projectId).exec();
