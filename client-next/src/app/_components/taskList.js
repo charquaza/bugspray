@@ -36,7 +36,9 @@ export default function TaskList({ projectId }) {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/tasks';
+
+            const queryParams = new URLSearchParams({ projectId });
+            const fetchURL = apiURL + '/tasks?' + queryParams;
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
@@ -187,8 +189,8 @@ export default function TaskList({ projectId }) {
             title: '',
             description: '',
             project: projectList[0]._id,
-            status: 'open',
-            priority: 'high',
+            status: 'Open',
+            priority: 'High',
             assignees: new Map(),
             selectedAddMemberId: memberList[0]._id
          });
