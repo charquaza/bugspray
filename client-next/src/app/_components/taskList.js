@@ -84,17 +84,9 @@ export default function TaskList({ projectId }) {
                projectData.team.forEach(member => {
                   memberListMap.set(member._id, member);
                });
-               //add lead to map if lead is not in team
-               if (!memberListMap.has(projectData.lead._id)) {
-                  memberListMap.set(projectData.lead._id, projectData.lead);
-               }
+               memberListMap.set(projectData.lead._id, projectData.lead);
 
                const memberListData = Array.from(memberListMap, ([key, value]) => value);
-
-               // const memberListMap = new Map();
-               // memberListData.forEach(member => {
-               //    memberListMap.set(member._id, member);
-               // });
 
                setMemberList(memberListData);
                setMemberMap(memberListMap);
