@@ -367,7 +367,9 @@ export default function TasksPage() {
                                  );
                               }) }
                            </select>
-                           <button type='button' onClick={handleAddAssignee}>Add</button>
+                           <button type='button' onClick={handleAddAssignee}
+                              disabled={inputValues.assignees.size >= memberMap.size}
+                           >Add</button>
                         </label>
                         <br/>
 

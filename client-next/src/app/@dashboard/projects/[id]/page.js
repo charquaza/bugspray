@@ -377,7 +377,9 @@ export default function ProjectDetailsPage({ params }) {
                                              );
                                           }) }
                                     </select>
-                                    <button type='button' onClick={handleTeamMemberAdd}>Add</button>
+                                    <button type='button' onClick={handleTeamMemberAdd}
+                                       disabled={inputValues.team.size >= memberMap.size}
+                                    >Add</button>
                                  </label>
                                  <br/>
    
