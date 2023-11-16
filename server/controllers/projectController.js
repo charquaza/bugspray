@@ -98,7 +98,13 @@ exports.create = [
         .trim().notEmpty().withMessage('Lead cannot be blank')
         .escape(),
     body('team').isArray().withMessage('Invalid value for Team').bail()
-        .isArray({ min: 1 }).withMessage('Team cannot be empty')
+        .isArray({ min: 1 }).withMessage('Team cannot be empty').bail()
+        .custom((value, { req }) => {
+            const leadIsInTeam = value.some(member => {
+                return member === req.body.lead;                
+            });
+            return !leadIsInTeam;
+        }).withMessage('Lead member cannot be assigned as a team member')
         .escape(),
 
     async function (req, res, next) {
@@ -178,6 +184,12 @@ exports.update = [
         .escape(),
     body('team').isArray().withMessage('Invalid value for Team').bail()
         .isArray({ min: 1 }).withMessage('Team cannot be empty')
+        .custom((value, { req }) => {
+            const leadIsInTeam = value.some(member => {
+                return member === req.body.lead;                
+            });
+            return !leadIsInTeam;
+        }).withMessage('Lead member cannot be assigned as a team member')
         .escape(),
 
     param('projectId').isString().withMessage('Invalid value for projectId').bail()
