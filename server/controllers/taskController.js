@@ -193,6 +193,15 @@ exports.create = [
             return res.status(403).json({ errors: ['Not allowed'] });
          }  
 
+         //make sure all assignees are lead or team member of parent project
+         let assigneesValid = req.body.assignees.every(assignee => {
+            return assignee === projectData.lead._id.toString() ||
+               projectData.team.some(member => assignee === member._id.toString());
+         });
+         if (!assigneesValid) {
+            return res.status(400).json({ errors: ['All assignees must be involved in parent project'] });
+         }
+
          //check if assignees exist
          let assigneesCount = await Member.countDocuments(
             { _id: { $in: req.body.assignees } }
@@ -294,6 +303,15 @@ exports.update = [
          ) {
             return res.status(403).json({ errors: ['Not allowed'] });
          }  
+
+         //make sure all assignees are lead or team member of parent project
+         let assigneesValid = req.body.assignees.every(assignee => {
+            return assignee === projectData.lead._id.toString() ||
+               projectData.team.some(member => assignee === member._id.toString());
+         });
+         if (!assigneesValid) {
+            return res.status(400).json({ errors: ['All assignees must be involved in parent project'] });
+         }
 
          //if user is admin
          if (req.user.privilege === 'admin') {
