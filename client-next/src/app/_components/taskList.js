@@ -72,17 +72,29 @@ export default function TaskList({ projectId }) {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/members';
+            const fetchURL = apiURL + '/projects/' + projectId;
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
 
             if (res.ok) {
-               const memberListData = data.data;
+               const projectData = data.data;
+               
                const memberListMap = new Map();
-               memberListData.forEach(member => {
+               projectData.team.forEach(member => {
                   memberListMap.set(member._id, member);
                });
+               //add lead to map if lead is not in team
+               if (!memberListMap.has(projectData.lead._id)) {
+                  memberListMap.set(projectData.lead._id, projectData.lead);
+               }
+
+               const memberListData = Array.from(memberListMap, ([key, value]) => value);
+
+               // const memberListMap = new Map();
+               // memberListData.forEach(member => {
+               //    memberListMap.set(member._id, member);
+               // });
 
                setMemberList(memberListData);
                setMemberMap(memberListMap);
@@ -97,7 +109,7 @@ export default function TaskList({ projectId }) {
       }
 
       fetchMemberList();
-   }, [memberList, updateMemberList]);
+   }, [memberList, updateMemberList, projectId]);
 
    async function handleFormSubmit(e) {
       e.preventDefault();
