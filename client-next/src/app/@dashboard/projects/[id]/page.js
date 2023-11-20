@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
-import TaskList from '@/app/_components/taskList';
+import TaskList from '@/app/_components/TaskList';
 
 export default function ProjectDetailsPage({ params }) {
    const user = useUserData();

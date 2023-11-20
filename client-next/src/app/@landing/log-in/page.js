@@ -3,107 +3,114 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiURL } from '@/root/config.js';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Logo from '@/app/_components/Logo';
+import styles from '@/app/_styles/logInPage.module.css';
 
 export default function LogInPage() {
-    const [inputValues, setInputValues] = useState({ username: '', password: '' });
-    const [formSubmitted, setFormSubmitted] = useState(false);
-    const [formErrors, setFormErrors] = useState([]);
-    
-    const router = useRouter();
+   const [inputValues, setInputValues] = useState({ username: '', password: '' });
+   const [formSubmitted, setFormSubmitted] = useState(false);
+   const [formErrors, setFormErrors] = useState([]);
+   
+   const router = useRouter();
 
-    useEffect(() => {
-        if (!formSubmitted) {
-            return;
-        }
+   useEffect(() => {
+      if (!formSubmitted) {
+         return;
+      }
 
-        async function sendFormData() {
-            try {
-                var fetchOptions = {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(inputValues),
-                    mode: 'cors',
-                    credentials: 'include',
-                    cache: 'no-store'
-                }
-                var fetchURL = apiURL + '/members/log-in';
-        
-                var res = await fetch(fetchURL, fetchOptions);
-                var data = await res.json();
-        
-                if (res.ok) {
-                    router.push('/');
-                    router.refresh();
-                } else {
-                    setFormErrors(data.errors);
-                }
-            } catch (err) {
-                console.error('Login failed: ' + err);
-                setFormErrors([ 'Network error: please try again later' ]);
+      async function sendFormData() {
+         try {
+            var fetchOptions = {
+               method: 'POST',
+               headers: { 
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify(inputValues),
+               mode: 'cors',
+               credentials: 'include',
+               cache: 'no-store'
             }
+            var fetchURL = apiURL + '/members/log-in';
+      
+            var res = await fetch(fetchURL, fetchOptions);
+            var data = await res.json();
+      
+            if (res.ok) {
+               router.push('/');
+               router.refresh();
+            } else {
+               setFormErrors(data.errors);
+            }
+         } catch (err) {
+            console.error('Login failed: ' + err);
+            setFormErrors([ 'Network error: please try again later' ]);
+         }
 
-            setFormSubmitted(false);
-        }
-    
-        sendFormData();
-    }, [formSubmitted]);
+         setFormSubmitted(false);
+      }
+   
+      sendFormData();
+   }, [formSubmitted]);
 
-    function handleFormSubmit(e) {
-        e.preventDefault();
+   function handleFormSubmit(e) {
+      e.preventDefault();
 
-        // sendFormData();
+      // sendFormData();
 
-        setFormSubmitted(true);
-    }
+      setFormSubmitted(true);
+   }
 
-    function handleInputChange(e) {  
-        var inputElem = e.target;
-        setInputValues(prevState => {
-            return { ...prevState, [inputElem.name]: inputElem.value };
-        });      
-    }
+   function handleInputChange(e) {  
+      var inputElem = e.target;
+      setInputValues(prevState => {
+         return { ...prevState, [inputElem.name]: inputElem.value };
+      });     
+   }
 
-    return (
-        <main>
+   return (
+      <div className={styles['login-container']}>
+         <header>
+            <Logo />
+         </header>
+   
+         <main>
             <h1>Log In</h1>
-
+   
             {
-                formErrors.length > 0 &&
-                    <div>
-                        <p>Log in unsuccessful: </p>
-                        <ul>
-                            {
-                                formErrors.map((errMsg) => {
-                                    return <li key={errMsg}>{errMsg}</li>;
-                                })
-                            }
-                        </ul>
-                    </div>
+               formErrors.length > 0 &&
+                  <div>
+                     <p>Log in unsuccessful: </p>
+                     <ul>
+                        {
+                           formErrors.map((errMsg) => {
+                              return <li key={errMsg}>{errMsg}</li>;
+                           })
+                        }
+                     </ul>
+                  </div>
             }
-
+   
             <form onSubmit={ handleFormSubmit }>
-                <label>
-                    Username:
-                    <input type='text' name='username' value={inputValues.username} 
-                        onChange={ handleInputChange }>
-                    </input>
-                </label>
+               <TextField 
+                  type='text' id='username' name='username'
+                  required label='Username' variant='outlined' 
+                  margin='normal' value={inputValues.username}
+                  onChange={ handleInputChange }
+               />
 
-                <br/>
-
-                <label>
-                    Password: 
-                    <input type='text' name='password' value={inputValues.password}
-                        onChange={ handleInputChange }>
-                    </input>
-                </label>
-
-                <br/>
-
-                <button type='submit'>Log In</button>
+               <TextField 
+                  type='password' id='password' name='password'
+                  required label='Password' variant='outlined' 
+                  margin='normal' value={inputValues.password}
+                  onChange={ handleInputChange }
+               />
+   
+               <Button type='submit' variant='contained' size='large'>Log In</Button>
             </form>
-        </main>
-    );
+         </main>
+   
+      </div>   
+   );
 }

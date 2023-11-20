@@ -1,0 +1,9 @@
+.logo-container {
+   display: inline-block;
+}
+ 
+.logo {
+   width: 40px;
+   height: auto;
+   padding: 4px;
+}

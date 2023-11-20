@@ -3,166 +3,162 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiURL } from '@/root/config.js';
+import { 
+   Button, TextField, FormControl, InputLabel, Select, MenuItem 
+} from '@mui/material';
+import Logo from '@/app/_components/Logo';
+import styles from '@/app/_styles/signUpPage.module.css';
 
 export default function SignUpPage() {
-    const [inputValues, setInputValues] = useState({ 
-        firstName: '',
-        lastName: '',
-        role: '',
-        privilege: 'user',
-        username: '', 
-        password: '',
-        confirmPassword: '' 
-    });
-    const [formSubmitted, setFormSubmitted] = useState(false);
-    const [formErrors, setFormErrors] = useState([]);
-    
-    const router = useRouter();
+   const [inputValues, setInputValues] = useState({ 
+      firstName: '',
+      lastName: '',
+      role: '',
+      privilege: 'user',
+      username: '', 
+      password: '',
+      confirmPassword: '' 
+   });
+   const [formSubmitted, setFormSubmitted] = useState(false);
+   const [formErrors, setFormErrors] = useState([]);
+   
+   const router = useRouter();
 
-    useEffect(() => {
-        if (!formSubmitted) {
-            return;
-        }
+   useEffect(() => {
+      if (!formSubmitted) {
+         return;
+      }
 
-        async function sendFormData() {
-            try {
-                var fetchOptions = {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(inputValues),
-                    mode: 'cors',
-                    credentials: 'include',
-                    cache: 'no-store'
-                }
-                var fetchURL = apiURL + '/members/sign-up';
-        
-                var res = await fetch(fetchURL, fetchOptions);
-                var data = await res.json();
-        
-                if (res.ok) {
-                    router.push('/');
-                    router.refresh();
-                } else {
-                    setFormErrors(data.errors);
-                }
-            } catch (err) {
-                console.error('Sign up failed: ' + err);
-                setFormErrors([ 'Network error: please try again later' ]);
+      async function sendFormData() {
+         try {
+            var fetchOptions = {
+               method: 'POST',
+               headers: { 
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify(inputValues),
+               mode: 'cors',
+               credentials: 'include',
+               cache: 'no-store'
             }
+            var fetchURL = apiURL + '/members/sign-up';
+      
+            var res = await fetch(fetchURL, fetchOptions);
+            var data = await res.json();
+      
+            if (res.ok) {
+               router.push('/');
+               router.refresh();
+            } else {
+               setFormErrors(data.errors);
+            }
+         } catch (err) {
+            console.error('Sign up failed: ' + err);
+            setFormErrors([ 'Network error: please try again later' ]);
+         }
 
-            setFormSubmitted(false);
-        }
-    
-        sendFormData();
-    }, [formSubmitted]);
+         setFormSubmitted(false);
+      }
+   
+      sendFormData();
+   }, [formSubmitted]);
 
-    function handleFormSubmit(e) {
-        e.preventDefault();
-        setFormSubmitted(true);
-    }
+   function handleFormSubmit(e) {
+      e.preventDefault();
+      setFormSubmitted(true);
+   }
 
-    function handleInputChange(e) {  
-        var inputElem = e.target;
-        setInputValues(prevState => {
-            return { ...prevState, [inputElem.name]: inputElem.value };
-        });      
-    }
+   function handleInputChange(e) {  
+      var inputElem = e.target;
+      setInputValues(prevState => {
+         return { ...prevState, [inputElem.name]: inputElem.value };
+      });     
+   }
 
-    return (
-        <main>
+   return (
+      <div className={styles['signup-container']}>
+         <header>
+            <Logo />
+         </header>
+
+         <main>
             <h1>Sign Up</h1>
-
+   
             {
-                formErrors.length > 0 &&
-                    <div>
-                        <p>Sign up unsuccessful: </p>
-                        <ul>
-                            {
-                                formErrors.map((errMsg) => {
-                                    return <li key={errMsg}>{errMsg}</li>;
-                                })
-                            }
-                        </ul>
-                    </div>
+               formErrors.length > 0 &&
+                  <div>
+                     <p>Sign up unsuccessful: </p>
+                     <ul>
+                        {
+                           formErrors.map((errMsg) => {
+                              return <li key={errMsg}>{errMsg}</li>;
+                           })
+                        }
+                     </ul>
+                  </div>
             }
-
+   
             <form onSubmit={ handleFormSubmit }>
-                <label>
-                    First Name:
-                    <input 
-                        type='text' name='firstName' value={inputValues.firstName} 
-                        onChange={ handleInputChange }
-                    >
-                    </input>
-                </label>
-                <br/>
+               <div className={styles['name-inputs-container']}>
+                  <TextField 
+                        type='text' id='firstName' name='firstName'
+                        required label='First Name' variant='outlined' 
+                        margin='normal' value={inputValues.firstName}
+                        onChange={handleInputChange}
+                  />
+                  <TextField 
+                        type='text' id='lastName' name='lastName'
+                        required label='Last Name' variant='outlined' 
+                        margin='normal' value={inputValues.lastName}
+                        onChange={handleInputChange}
+                  />
+               </div>  
+                
+               <TextField 
+                  type='text' id='role' name='role'
+                  required label='Role' variant='outlined' 
+                  margin='normal' value={inputValues.role}
+                  onChange={handleInputChange}
+               />
 
-                <label>
-                    Last Name: 
-                    <input 
-                        type='text' name='lastName' value={inputValues.lastName}
-                        onChange={ handleInputChange }
-                    >
-                    </input>
-                </label>
-                <br/>
+               <FormControl fullWidth margin='normal'>
+                  <InputLabel id='privilege'>Privilege</InputLabel>
+                  <Select
+                     labelId='privilege'
+                     value={inputValues.privilege}
+                     label='Privilege'
+                     name='privilege'
+                     onChange={handleInputChange}
+                  >
+                     <MenuItem value='user'>User</MenuItem>
+                     <MenuItem value='admin'>Admin</MenuItem>
+                  </Select>
+               </FormControl>
 
-                <label>
-                    Role: 
-                    <input 
-                        type='text' name='role' value={inputValues.role}
-                        onChange={ handleInputChange }
-                    >
-                    </input>
-                </label>
-                <br/>
+               <TextField 
+                  type='text' id='username' name='username'
+                  required label='Username' variant='outlined' 
+                  margin='normal' value={inputValues.username}
+                  onChange={handleInputChange}
+               />
 
-                <label>
-                    Privilege: 
-                    <select 
-                        name='privilege' value={inputValues.privilege} 
-                        onChange={ handleInputChange }
-                    >
-                        <option value='user'>User</option>
-                        <option value='admin'>Admin</option>
-                    </select>
-                </label>
-                <br/>
+               <TextField 
+                  type='password' id='password' name='password'
+                  required label='Password' variant='outlined' 
+                  margin='normal' value={inputValues.password}
+                  onChange={handleInputChange}
+               />
 
-                <label>
-                    Username: 
-                    <input 
-                        type='text' name='username' value={inputValues.username}
-                        onChange={ handleInputChange }
-                    >
-                    </input>
-                </label>
-                <br/>
-
-                <label>
-                    Password: 
-                    <input 
-                        type='text' name='password' value={inputValues.password}
-                        onChange={ handleInputChange }
-                    >
-                    </input>
-                </label>
-                <br/>
-
-                <label>
-                    Confirm Password: 
-                    <input 
-                        type='text' name='confirmPassword' value={inputValues.confirmPassword}
-                        onChange={ handleInputChange }
-                    >
-                    </input>
-                </label>
-                <br/>
-
-                <button type='submit'>Sign Up</button>
+               <TextField 
+                  type='password' id='confirmPassword' name='confirmPassword'
+                  required label='Confirm Password' variant='outlined' 
+                  margin='normal' value={inputValues.confirmPassword}
+                  onChange={handleInputChange}
+               />
+      
+               <Button type='submit' variant='contained' size='large'>Sign Up</Button>
             </form>
-        </main>
-    );
+         </main>
+      </div>   
+   );
 }
