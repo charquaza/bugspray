@@ -211,6 +211,7 @@ export default function TaskDetailsPage({ params }) {
             project: task.project._id,
             status: task.status,
             priority: task.priority,
+            sprint: task.sprint,
             assignees: assigneesMap,
             selectedAddMemberId
          };
@@ -414,6 +415,16 @@ export default function TaskDetailsPage({ params }) {
                                     </label>
                                     <br/>
 
+                                    <label>
+                                       Sprint:
+                                       <input 
+                                          type='number' name='sprint' value={inputValues.sprint} 
+                                          onChange={ handleInputChange }
+                                       >
+                                       </input>
+                                    </label>
+                                    <br/>
+
                                     Assignees: 
                                     <ul>
                                        { Array.from(inputValues.assignees, ([ memberId, member ]) => {
@@ -477,6 +488,7 @@ export default function TaskDetailsPage({ params }) {
                                  </li>
                                  <li>Status: {task.status}</li>
                                  <li>Priority: {task.priority}</li>
+                                 <li>Sprint: {task.sprint || 'N/A'}</li>
                                  <li>
                                     Assignees: 
                                     <ul>

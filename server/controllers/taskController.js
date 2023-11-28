@@ -161,6 +161,10 @@ exports.create = [
       .trim().notEmpty().withMessage('Priority cannot be blank')
       .isLength({ max: 100 }).withMessage('Priority cannot be longer than 100 characters')
       .escape(),
+   body('sprint').isString().withMessage('Invalid value for Sprint').bail()
+      .trim().escape()
+      .if(body('sprint').notEmpty())
+      .isNumeric().withMessage('Sprint must be a number'),
    body('assignees').isArray().withMessage('Invalid value for Assignees').bail()
       .isArray({ min: 1 }).withMessage('Assignees cannot be empty')
       .escape(),
@@ -222,6 +226,7 @@ exports.create = [
             createdBy: req.user._id,
             status: req.body.status,
             priority: req.body.priority,
+            sprint: req.body.sprint,
             assignees: req.body.assignees
          });
 
@@ -268,6 +273,10 @@ exports.update = [
       .trim().notEmpty().withMessage('Priority cannot be blank')
       .isLength({ max: 100 }).withMessage('Priority cannot be longer than 100 characters')
       .escape(),
+   body('sprint').isString().withMessage('Invalid value for Sprint').bail()
+      .trim().escape()
+      .if(body('sprint').notEmpty())
+      .isNumeric().withMessage('Sprint must be a number'),
    body('assignees').isArray().withMessage('Invalid value for Assignees').bail()
       .isArray({ min: 1 }).withMessage('Assignees cannot be empty')
       .escape(),
@@ -343,6 +352,7 @@ exports.update = [
             project: req.body.project,
             status: req.body.status,
             priority: req.body.priority,
+            sprint: req.body.sprint,
             assignees: req.body.assignees
          };
 

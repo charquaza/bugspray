@@ -155,6 +155,7 @@ export default function TaskList({ projectId }) {
             description: '',
             status: 'Open',
             priority: 'High',
+            sprint: '',
             assignees: new Map(),
             selectedAddMemberId: memberList[0]._id
          });
@@ -286,6 +287,16 @@ export default function TaskList({ projectId }) {
                         </label>
                         <br/>
 
+                        <label>
+                           Sprint:
+                           <input 
+                              type='number' name='sprint' value={inputValues.sprint} 
+                              onChange={ handleInputChange }
+                           >
+                           </input>
+                        </label>
+                        <br/>
+
                         Assignees: 
                         <ul>
                            { Array.from(inputValues.assignees, ([ memberId, member ]) => {
@@ -359,6 +370,7 @@ export default function TaskList({ projectId }) {
                                  </li>
                                  <li>Status: {task.status}</li>
                                  <li>Priority: {task.priority}</li>
+                                 <li>Sprint: {task.sprint || 'N/A'}</li>
                                  <li>
                                     Assignees: 
                                     <ul>
