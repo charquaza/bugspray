@@ -108,8 +108,8 @@ export default function ProjectsPage() {
          //'add' button cannot send info about which member is currently selected
          setInputValues({ 
             name: '',
-            status: 'open',
-            priority: 'high',
+            status: 'Open',
+            priority: 'High',
             lead: memberList[0]._id,
             team: new Map(),
             selectedAddMemberId: memberList[0]._id
