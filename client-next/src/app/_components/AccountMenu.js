@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
-function AccountMenu(props) {
+export default function AccountMenu(props) {
      const [anchorEl, setAnchorEl] = useState(null);
      const open = Boolean(anchorEl);
 
@@ -95,5 +95,3 @@ function AccountMenu(props) {
           </>
      );
 }
-
-export default AccountMenu;

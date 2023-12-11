@@ -4,7 +4,7 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
-function SearchBar() {
+export default function SearchBar() {
    const Search = styled('div')(({ theme }) => ({
       display: 'none',
       [theme.breakpoints.up(565)]: {
@@ -64,5 +64,3 @@ function SearchBar() {
       </Search>
    );
 }
-
-export default SearchBar;

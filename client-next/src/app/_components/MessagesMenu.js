@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
-function MessagesMenu() {
+export default function MessagesMenu() {
    const [anchorEl, setAnchorEl] = useState(null);
    const open = Boolean(anchorEl);
 
@@ -88,5 +88,3 @@ function MessagesMenu() {
       </>
    );
 }
-
-export default MessagesMenu;

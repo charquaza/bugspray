@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
-function NotificationsMenu() {
+export default function NotificationsMenu() {
    const [anchorEl, setAnchorEl] = useState(null);
    const open = Boolean(anchorEl);
 
@@ -85,5 +85,3 @@ function NotificationsMenu() {
       </>
    );
 }
-
-export default NotificationsMenu;
