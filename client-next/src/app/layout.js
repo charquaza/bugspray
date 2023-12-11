@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
-import Link from 'next/link';
 import { Source_Sans_3 } from 'next/font/google';
 import { apiURL, apiSessionCookieName } from '@/root/config.js';
+import DashboardContainer from '@/app/_components/DashboardContainer';
 import ThemeRegistry from '@/app/_styles/ThemeRegistry';
 import '@/app/_styles/globals.css';
 
@@ -57,22 +57,9 @@ export default async function RootLayout({ dashboard, landing, children }) {
                { 
                   isLoggedIn 
                      ?
-                        <>
-                           <nav>
-                              <ul>
-                                 <li><Link href='/'>Home</Link></li>
-                                 <li><Link href='/projects'>Projects</Link></li>
-                                 <li><Link href='/tasks'>Tasks</Link></li>
-                                 <li><Link href='/team'>Team</Link></li>
-                                 <li><Link href='/inbox'>Inbox</Link></li>
-                                 <li><Link href='/notifications'>Notifications</Link></li>
-                                 <li><Link href='/account'>Account</Link></li>
-                              </ul>
-                           </nav> 
-                           {dashboard}
-                        </>
+                        <DashboardContainer content={dashboard} />
                      :
-                     landing 
+                        landing 
                }
             </body>
          </ThemeRegistry>

@@ -1,0 +1,41 @@
+.dashboard-container {
+    --topbar-height: 56px;
+    --sidebar-width: 210px;
+    margin-top: 56px;
+    position: relative;
+}
+
+.dashboard-container p {
+    margin: 0;
+}
+
+.dashboard-container main {
+    padding: 10px;
+}
+
+.dashboard-container .main-container aside {
+    position: absolute;
+}
+
+.dashboard-container main.sidebar-open::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    min-height: calc(100vh - var(--topbar-height)); 
+    background: #000;
+    opacity: 0.5;
+    transition: opacity 0.3s ease-in-out;
+}
+
+@media (min-width: 992px) {
+    .dashboard-container main.sidebar-open {
+        padding-left: calc(10px + var(--sidebar-width));
+    }
+
+    .dashboard-container main.sidebar-open::before {
+        display: none;
+    }
+}
+
