@@ -25,11 +25,11 @@ export default function DashboardContainer(props) {
                </aside>
             }
 
-            <main className={sidebarOpen ? styles['sidebar-open'] : undefined}
+            <div className={sidebarOpen ? styles['sidebar-open'] : undefined}
                onClick={handleClick}
             >
                {props.content || <NotFound />}
-            </main>
+            </div>
          </div>
       </div>
    );
