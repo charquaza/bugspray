@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiURL } from '@/root/config.js';
 import { 
@@ -78,7 +79,9 @@ export default function SignUpPage() {
    return (
       <div className={styles['signup-container']}>
          <header>
-            <Logo />
+            <Link href='/'>
+               <Logo />
+            </Link>
          </header>
 
          <main>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiURL } from '@/root/config.js';
 import TextField from '@mui/material/TextField';
@@ -72,7 +73,9 @@ export default function LogInPage() {
    return (
       <div className={styles['login-container']}>
          <header>
-            <Logo />
+            <Link href='/'>
+               <Logo />
+            </Link>
          </header>
    
          <main>
