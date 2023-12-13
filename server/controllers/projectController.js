@@ -6,7 +6,7 @@ const { body, param, validationResult } = require('express-validator');
 exports.getAll = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         return next();
@@ -30,7 +30,7 @@ exports.getAll = [
 exports.getById = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         return next();
@@ -72,11 +72,11 @@ exports.getById = [
 exports.create = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).end();
+            return res.status(403).json({});
         }
 
         return next();
@@ -157,11 +157,11 @@ exports.create = [
 exports.update = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).end();
+            return res.status(403).json({});
         }
 
         return next();
@@ -251,11 +251,11 @@ exports.update = [
 exports.delete = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).end();
+            return res.status(403).json({});
         }
 
         return next();

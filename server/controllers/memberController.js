@@ -151,7 +151,7 @@ exports.logIn = [
 exports.logOut = [
     function (req, res, next) {
         if (!req.user) {
-            return res.status(200).end();
+            return res.status(200).json({});
         }
 
         req.logout(function (err) {
@@ -168,7 +168,7 @@ exports.logOut = [
                     return next(err);
                 }
 
-                res.status(200).end();
+                res.status(200).json({});
             });
         });
     }
@@ -177,7 +177,7 @@ exports.logOut = [
 exports.getAll = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         return next();
@@ -196,7 +196,7 @@ exports.getAll = [
 exports.getById = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         return next();
@@ -238,11 +238,11 @@ exports.update = [
         }
 
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         if (req.user.privilege !== 'admin' && req.user._id.toString() !== req.params.memberId) {
-            return res.status(403).end();
+            return res.status(403).json({});
         }
 
         return next();
@@ -367,11 +367,11 @@ exports.update = [
 exports.delete = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).end();
+            return res.status(404).json({});
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).end();
+            return res.status(403).json({});
         }
 
         return next();
