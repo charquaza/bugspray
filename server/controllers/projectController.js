@@ -6,7 +6,7 @@ const { body, param, validationResult } = require('express-validator');
 exports.getAll = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Project not found'] });
         }
 
         return next();
@@ -30,7 +30,7 @@ exports.getAll = [
 exports.getById = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Project not found'] });
         }
 
         return next();
@@ -72,11 +72,11 @@ exports.getById = [
 exports.create = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Project not found'] });
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).json({});
+            return res.status(403).json({ errors: ['Not allowed'] });
         }
 
         return next();
@@ -157,11 +157,11 @@ exports.create = [
 exports.update = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Project not found'] });
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).json({});
+            return res.status(403).json({ errors: ['Not allowed'] });
         }
 
         return next();
@@ -238,7 +238,7 @@ exports.update = [
                     .exec();
             
             if (oldProjectData === null) {
-                res.status(404).json({ errors: ['Cannot update project: Project not found'] });
+                res.status(404).json({ errors: ['Project not found'] });
             } else {
                 res.json({ data: oldProjectData });
             }
@@ -251,11 +251,11 @@ exports.update = [
 exports.delete = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Project not found'] });
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).json({});
+            return res.status(403).json({ errors: ['Not allowed'] });
         }
 
         return next();
@@ -276,9 +276,7 @@ exports.delete = [
             let deletedProjectData = await Project.findByIdAndDelete(req.params.projectId).exec();
 
             if (deletedProjectData === null) {
-                return res.status(404).json({ 
-                    errors: ['Cannot delete project: Project not found'] 
-                });
+                return res.status(404).json({ errors: ['Project not found'] });
             }
 
             //delete tasks that reference deleted project

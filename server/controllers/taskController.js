@@ -6,7 +6,7 @@ const { body, param, query, validationResult } = require('express-validator');
 exports.getAll = [
    async function checkPermissions(req, res, next) {
       if (!req.user) {
-         return res.status(404).json({});
+         return res.status(404).json({ errors: 'Task not found' });
       }
 
       return next();
@@ -34,7 +34,7 @@ exports.getAll = [
                req.user._id.toString() !== projectData.lead._id.toString() &&
                !projectData.team.some(member => req.user._id.toString() === member._id.toString())
             ) {
-               return res.status(404).json({ errors: 'Not found' });
+               return res.status(404).json({ errors: 'Task not found' });
             } else {
                let taskList = await Task.find({ project: req.query.projectId })
                   .populate({ path: 'project', populate: { 
@@ -85,7 +85,7 @@ exports.getAll = [
 exports.getById = [
    async function checkPermissions(req, res, next) {
       if (!req.user) {
-         return res.status(404).json({});
+         return res.status(404).json({ errors: 'Task not found' });
       }
 
       return next();
@@ -117,7 +117,7 @@ exports.getById = [
                let projectData = await Project.findById(taskData.project._id).exec();
 
                if (projectData === null) {
-                  return res.status(404).json({ errors: ['Parent project not found'] });
+                  return res.status(400).json({ errors: ['Parent project not found'] });
                } else if (
                   req.user._id.toString() !== projectData.lead._id.toString() &&
                   !projectData.team.some(member => req.user._id.toString() === member._id.toString())
@@ -137,7 +137,7 @@ exports.getById = [
 exports.create = [
    async function checkPermissions(req, res, next) {
       if (!req.user) {
-         return res.status(404).json({});
+         return res.status(404).json({ errors: 'Task not found' });
       }
 
       return next();
@@ -241,7 +241,7 @@ exports.create = [
 exports.update = [
    async function checkPermissions(req, res, next) {
       if (!req.user) {
-         return res.status(404).json({});
+         return res.status(404).json({ errors: 'Task not found' });
       }
 
       return next();
@@ -366,7 +366,7 @@ exports.update = [
                .exec();
          
          if (oldTaskData === null) {
-            res.status(404).json({ errors: ['Cannot update task: Task not found'] });
+            res.status(404).json({ errors: ['Task not found'] });
          } else {
             res.json({ data: oldTaskData });
          }
@@ -379,7 +379,7 @@ exports.update = [
 exports.delete = [
    async function checkPermissions(req, res, next) {
       if (!req.user) {
-         return res.status(404).json({});
+         return res.status(404).json({ errors: 'Task not found' });
       }
 
       return next();
@@ -407,7 +407,7 @@ exports.delete = [
                let projectData = await Project.findById(taskData.project._id).exec();
 
                if (projectData === null) {
-                  return res.status(404).json({ errors: ['Parent project not found'] });
+                  return res.status(400).json({ errors: ['Parent project not found'] });
                } else if (
                   req.user._id.toString() !== projectData.lead._id.toString() &&
                   !projectData.team.some(member => req.user._id.toString() === member._id.toString())
@@ -419,7 +419,7 @@ exports.delete = [
             let deletedTaskData = await Task.findByIdAndDelete(req.params.taskId).exec();
 
             if (deletedTaskData === null) {
-               res.status(404).json({ errors: ['Cannot delete task: Task not found'] });
+               res.status(404).json({ errors: ['Task not found'] });
             } else {
                res.json({ data: deletedTaskData });
             }

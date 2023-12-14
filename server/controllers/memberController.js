@@ -12,7 +12,7 @@ exports.getCurrUser = [
             delete memberDataCopy.password;
             res.json({ data: memberDataCopy });
         } else {
-            res.status(404).json({});
+            res.status(404).json({ errors: ['Member not found'] });
         }
     }
 ];
@@ -177,7 +177,7 @@ exports.logOut = [
 exports.getAll = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Member not found'] });
         }
 
         return next();
@@ -196,7 +196,7 @@ exports.getAll = [
 exports.getById = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Member not found'] });
         }
 
         return next();
@@ -238,11 +238,11 @@ exports.update = [
         }
 
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Member not found'] });
         }
 
         if (req.user.privilege !== 'admin' && req.user._id.toString() !== req.params.memberId) {
-            return res.status(403).json({});
+            return res.status(403).json({ errors: ['Not allowed'] });
         }
 
         return next();
@@ -352,7 +352,7 @@ exports.update = [
                     .exec();
             
             if (oldMemberData === null) {
-                res.status(404).json({ errors: ['Cannot update member: Member not found'] });
+                res.status(404).json({ errors: ['Member not found'] });
             } else {
                 let memberDataCopy = { ...oldMemberData._doc };
                 delete memberDataCopy.password;
@@ -367,11 +367,11 @@ exports.update = [
 exports.delete = [
     async function checkPermissions(req, res, next) {
         if (!req.user) {
-            return res.status(404).json({});
+            return res.status(404).json({ errors: ['Member not found'] });
         }
 
         if (req.user.privilege !== 'admin') {
-            return res.status(403).json({});
+            return res.status(403).json({ errors: ['Not allowed'] });
         }
 
         return next();
@@ -435,7 +435,7 @@ exports.delete = [
             let deletedMemberData = await Member.findByIdAndDelete(req.params.memberId).exec();
 
             if (deletedMemberData === null) {
-                res.status(404).json({ errors: ['Cannot delete member: Member not found'] });
+                res.status(404).json({ errors: ['Member not found'] });
             } else {
                 let memberDataCopy = { ...deletedMemberData._doc }; //get POJO from Mongoose document
                 delete memberDataCopy.password;
