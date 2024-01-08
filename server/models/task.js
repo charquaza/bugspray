@@ -10,7 +10,7 @@ const TaskSchema = new Schema({
     createdBy: { type: Schema.Types.ObjectId, ref: 'Member', required: true },
     status: { type: String, required: true },
     priority: { type: String, required: true },
-    sprint: { type: String },
+    sprint: { type: Schema.Types.ObjectId, ref: 'Sprint' },
     assignees: [ { type: Schema.Types.ObjectId, ref: 'Member', required: true } ]
 });
 

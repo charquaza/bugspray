@@ -1,6 +1,7 @@
 const Task = require('../models/task');
 const Project = require('../models/project');
 const Member = require('../models/member');
+const Sprint = require('../models/sprint');
 const { body, param, query, validationResult } = require('express-validator');
 
 exports.getAll = [
@@ -41,6 +42,7 @@ exports.getAll = [
                      path: 'lead team', select: '-password' 
                   } })
                   .populate('createdBy', '-password')
+                  .populate('sprint')
                   .populate('assignees', '-password')
                   .exec();
                
@@ -54,6 +56,7 @@ exports.getAll = [
                      path: 'lead team', select: '-password' 
                   } })
                   .populate('createdBy', '-password')
+                  .populate('sprint')
                   .populate('assignees', '-password')
                   .exec();
                
@@ -70,6 +73,7 @@ exports.getAll = [
                      path: 'lead team', select: '-password' 
                   } })
                   .populate('createdBy', '-password')
+                  .populate('sprint')
                   .populate('assignees', '-password')
                   .exec();
 
@@ -105,6 +109,7 @@ exports.getById = [
          let taskData = await Task.findById(req.params.taskId)
             .populate({ path: 'project', populate: { path: 'lead team', select: '-password' } })
             .populate('createdBy', '-password')
+            .populate('sprint')
             .populate('assignees', '-password')
             .exec();
 
@@ -162,9 +167,7 @@ exports.create = [
       .isLength({ max: 100 }).withMessage('Priority cannot be longer than 100 characters')
       .escape(),
    body('sprint').isString().withMessage('Invalid value for Sprint').bail()
-      .trim().escape()
-      .if(body('sprint').notEmpty())
-      .isNumeric().withMessage('Sprint must be a number'),
+      .trim().escape(),
    body('assignees').isArray().withMessage('Invalid value for Assignees').bail()
       .isArray({ min: 1 }).withMessage('Assignees cannot be empty')
       .escape(),
@@ -215,6 +218,17 @@ exports.create = [
             return res.status(400).json({ 
                errors: ['Cannot create task: Assignee(s) not found'] 
             });
+         }
+
+         //if sprint has been provided, check if sprint exists
+         if (req.body.sprint) {
+            let sprintData = await Sprint.findById(req.body.sprint).exec();
+
+            if (sprintData === null) {
+               return res.status(400).json({ 
+                  errors: ['Cannot create task: sprint not found'] 
+               });
+            }   
          }
       
          //project and all assignees exist, proceed with task creation
@@ -274,9 +288,7 @@ exports.update = [
       .isLength({ max: 100 }).withMessage('Priority cannot be longer than 100 characters')
       .escape(),
    body('sprint').isString().withMessage('Invalid value for Sprint').bail()
-      .trim().escape()
-      .if(body('sprint').notEmpty())
-      .isNumeric().withMessage('Sprint must be a number'),
+      .trim().escape(),
    body('assignees').isArray().withMessage('Invalid value for Assignees').bail()
       .isArray({ min: 1 }).withMessage('Assignees cannot be empty')
       .escape(),
@@ -344,7 +356,18 @@ exports.update = [
                { errors: ['Cannot update task: Assignee(s) not found'] }
             );
          }
-      
+
+         //if sprint has been provided, check if sprint exists
+         if (req.body.sprint) {
+            let sprintData = await Sprint.findById(req.body.sprint).exec();
+
+            if (sprintData === null) {
+               return res.status(400).json({ 
+                  errors: ['Cannot create task: sprint not found'] 
+               });
+            }   
+         }
+         
          //project, creator, and all assignees exist, proceed with task update
          let fieldsToUpdate = {
             title: req.body.title,
