@@ -1,6 +1,7 @@
 const Project = require('../models/project');
 const Member = require('../models/member');
 const Task = require('../models/task');
+const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
 
 exports.getAll = [
@@ -282,7 +283,10 @@ exports.delete = [
             //delete tasks that reference deleted project
             let deletedTaskCount = await Task.deleteMany({ project: req.params.projectId }).exec();
 
-            res.json({ data: { deletedProjectData, deletedTaskCount } });
+            //delete sprints that reference deleted project
+            let deletedSprintCount = await Sprint.deleteMany({ project: req.params.projectId }).exec();
+
+            res.json({ data: { deletedProjectData, deletedTaskCount, deletedSprintCount } });
         } catch (err) {
             return next(err);
         }
