@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 import TaskList from '@/app/_components/TaskList';
@@ -395,7 +396,11 @@ export default function ProjectDetailsPage({ params }) {
                            <>
                               <ul>
                                  <li>Name: {project.name}</li>
-                                 <li>Date Created: {project.dateCreated}</li>
+                                 <li>Date Created:&nbsp;
+                                    {
+                                       DateTime.fromISO(project.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+                                    }
+                                 </li>
                                  <li>Status: {project.status}</li>
                                  <li>Priority: {project.priority}</li>
                                  <li>Lead:&nbsp;

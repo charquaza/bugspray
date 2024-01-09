@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { DateTime } from 'luxon';
 import { apiURL } from '@/root/config.js';
 
 export default function TaskList({ projectId }) {
@@ -359,7 +360,11 @@ export default function TaskList({ projectId }) {
                                        {task.project.name}
                                     </Link>
                                  </li>
-                                 <li>Date Created: {task.dateCreated}</li>
+                                 <li>Date Created:&nbsp;
+                                    {
+                                       DateTime.fromISO(task.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+                                    }
+                                 </li>
                                  <li>Created By:&nbsp;
                                     <Link href={'/team/' + task.createdBy._id}>
                                        {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
@@ -477,7 +478,11 @@ export default function TaskDetailsPage({ params }) {
                                        {task.project.name}
                                     </Link>
                                  </li>
-                                 <li>Date Created: {task.dateCreated}</li>
+                                 <li>Date Created:&nbsp;
+                                    {
+                                       DateTime.fromISO(task.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+                                    }
+                                 </li>
                                  <li>Created By:&nbsp;
                                     <Link href={'/team/' + task.createdBy._id}>
                                        {

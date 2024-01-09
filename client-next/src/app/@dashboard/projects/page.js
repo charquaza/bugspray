@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
@@ -349,7 +350,11 @@ export default function ProjectsPage() {
                                  <li>Name:&nbsp; 
                                     <Link href={'/projects/' + project._id}>{project.name}</Link>
                                  </li>
-                                 <li>Date Created: {project.dateCreated}</li>
+                                 <li>Date Created:&nbsp;
+                                    {
+                                       DateTime.fromISO(project.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+                                    }
+                                 </li>
                                  <li>Status: {project.status}</li>
                                  <li>Priority: {project.priority}</li>
                                  <li>Lead:&nbsp;
