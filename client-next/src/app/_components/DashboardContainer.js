@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
 import NotFound from './NotFound';
@@ -15,22 +17,24 @@ export default function DashboardContainer(props) {
    }
 
    return (
-      <div className={styles['dashboard-container']}>
-         <Topbar setSidebarOpen={setSidebarOpen} setCurrUser={props.setCurrUser} />
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
+         <div className={styles['dashboard-container']}>
+            <Topbar setSidebarOpen={setSidebarOpen} setCurrUser={props.setCurrUser} />
 
-         <div className={styles['main-container']}>
-            {sidebarOpen && 
-               <aside>
-                  <Sidebar setSidebarOpen={setSidebarOpen} />
-               </aside>
-            }
+            <div className={styles['main-container']}>
+               {sidebarOpen && 
+                  <aside>
+                     <Sidebar setSidebarOpen={setSidebarOpen} />
+                  </aside>
+               }
 
-            <div className={sidebarOpen ? styles['sidebar-open'] : undefined}
-               onClick={handleClick}
-            >
-               {props.content || <NotFound />}
+               <div className={sidebarOpen ? styles['sidebar-open'] : undefined}
+                  onClick={handleClick}
+               >
+                  {props.content || <NotFound />}
+               </div>
             </div>
          </div>
-      </div>
+      </LocalizationProvider>
    );
-}
+};

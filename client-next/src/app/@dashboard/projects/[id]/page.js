@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 import TaskList from '@/app/_components/TaskList';
+import SprintList from '@/app/_components/SprintList';
 
 export default function ProjectDetailsPage({ params }) {
    const user = useUserData();
@@ -431,6 +432,7 @@ export default function ProjectDetailsPage({ params }) {
                                     </div>
                               }
 
+                              <SprintList projectId={project._id} />
                               <TaskList projectId={project._id} />
                            </>
                   }           
