@@ -7,12 +7,14 @@ import { apiURL } from '@/root/config.js';
 
 export default function TaskList({ projectId }) {
    const [taskList, setTaskList] = useState();
+   const [sprintList, setSprintList] = useState();
    const [memberList, setMemberList] = useState(); 
    const [memberMap, setMemberMap] = useState();
    const [showCreateForm, setShowCreateForm] = useState(false);
    const [inputValues, setInputValues] = useState();
    const [formErrors, setFormErrors] = useState([]);
    const [updateTaskList, setUpdateTaskList] = useState(false);
+   const [updateSprintList, setUpdateSprintList] = useState(false);
    const [updateMemberList, setUpdateMemberList] = useState(false);
    const [error, setError] = useState();
 
@@ -57,6 +59,46 @@ export default function TaskList({ projectId }) {
 
       fetchTaskList();
    }, [taskList, updateTaskList, projectId]);
+
+   useEffect(function getSprintList() {
+      //only run on initial render and 
+      //after each successful create call to api
+      if (sprintList && !updateSprintList) {
+         return;
+      }
+
+      async function fetchSprintList() {
+         try {
+            const fetchOptions = {
+               method: 'GET',
+               mode:'cors',
+               credentials: 'include',
+               cache: 'no-store'
+            };
+
+            const queryParams = new URLSearchParams({ projectId });
+            const fetchURL = apiURL + '/sprints?' + queryParams;
+
+            const res = await fetch(fetchURL, fetchOptions);
+            const data = await res.json();
+
+            if (res.ok) {
+               const sprintListData = data.data;
+               //add option to not assign a sprint
+               sprintListData.unshift({_id: '', name: '(Not assigned)'});
+               setSprintList(sprintListData);
+               setUpdateSprintList(false);
+            } else {
+               const errors = data.errors;
+               setError(new Error(errors[0]));
+            }
+         } catch (err) {
+            setError(err);
+         }
+      }
+
+      fetchSprintList();
+   }, [sprintList, updateSprintList, projectId]);
 
    useEffect(function getAllMembers() {  
       //only run on initial render and 
@@ -133,6 +175,7 @@ export default function TaskList({ projectId }) {
 
          if (res.ok) {
             setUpdateTaskList(true);
+            setUpdateSprintList(true);
             setUpdateMemberList(true);
             setFormErrors([]); 
             setShowCreateForm(false);
@@ -156,7 +199,7 @@ export default function TaskList({ projectId }) {
             description: '',
             status: 'Open',
             priority: 'High',
-            sprint: '',
+            sprint: sprintList[0]._id,
             assignees: new Map(),
             selectedAddMemberId: memberList[0]._id
          });
@@ -290,11 +333,18 @@ export default function TaskList({ projectId }) {
 
                         <label>
                            Sprint:
-                           <input 
-                              type='number' name='sprint' value={inputValues.sprint} 
+                           <select 
+                              name='sprint' value={inputValues.sprint} 
                               onChange={ handleInputChange }
                            >
-                           </input>
+                              { sprintList && sprintList.map((sprint) => {
+                                 return (
+                                    <option value={sprint._id} key={sprint._id}>
+                                       {sprint.name}
+                                    </option>
+                                 );
+                              }) }
+                           </select>
                         </label>
                         <br/>
 
@@ -375,7 +425,13 @@ export default function TaskList({ projectId }) {
                                  </li>
                                  <li>Status: {task.status}</li>
                                  <li>Priority: {task.priority}</li>
-                                 <li>Sprint: {task.sprint || 'N/A'}</li>
+                                 <li>Sprint:&nbsp;
+                                    {
+                                       task.sprint 
+                                          ? <Link href={'/sprints/' + task.sprint._id}>{task.sprint.name}</Link> 
+                                          : 'N/A'
+                                    }
+                                 </li>
                                  <li>
                                     Assignees: 
                                     <ul>

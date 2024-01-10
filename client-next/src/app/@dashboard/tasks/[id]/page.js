@@ -493,7 +493,13 @@ export default function TaskDetailsPage({ params }) {
                                  </li>
                                  <li>Status: {task.status}</li>
                                  <li>Priority: {task.priority}</li>
-                                 <li>Sprint: {task.sprint || 'N/A'}</li>
+                                 <li>Sprint:&nbsp;
+                                    {
+                                       task.sprint 
+                                          ? <Link href={'/sprints/' + task.sprint._id}>{task.sprint.name}</Link> 
+                                          : 'N/A'
+                                    }
+                                 </li>
                                  <li>
                                     Assignees: 
                                     <ul>
