@@ -240,7 +240,7 @@ exports.create = [
             createdBy: req.user._id,
             status: req.body.status,
             priority: req.body.priority,
-            sprint: req.body.sprint,
+            sprint: req.body.sprint || null,
             assignees: req.body.assignees
          });
 
