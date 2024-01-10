@@ -7,16 +7,18 @@ import { apiURL } from '@/root/config.js';
 
 export default function TasksPage() {
    const [taskList, setTaskList] = useState();
-   const [sprintList, setSprintList] = useState();
+   const [allSprintList, setAllSprintList] = useState();
+   const [filteredSprintList, setFilteredSprintList] = useState();
    const [memberList, setMemberList] = useState(); 
    const [memberMap, setMemberMap] = useState();
    const [projectList, setProjectList] = useState(); 
+
    const [showCreateForm, setShowCreateForm] = useState(false);
    const [inputValues, setInputValues] = useState();
    const [formErrors, setFormErrors] = useState([]);
+
    const [updateTaskList, setUpdateTaskList] = useState(false);
-   const [updateSprintList, setUpdateSprintList] = useState(false);
-   const [updateMemberList, setUpdateMemberList] = useState(false);
+   const [updateAllSprintList, setUpdateAllSprintList] = useState(false);
    const [updateProjectList, setUpdateProjectList] = useState(false);
    const [error, setError] = useState();
 
@@ -63,7 +65,7 @@ export default function TasksPage() {
    useEffect(function getSprintList() {
       //only run on initial render and 
       //after each successful create call to api
-      if (sprintList && !updateSprintList) {
+      if (allSprintList && !updateAllSprintList) {
          return;
       }
 
@@ -82,11 +84,11 @@ export default function TasksPage() {
             const data = await res.json();
 
             if (res.ok) {
-               const sprintListData = data.data;
+               const allSprintListData = data.data;
                //add option to not assign a sprint
-               sprintListData.unshift({_id: '', name: '(Not assigned)'});
-               setSprintList(sprintListData);
-               setUpdateSprintList(false);
+               allSprintListData.unshift({_id: '', name: '(Not assigned)'});
+               setAllSprintList(allSprintListData);
+               setUpdateAllSprintList(false);
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));
@@ -97,49 +99,7 @@ export default function TasksPage() {
       }
 
       fetchSprintList();
-   }, [sprintList, updateSprintList]);
-
-   useEffect(function getAllMembers() {  
-      //only run on initial render and 
-      //after each successful create call to api
-      if (memberList && !updateMemberList) {
-         return;
-      }
-      
-      async function fetchMemberList() {
-         try {
-            const fetchOptions = {
-               method: 'GET',
-               mode:'cors',
-               credentials: 'include',
-               cache: 'no-store'
-            };
-            const fetchURL = apiURL + '/members';
-
-            const res = await fetch(fetchURL, fetchOptions);
-            const data = await res.json();
-
-            if (res.ok) {
-               const memberListData = data.data;
-               const memberListMap = new Map();
-               memberListData.forEach(member => {
-                  memberListMap.set(member._id, member);
-               });
-
-               setMemberList(memberListData);
-               setMemberMap(memberListMap);
-               setUpdateMemberList(false);
-            } else {
-               const errors = data.errors;
-               setError(new Error(errors[0]));
-            }
-         } catch (err) {
-            setError(err);
-         }
-      }
-
-      fetchMemberList();
-   }, [memberList, updateMemberList]);
+   }, [allSprintList, updateAllSprintList]);
 
    useEffect(function getAllProjects() {  
       //only run on initial render and 
@@ -206,8 +166,7 @@ export default function TasksPage() {
 
          if (res.ok) {
             setUpdateTaskList(true);
-            setUpdateSprintList(true);
-            setUpdateMemberList(true);
+            setUpdateAllSprintList(true);
             setUpdateProjectList(true);
             setFormErrors([]); 
             setShowCreateForm(false);
@@ -223,18 +182,32 @@ export default function TasksPage() {
       if (!showCreateForm) {
          //Before rendering create form:
          //initialize inputValues
+         let currProject = projectList[0];
+         let currFilteredSprintList = allSprintList.filter(
+            sprint =>  sprint._id === '' || sprint.project._id === currProject._id 
+         );
+         setFilteredSprintList(currFilteredSprintList);
+
+         let currMemberList = [ currProject.lead, ...currProject.team ];
+         setMemberList(currMemberList);
+
+         let memberListMap = new Map();
+         currMemberList.forEach(member => {
+            memberListMap.set(member._id, member);
+         });
+         setMemberMap(memberListMap);
 
          //selectedAddMemberId keeps track of <select>.value since
          //'add' button cannot send info about which member is currently selected
          setInputValues({ 
             title: '',
             description: '',
-            project: projectList[0]._id,
+            project: currProject._id,
             status: 'Open',
             priority: 'High',
-            sprint: sprintList[0]._id,
+            sprint: currFilteredSprintList[0] ? currFilteredSprintList[0]._id : '(Not assigned)',
             assignees: new Map(),
-            selectedAddMemberId: memberList[0]._id
+            selectedAddMemberId: currMemberList[0]._id
          });
          //reset form errors
          setFormErrors([]);
@@ -246,9 +219,37 @@ export default function TasksPage() {
    function handleInputChange(e) {  
       var inputElem = e.target;
 
-      setInputValues(prevState => {
-         return { ...prevState, [inputElem.name]: inputElem.value };
-      });   
+      if (inputElem.name === 'project') {
+         let currProject = projectList.find(project => project._id === inputElem.value);
+
+         let currFilteredSprintList = allSprintList.filter(
+            sprint =>  sprint._id === '' || sprint.project._id === currProject._id 
+         );
+         setFilteredSprintList(currFilteredSprintList);
+
+         let currMemberList = [ currProject.lead, ...currProject.team ];
+         setMemberList(currMemberList);
+
+         let memberListMap = new Map();
+         currMemberList.forEach(member => {
+            memberListMap.set(member._id, member);
+         });
+         setMemberMap(memberListMap);
+
+         setInputValues(prevState => { 
+            return {
+               ...prevState,
+               project: currProject._id,
+               sprint: currFilteredSprintList[0] ? currFilteredSprintList[0]._id : '(Not assigned)',
+               assignees: new Map(),
+               selectedAddMemberId: currMemberList[0]._id
+            };
+         });
+      } else {
+         setInputValues(prevState => {
+            return { ...prevState, [inputElem.name]: inputElem.value };
+         });   
+      }
    }
 
    function handleAddAssignee(e) {
@@ -387,7 +388,7 @@ export default function TasksPage() {
                               name='sprint' value={inputValues.sprint} 
                               onChange={ handleInputChange }
                            >
-                              { sprintList && sprintList.map((sprint) => {
+                              { filteredSprintList && filteredSprintList.map((sprint) => {
                                  return (
                                     <option value={sprint._id} key={sprint._id}>
                                        {sprint.name}
