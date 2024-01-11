@@ -1,62 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
+import ProjectList from '@/app/_components/ProjectList';
 import { apiURL } from '@/root/config.js';
 
 export default function ProjectsPage() {
    const user = useUserData();
-   const [projectList, setProjectList] = useState();
    const [memberList, setMemberList] = useState(); 
    const [memberMap, setMemberMap] = useState();
    const [showCreateForm, setShowCreateForm] = useState(false);
    const [inputValues, setInputValues] = useState();
    const [formErrors, setFormErrors] = useState([]);
-   const [updateProjectList, setUpdateProjectList] = useState(false);
    const [updateMemberList, setUpdateMemberList] = useState(false);
    const [error, setError] = useState();
 
    if (error) {
       throw error;
    }
-
-   useEffect(function getProjectList() {
-      //only run on initial render and 
-      //after each successful create call to api
-      if (projectList && !updateProjectList) {
-         return;
-      }
-
-      async function fetchProjectList() {
-         try {
-            const fetchOptions = {
-               method: 'GET',
-               mode: 'cors',
-               credentials: 'include',
-               cache: 'no-store'
-            };
-            const fetchURL = apiURL + '/projects';
-
-            const res = await fetch(fetchURL, fetchOptions);
-            const data = await res.json();
-
-            if (res.ok) {
-               const projectListData = data.data;   
-               setProjectList(projectListData);
-               setUpdateProjectList(false);
-            } else {
-               const errors = data.errors;
-               setError(new Error(errors[0]));
-            }
-         } catch (err) {
-            setError(err);
-         }
-      }
-
-      fetchProjectList();
-   }, [projectList, updateProjectList]);
 
    useEffect(function getAllMembers() {  
       //only run on initial render and 
@@ -149,7 +110,6 @@ export default function ProjectsPage() {
          var data = await res.json();
 
          if (res.ok) {
-            setUpdateProjectList(true);
             setUpdateMemberList(true);
             setFormErrors([]); 
             setShowCreateForm(false);
@@ -339,55 +299,7 @@ export default function ProjectsPage() {
                )
          }
 
-         {
-            projectList &&
-               <ol>
-                  {
-                     projectList.map((project) => {
-                        return (
-                           <li key={project._id}>
-                              <ul>
-                                 <li>Name:&nbsp; 
-                                    <Link href={'/projects/' + project._id}>{project.name}</Link>
-                                 </li>
-                                 <li>Date Created:&nbsp;
-                                    {
-                                       DateTime.fromISO(project.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
-                                    }
-                                 </li>
-                                 <li>Status: {project.status}</li>
-                                 <li>Priority: {project.priority}</li>
-                                 <li>Lead:&nbsp;
-                                    <Link href={'/team/' + project.lead._id}>
-                                       {
-                                          project.lead.firstName + ' ' +
-                                          project.lead.lastName
-                                       }
-                                    </Link>
-                                 </li>
-                                 <li>
-                                    Team Members: 
-                                    <ul>
-                                       {
-                                          project.team.map((member) => {
-                                             return (
-                                                <li key={member._id}>
-                                                   <Link href={'/team/' + member._id}>
-                                                      {member.firstName + ' ' + member.lastName}
-                                                   </Link>
-                                                </li>
-                                             );
-                                          })
-                                       }
-                                    </ul>
-                                 </li>
-                              </ul>
-                           </li>
-                        );
-                     })
-                  }
-               </ol>
-         }
+         <ProjectList />
       </main>
    );
 }
