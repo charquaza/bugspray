@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
@@ -245,7 +246,10 @@ export default function TeamPage() {
                                     </Link>
                                  </li>
                                  <li>Username: {member.username}</li>
-                                 <li>Date Joined: {member.dateJoined}</li>
+                                 <li>
+                                    Date Joined:&nbsp; 
+                                    {DateTime.fromISO(member.dateJoined).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
+                                 </li>
                                  <li>Role: {member.role}</li>
                                  <li>Privilege: {member.privilege}</li>
                               </ul>

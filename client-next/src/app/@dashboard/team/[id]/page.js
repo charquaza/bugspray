@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
@@ -269,7 +270,10 @@ export default function MemberDetailsPage({ params }) {
                                  <li>First Name: {memberData.firstName}</li>
                                  <li>Last Name: {memberData.lastName}</li>
                                  <li>Username: {memberData.username}</li>
-                                 <li>Date Joined: {memberData.dateJoined}</li>
+                                 <li>
+                                    Date Joined:&nbsp; 
+                                    {DateTime.fromISO(memberData.dateJoined).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
+                                 </li>
                                  <li>Role: {memberData.role}</li>
                                  <li>Privilege: {memberData.privilege}</li>
                               </ul>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { DateTime } from 'luxon';
 import { apiURL } from '@/root/config.js';
 
 export default function AccountPage({ params }) {
@@ -275,7 +276,10 @@ export default function AccountPage({ params }) {
                                  <li>First Name: {user.firstName}</li>
                                  <li>Last Name: {user.lastName}</li>
                                  <li>Username: {user.username}</li>
-                                 <li>Date Joined: {user.dateJoined}</li>
+                                 <li>
+                                    Date Joined:&nbsp; 
+                                    {DateTime.fromISO(user.dateJoined).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
+                                 </li>
                                  <li>Role: {user.role}</li>
                                  <li>Privilege: {user.privilege}</li>
                               </ul>
