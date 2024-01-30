@@ -92,6 +92,7 @@ export default function ProjectList() {
                      pageSize={5}
                      rowsPerPageOptions={[5]}
                      checkboxSelection
+                     localeText={{ noRowsLabel: 'No projects to display' }}
                   />
                </div>
          }

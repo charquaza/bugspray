@@ -132,6 +132,7 @@ export default function TaskList({ projectId }) {
                pageSize={5}
                rowsPerPageOptions={[5]}
                checkboxSelection
+               localeText={{ noRowsLabel: 'No tasks to display' }}
             />
          </div>
    );
