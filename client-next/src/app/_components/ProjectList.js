@@ -81,21 +81,17 @@ export default function ProjectList() {
    }      
 
    return (
-      <section>
-         {
-            projectList &&
-               <div style={{ height: 400, width: '100%' }}>
-                  <DataGrid
-                     getRowId={getRowId}
-                     rows={dataGridRows}
-                     columns={dataGridColumns}
-                     pageSize={5}
-                     rowsPerPageOptions={[5]}
-                     checkboxSelection
-                     localeText={{ noRowsLabel: 'No projects to display' }}
-                  />
-               </div>
-         }
-      </section>
+      projectList &&
+         <div style={{ height: 400, width: '100%' }}>
+            <DataGrid
+               getRowId={getRowId}
+               rows={dataGridRows}
+               columns={dataGridColumns}
+               pageSize={5}
+               rowsPerPageOptions={[5]}
+               checkboxSelection
+               localeText={{ noRowsLabel: 'No projects to display' }}
+            />
+         </div>
    );
 }
