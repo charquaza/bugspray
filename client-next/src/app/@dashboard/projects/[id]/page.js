@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 import SprintList from '@/app/_components/SprintList';
+import SprintCreateForm from '@/app/_components/SprintCreateForm';
 import TaskList from '@/app/_components/TaskList';
 import TaskCreateForm from '@/app/_components/TaskCreateForm';
 
@@ -438,7 +439,11 @@ export default function ProjectDetailsPage({ params }) {
                                     </div>
                               }
 
+                              <h2>Sprints</h2>
+                              <SprintCreateForm projectId={project._id} />
                               <SprintList projectId={project._id} />
+
+                              <h2>Tasks</h2>
                               <TaskCreateForm projectId={project._id} />
                               <TaskList projectId={project._id} />
                            </>
