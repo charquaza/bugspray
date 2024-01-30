@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
-import TaskList from '@/app/_components/TaskList';
 import SprintList from '@/app/_components/SprintList';
+import TaskList from '@/app/_components/TaskList';
+import TaskCreateForm from '@/app/_components/TaskCreateForm';
 
 export default function ProjectDetailsPage({ params }) {
    const user = useUserData();
@@ -438,6 +439,7 @@ export default function ProjectDetailsPage({ params }) {
                               }
 
                               <SprintList projectId={project._id} />
+                              <TaskCreateForm projectId={project._id} />
                               <TaskList projectId={project._id} />
                            </>
                   }           
