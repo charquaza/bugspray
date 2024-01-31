@@ -355,7 +355,7 @@ exports.update = [
             project: req.body.project,
             status: req.body.status,
             priority: req.body.priority,
-            sprint: req.body.sprint,
+            sprint: req.body.sprint || null,
             assignees: req.body.assignees
          };
 
