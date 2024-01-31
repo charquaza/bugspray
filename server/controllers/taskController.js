@@ -271,14 +271,6 @@ exports.update = [
    body('project').isString().withMessage('Invalid value for Project').bail()
       .trim().notEmpty().withMessage('Project cannot be blank')
       .escape(),
-   body('createdBy')
-      .if((value, { req }) => {
-         //only admins can edit createdBy field; ignore field if user is not admin
-         return req.user.privilege === 'admin';
-      })
-      .isString().withMessage('Invalid value for Creator').bail()
-      .trim().notEmpty().withMessage('Creator cannot be blank')
-      .escape(),
    body('status').isString().withMessage('Invalid value for Status').bail()
       .trim().notEmpty().withMessage('Status cannot be blank')
       .isLength({ max: 100 }).withMessage('Status cannot be longer than 100 characters')
@@ -334,18 +326,6 @@ exports.update = [
             return res.status(400).json({ errors: ['All assignees must be involved in parent project'] });
          }
 
-         //if user is admin
-         if (req.user.privilege === 'admin') {
-            //check if creator exists
-            let creator = await Member.findById(req.body.createdBy).exec();
-
-            if (creator === null) {
-               return res.status(400).json({ 
-                  errors: ['Cannot update task: Creator not found'] 
-               });
-            }   
-         }
-
          //check if assignees exist
          let assigneesCount = await Member.countDocuments(
             { _id: { $in: req.body.assignees } }
@@ -368,7 +348,7 @@ exports.update = [
             }   
          }
          
-         //project, creator, and all assignees exist, proceed with task update
+         //project and all assignees exist, proceed with task update
          let fieldsToUpdate = {
             title: req.body.title,
             description: req.body.description,
@@ -378,11 +358,6 @@ exports.update = [
             sprint: req.body.sprint,
             assignees: req.body.assignees
          };
-
-         //update createdBy field if user is admin
-         if (req.user.privilege === 'admin') {
-            fieldsToUpdate.createdBy = req.body.createdBy;
-         }
 
          let oldTaskData = await 
             Task.findByIdAndUpdate(req.params.taskId, fieldsToUpdate)
