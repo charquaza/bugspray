@@ -228,7 +228,7 @@ export default function TaskCreateForm({ projectId }) {
                project: currProject._id,
                status: 'Open',
                priority: 'High',
-               sprint: currFilteredSprintList[0] ? currFilteredSprintList[0]._id : '(Not assigned)',
+               sprint: '',
                assignees: new Map(),
                selectedAddMemberId: currMemberList[0]._id
             });
