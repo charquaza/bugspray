@@ -82,13 +82,16 @@ export default function ProjectList() {
 
    return (
       projectList &&
-         <div style={{ height: 400, width: '100%' }}>
+         <div style={{ width: '100%' }}>
             <DataGrid
                getRowId={getRowId}
                rows={dataGridRows}
                columns={dataGridColumns}
-               pageSize={5}
-               rowsPerPageOptions={[5]}
+               autoHeight
+               initialState={{
+                  pagination: { paginationModel: { pageSize: 10 } },
+                }}
+               pageSizeOptions={[5,10,25,50,100]}
                checkboxSelection
                localeText={{ noRowsLabel: 'No projects to display' }}
             />
