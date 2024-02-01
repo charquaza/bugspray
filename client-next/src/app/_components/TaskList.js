@@ -6,7 +6,9 @@ import { DateTime } from 'luxon';
 import { DataGrid } from '@mui/x-data-grid';
 import { apiURL } from '@/root/config.js';
 
-export default function TaskList({ projectId }) {
+export default function TaskList({ 
+   projectId, selectColumns, initialPageSize, filterByStatus 
+}) {
    const [taskList, setTaskList] = useState();
    const [error, setError] = useState();
 
@@ -31,7 +33,14 @@ export default function TaskList({ projectId }) {
             const data = await res.json();
 
             if (res.ok) {
-               const taskListData = data.data;   
+               let taskListData = data.data;
+               
+               if (filterByStatus) {
+                  taskListData = taskListData.filter(task => {
+                     return filterByStatus.includes(task.status);
+                  });
+               }
+
                setTaskList(taskListData);
             } else {
                const errors = data.errors;
@@ -56,6 +65,11 @@ export default function TaskList({ projectId }) {
       { field: 'sprint', headerName: 'Sprint', width: 100, renderCell: renderSprint },
       { field: 'assignees', headerName: 'Assignees', width: 200, renderCell: renderAssignees },
    ];
+   if (selectColumns) {
+      dataGridColumns = dataGridColumns.filter(column => {
+         return selectColumns.includes(column.field);
+      });
+   }
 
    var dataGridRows = (taskList) 
       ?
@@ -131,7 +145,7 @@ export default function TaskList({ projectId }) {
                columns={dataGridColumns}
                autoHeight
                initialState={{
-                  pagination: { paginationModel: { pageSize: 25 } },
+                  pagination: { paginationModel: { pageSize: initialPageSize || 25 } },
                 }}
                pageSizeOptions={[5,10,25,50,100]}
                checkboxSelection
@@ -139,4 +153,4 @@ export default function TaskList({ projectId }) {
             />
          </div>
    );
-}
+};
