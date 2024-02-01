@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { apiURL } from '@/root/config.js';
-import DashProjectCard from '@/app/_components/DashProjectCard';
+import HomeProjectCard from '@/app/_components/HomeProjectCard';
 
 export default function Home() {
    const [projectList, setProjectList] = useState();
@@ -50,7 +50,7 @@ export default function Home() {
 
                   {
                      projectList.map(project => {
-                        return <DashProjectCard project={project} key={project._id} />;
+                        return <HomeProjectCard project={project} key={project._id} />;
                      })
                   }
                </>   

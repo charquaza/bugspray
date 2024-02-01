@@ -4,18 +4,9 @@ import { useState, useEffect } from 'react';
 import { apiURL } from '@/root/config.js';
 import TaskList from '@/app/_components/TaskList';
 
-export default function DashProjectCard({ project }) {
+export default function HomeProjectCard({ project }) {
    const [taskList, setTaskList] = useState();
    const [error, setError] = useState();
-
-   let completedTaskCount = 0; 
-   if (taskList) {
-      taskList.forEach(task => {
-         if (task.status === 'Complete' || task.status === 'Closed') {
-            completedTaskCount++;
-         }
-      });
-   }
 
    if (error) {
       throw error;
@@ -49,6 +40,15 @@ export default function DashProjectCard({ project }) {
 
       fetchTaskList();
    }, [project._id]);
+
+   let completedTaskCount = 0; 
+   if (taskList) {
+      taskList.forEach(task => {
+         if (task.status === 'Complete' || task.status === 'Closed') {
+            completedTaskCount++;
+         }
+      });
+   }
 
    return (
       <article>
