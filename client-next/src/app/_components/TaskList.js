@@ -52,7 +52,7 @@ export default function TaskList({
       }
 
       fetchTaskList();
-   }, [projectId]);
+   }, [projectId, filterByStatus]);
 
    var dataGridColumns = [
       { field: 'title', headerName: 'Title', width: 200, renderCell: renderTask },
@@ -62,7 +62,7 @@ export default function TaskList({
       { field: 'priority', headerName: 'Priority', width: 100 },
       { field: 'dateCreated', headerName: 'Date Created', width: 150 },
       { field: 'createdBy', headerName: 'Created By', width: 120, renderCell: renderMember },
-      { field: 'sprint', headerName: 'Sprint', width: 100, renderCell: renderSprint },
+      { field: 'sprint', headerName: 'Sprint', width: 60, renderCell: renderSprint },
       { field: 'assignees', headerName: 'Assignees', width: 200, renderCell: renderAssignees },
    ];
    if (selectColumns) {
