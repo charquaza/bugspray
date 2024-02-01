@@ -6,7 +6,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
 import NotFound from './NotFound';
-import styles from '@/app/_styles/dashboardContainer.module.css';
+import styles from '@/app/_styles/DashboardContainer.module.css';
 
 export default function DashboardContainer(props) {
    const [sidebarOpen, setSidebarOpen] = useState(false);
