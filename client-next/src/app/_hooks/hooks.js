@@ -32,4 +32,4 @@ export function useUserData() {
    }, []);
 
    return user;
-}
+};

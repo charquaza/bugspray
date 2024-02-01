@@ -51,4 +51,4 @@ export default function Topbar(props) {
          </ul>
       </header>
    );
-}
+};

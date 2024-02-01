@@ -9,4 +9,4 @@ export default function LandingError({ error, reset }) {
          <button onClick={() => reset()}>Click Here to Try Again</button>
       </main>
    );
-}
+};

@@ -302,4 +302,4 @@ export default function ProjectsPage() {
          <ProjectList />
       </main>
    );
-}
+};

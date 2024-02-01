@@ -9,4 +9,4 @@ export default function TasksPage() {
          <TaskList />
       </main>
    );
-}
+};

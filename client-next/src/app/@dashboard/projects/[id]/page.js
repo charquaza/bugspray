@@ -452,4 +452,4 @@ export default function ProjectDetailsPage({ params }) {
          }
       </main>
    );
-}
+};

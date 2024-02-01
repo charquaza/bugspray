@@ -7,4 +7,4 @@ export default function LandingContainer(props) {
          {props.content || <NotFound />}
       </div>
    );
-}
+};

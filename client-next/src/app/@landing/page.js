@@ -16,4 +16,4 @@ export default function LandingPage() {
             <p>Welcome to Bug Tracker! You are not logged in. This is the landing page.</p>
         </main>
     );
-}
+};

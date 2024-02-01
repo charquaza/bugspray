@@ -5,4 +5,4 @@ export default function InboxPage() {
             <p>You are logged in. This is your inbox.</p>
         </main>
     );
-}
+};

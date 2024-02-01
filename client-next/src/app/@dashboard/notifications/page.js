@@ -5,4 +5,4 @@ export default function NotificationsPage() {
             <p>You are logged in. This is the notifications page.</p>
         </main>
     );
-}
+};

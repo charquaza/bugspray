@@ -291,4 +291,4 @@ export default function MemberDetailsPage({ params }) {
          }
       </main>
    );
-}
+};

@@ -429,4 +429,4 @@ export default function TaskUpdateForm({ taskId, setInUpdateMode, setUpdateTask 
          }
       </div>
    );
-}
+};

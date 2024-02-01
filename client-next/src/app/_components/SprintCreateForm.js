@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { apiURL } from '@/root/config.js';
 
-export default function SprintList({ projectId }) {
+export default function SprintCreateForm({ projectId }) {
    const [showCreateForm, setShowCreateForm] = useState(false);
    const [inputValues, setInputValues] = useState();
    const [formErrors, setFormErrors] = useState([]);
@@ -141,4 +141,4 @@ export default function SprintList({ projectId }) {
          }
       </div>
    );
-}
+};
