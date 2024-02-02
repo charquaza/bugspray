@@ -2,7 +2,7 @@
     --topbar-height: 56px;
     --sidebar-width: 210px;
     margin-top: 56px;
-    position: relative;
+    /* position: relative; */
 }
 
 .dashboard-container p {
@@ -20,9 +20,11 @@
 .dashboard-container div.sidebar-open::before {
     content: "";
     display: block;
-    position: absolute;
-    top: 0;
-    width: 100vw;
+    position: fixed;
+    top: var(--topbar-height);
+    left: var(--sidebar-width);
+    z-index: 1;
+    width: calc(100vw - var(--sidebar-width));
     min-height: calc(100vh - var(--topbar-height)); 
     background: #000;
     opacity: 0.5;
