@@ -1,0 +1,7 @@
+.home-container .card-list-container {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(0, 620px));
+   gap: 1rem;
+   place-items: start;
+   place-content: center;
+}

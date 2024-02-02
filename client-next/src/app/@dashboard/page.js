@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { apiURL } from '@/root/config.js';
 import HomeProjectCard from '@/app/_components/HomeProjectCard';
+import styles from '@/app/_styles/homePage.module.css';
 
 export default function Home() {
    const [projectList, setProjectList] = useState();
@@ -42,17 +43,19 @@ export default function Home() {
    }, []);
 
    return (
-      <main>
+      <main className={styles['home-container']}>
          {
             projectList &&
                <>
                   <h1>Your Work, in Progress</h1>
 
-                  {
-                     projectList.map(project => {
-                        return <HomeProjectCard project={project} key={project._id} />;
-                     })
-                  }
+                  <div className={styles['card-list-container']}>
+                     {
+                        projectList.map(project => {
+                           return <HomeProjectCard project={project} key={project._id} />;
+                        })
+                     }
+                  </div>               
                </>   
          }
       </main>
