@@ -3,7 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
-import { DataGrid } from '@mui/x-data-grid';
+import { 
+   DataGrid, GridToolbarContainer,
+   GridToolbarDensitySelector 
+} from '@mui/x-data-grid';
 import { apiURL } from '@/root/config.js';
 
 export default function TaskList({ 
@@ -54,16 +57,24 @@ export default function TaskList({
       fetchTaskList();
    }, [projectId, filterByStatus]);
 
+   function GridToolbar() {
+      return (
+        <GridToolbarContainer>
+          <GridToolbarDensitySelector />
+        </GridToolbarContainer>
+      );
+    }
+
    var dataGridColumns = [
-      { field: 'title', headerName: 'Title', width: 200, renderCell: renderTask },
-      { field: 'description', headerName: 'Description', width: 120 },
-      { field: 'project', headerName: 'Project', width: 120, renderCell: renderProject },
-      { field: 'status', headerName: 'Status', width: 120 },
+      { field: 'title', headerName: 'Title', flex: 0.7, minWidth: 90, renderCell: renderTask },
+      { field: 'description', headerName: 'Description', flex: 1, minWidth: 100 },
+      { field: 'project', headerName: 'Project', width: 90, renderCell: renderProject },
+      { field: 'status', headerName: 'Status', width: 90 },
       { field: 'priority', headerName: 'Priority', width: 100 },
-      { field: 'dateCreated', headerName: 'Date Created', width: 150 },
-      { field: 'createdBy', headerName: 'Created By', width: 120, renderCell: renderMember },
+      { field: 'dateCreated', headerName: 'Date Created', width: 130, minWidth: 80 },
+      { field: 'createdBy', headerName: 'Created By', width: 120, minWidth: 65, renderCell: renderMember },
       { field: 'sprint', headerName: 'Sprint', width: 60, renderCell: renderSprint },
-      { field: 'assignees', headerName: 'Assignees', width: 200, renderCell: renderAssignees },
+      { field: 'assignees', headerName: 'Assignees', width: 180, minWidth: 60, renderCell: renderAssignees },
    ];
    if (selectColumns) {
       dataGridColumns = dataGridColumns.filter(column => {
@@ -138,12 +149,16 @@ export default function TaskList({
 
    return (
       taskList &&
-         <div style={{ width: '100%' }}>
+         <div>
             <DataGrid
                getRowId={getRowId}
                rows={dataGridRows}
                columns={dataGridColumns}
                autoHeight
+               getRowHeight={() => 'auto'}
+               slots={{
+                  toolbar: GridToolbar,
+                }}
                initialState={{
                   pagination: { paginationModel: { pageSize: initialPageSize || 25 } },
                 }}
