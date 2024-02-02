@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { apiURL } from '@/root/config.js';
 import TaskList from '@/app/_components/TaskList';
+import styles from '@/app/_styles/HomeProjectCard.module.css';
 
 export default function HomeProjectCard({ project }) {
    const [taskList, setTaskList] = useState();
@@ -51,7 +52,7 @@ export default function HomeProjectCard({ project }) {
    }
 
    return (
-      <article>
+      <article className={styles['card-container']}>
          <h2>{project.name}</h2>
 
          <p>
