@@ -1,5 +1,5 @@
 import NotFound from './NotFound';
-import styles from '@/app/_styles/dashboardContainer.module.css';
+import styles from '@/app/_styles/DashboardContainer.module.css';
 
 export default function LandingContainer(props) {
    return (
