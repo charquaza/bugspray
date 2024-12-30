@@ -7,6 +7,9 @@ export default createTheme({
       },
       secondary: {
          main: '#f50057',
+      },
+      error: {
+         main: 'rgb(255, 72, 0)'
       }
    },
    typography: {

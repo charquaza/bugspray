@@ -1,5 +1,10 @@
 @import "normalize.css";
 
+:root {
+  --color-main: rgb(84,188,124);
+  --color-error: rgb(255, 72, 0);
+}
+
 body {
   margin: 0;
   line-height: 1.4;

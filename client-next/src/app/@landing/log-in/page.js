@@ -74,7 +74,9 @@ export default function LogInPage() {
       <div className={styles['login-container']}>
          <header>
             <Link href='/'>
-               <Logo />
+               <div className={styles['logo-container']}>
+                  <Logo />
+               </div>
             </Link>
          </header>
    
@@ -83,7 +85,7 @@ export default function LogInPage() {
    
             {
                formErrors.length > 0 &&
-                  <div>
+                  <div className={styles['error-container']}>
                      <p>Log in unsuccessful: </p>
                      <ul>
                         {
@@ -101,6 +103,7 @@ export default function LogInPage() {
                   required label='Username' variant='outlined' 
                   margin='normal' value={inputValues.username}
                   onChange={ handleInputChange }
+                  error={formErrors.length > 0}
                />
 
                <TextField 
@@ -108,6 +111,7 @@ export default function LogInPage() {
                   required label='Password' variant='outlined' 
                   margin='normal' value={inputValues.password}
                   onChange={ handleInputChange }
+                  error={formErrors.length > 0}
                />
    
                <Button type='submit' variant='contained' size='large'>Log In</Button>

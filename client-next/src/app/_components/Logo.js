@@ -4,12 +4,10 @@ import styles from '@/app/_styles/Logo.module.css';
 
 export default function Logo() {
     return (
-        <div className={styles['logo-container']}>
-            <Image 
-                src={logo} 
-                alt='The app logo' 
-                className={styles.logo} 
-            />
-        </div>
+        <Image 
+            src={logo} 
+            alt='The app logo - a green caterpillar' 
+            className={styles.logo} 
+        />
     );
 };
