@@ -28,8 +28,10 @@ export default function Topbar(props) {
             <li className={styles['home-link-container']}>
                <Link href='/'>
                   <div className={styles['logo-brand-container']}>
-                     <Logo />
-                     <p className={styles['brand-name']}>MoveForward</p>
+                     <div className={styles['logo-container']}>
+                        <Logo />
+                     </div>
+                     <p className={styles['brand-name'] + ' ' + styles['hide-mobile-1']}>MoveForward</p>
                   </div>
                </Link>
             </li>
@@ -39,10 +41,10 @@ export default function Topbar(props) {
          </ul>
             
          <ul>
-            <li className={styles['hide-mobile']}>
+            <li className={styles['hide-mobile-2']}>
                <MessagesMenu />
             </li>
-            <li className={styles['hide-mobile']}>
+            <li className={styles['hide-mobile-2']}>
                <NotificationsMenu />   
             </li>
             <li>
