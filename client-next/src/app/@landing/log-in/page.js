@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiURL } from '@/root/config.js';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { TextField, Button, CircularProgress } from '@mui/material';
 import Logo from '@/app/_components/Logo';
 import styles from '@/app/_styles/logInPage.module.css';
 
@@ -41,15 +40,16 @@ export default function LogInPage() {
             if (res.ok) {
                router.push('/');
                router.refresh();
+               setFormErrors([]);
             } else {
                setFormErrors(data.errors);
+               setFormSubmitted(false);
             }
          } catch (err) {
             console.error('Login failed: ' + err);
             setFormErrors([ 'Network error: please try again later' ]);
+            setFormSubmitted(false);
          }
-
-         setFormSubmitted(false);
       }
    
       sendFormData();
@@ -113,11 +113,23 @@ export default function LogInPage() {
                   onChange={ handleInputChange }
                   error={formErrors.length > 0}
                />
-   
-               <Button type='submit' variant='contained' size='large'>Log In</Button>
+
+               {formSubmitted 
+                  ?
+                     <Button type='submit' variant='contained' size='large'
+                        disabled={true}
+                     >
+                        <CircularProgress size='1.4em' color='primary' 
+                           thickness={5}
+                        />
+                     </Button>
+                  :
+                     <Button type='submit' variant='contained' size='large'>
+                        Log In
+                     </Button>
+               }
             </form>
          </main>
-   
-      </div>   
+      </div>
    );
 };

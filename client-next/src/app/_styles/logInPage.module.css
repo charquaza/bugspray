@@ -43,6 +43,7 @@
 
 .login-container form button {
     margin-top: 16px;
+    height: 2.2em;
     font-size: 1.4em;
     font-weight: 500;
     padding: 0.2em;

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiURL } from '@/root/config.js';
 import { 
-   Button, TextField, FormControl, InputLabel, Select, MenuItem 
+   Button, TextField, FormControl, InputLabel, Select, MenuItem,
+   CircularProgress
 } from '@mui/material';
 import Logo from '@/app/_components/Logo';
 import styles from '@/app/_styles/signUpPage.module.css';
@@ -67,15 +68,16 @@ export default function SignUpPage() {
             if (res.ok) {
                router.push('/');
                router.refresh();
+               setFormErrors([]);
             } else {
                setFormErrors(data.errors);
+               setFormSubmitted(false);
             }
          } catch (err) {
             console.error('Sign up failed: ' + err);
             setFormErrors([ 'Network error: please try again later' ]);
+            setFormSubmitted(false);
          }
-
-         setFormSubmitted(false);
       }
    
       sendFormData();
@@ -185,7 +187,20 @@ export default function SignUpPage() {
                   error={inputsWithErrors.has('password')}
                />
       
-               <Button type='submit' variant='contained' size='large'>Sign Up</Button>
+               {formSubmitted 
+                  ?
+                     <Button type='submit' variant='contained' size='large'
+                        disabled={true}
+                     >
+                        <CircularProgress size='1.4em' color='primary' 
+                           thickness={5}
+                        />
+                     </Button>
+                  :
+                     <Button type='submit' variant='contained' size='large'>
+                        Sign Up
+                     </Button>
+               }
             </form>
          </main>
       </div>   
