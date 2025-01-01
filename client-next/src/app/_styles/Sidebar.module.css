@@ -1,6 +1,7 @@
 .sidebar-container {
     width: var(--sidebar-width);
-    min-height: calc(100vh - var(--topbar-height));
+    height: calc(100vh - var(--topbar-height));
+    overflow: scroll;
     position: fixed;
     z-index: 1;
     background: rgb(228, 255, 238);
