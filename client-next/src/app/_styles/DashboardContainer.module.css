@@ -6,6 +6,8 @@
 }
 
 .dashboard-container main {
+    box-sizing: border-box;
+    min-height: calc(100vh - var(--topbar-height));
     padding: 1px 5px 4px;
 }
 
