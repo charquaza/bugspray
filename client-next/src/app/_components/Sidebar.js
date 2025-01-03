@@ -28,7 +28,7 @@ export default function Sidebar(props) {
          <List onClick={handleClick}>
             <Link href='/'>
                <ListItem button key='Home'>
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ 'min-width': '45px' }}>
                      <HomeOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText primary='Home' />
@@ -36,7 +36,7 @@ export default function Sidebar(props) {
             </Link>
             <Link href='/projects'>
                <ListItem button key='Projects'>
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ 'min-width': '45px' }}>
                      <AccountTreeOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText primary='Projects' />
@@ -44,7 +44,7 @@ export default function Sidebar(props) {
             </Link>
             <Link href='/tasks'>
                <ListItem button key='Tasks'>
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ 'min-width': '45px' }}>
                      <FormatListNumberedOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText primary='Tasks' />
@@ -52,7 +52,7 @@ export default function Sidebar(props) {
             </Link>
             <Link href='/team'>
                <ListItem button key='Team'>
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ 'min-width': '45px' }}>
                      <PeopleAltOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText primary='Team' />
@@ -63,7 +63,7 @@ export default function Sidebar(props) {
 
             <Link href='/inbox'>
                <ListItem button key='Inbox'>
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ 'min-width': '45px' }}>
                      <MailTwoToneIcon />
                   </ListItemIcon>
                   <ListItemText primary='Inbox' />
@@ -71,7 +71,7 @@ export default function Sidebar(props) {
             </Link>
             <Link href='/notifications'>
                <ListItem button key='Notifications'>
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ 'min-width': '45px' }}>
                      <NotificationsTwoToneIcon />
                   </ListItemIcon>
                   <ListItemText primary='Notifications' />
@@ -82,7 +82,7 @@ export default function Sidebar(props) {
 
             <Link href='/account'>
                <ListItem button key='My Account'>
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ 'min-width': '45px' }}>
                      <SettingsApplicationsIcon />
                   </ListItemIcon>
                   <ListItemText primary='My Account' />
