@@ -5,21 +5,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import { 
+   Avatar, Menu, MenuItem, ListItemIcon, Divider, 
+   IconButton, Tooltip, CircularProgress 
+} from '@mui/material';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 export default function AccountMenu() {
+   const [anchorEl, setAnchorEl] = useState(null);
+   const [loggingOut, setLoggingOut] = useState(false);
+
    const user = useUserData();
    const router = useRouter();
 
-   const [anchorEl, setAnchorEl] = useState(null);
    const open = Boolean(anchorEl);
 
    const handleClick = (event) => {
@@ -30,7 +29,11 @@ export default function AccountMenu() {
       setAnchorEl(null);
    };
    
-   async function handleLogOut() {
+   async function handleLogOut(e) {
+      e.stopPropagation();
+
+      setLoggingOut(true);
+
       try {
          const fetchOptions = {
             method: 'POST',
@@ -111,10 +114,22 @@ export default function AccountMenu() {
             </MenuItem>
             <Divider />
             <MenuItem onClick={handleLogOut}>
-               <ListItemIcon>
-                  <Logout fontSize="small" />
-               </ListItemIcon>
-               Logout
+               {loggingOut
+                  ?
+                     <>
+                        <CircularProgress size='1.4em' color='primary' 
+                           thickness={5} sx={{ 'margin-right': '0.8em' }}
+                        />
+                        Logging Out...
+                     </>
+                  :
+                     <>
+                        <ListItemIcon>
+                           <Logout fontSize="small" />
+                        </ListItemIcon>
+                        Logout
+                     </>
+               }
             </MenuItem>
          </Menu>
       </>
