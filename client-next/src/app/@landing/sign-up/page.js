@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiURL } from '@/root/config.js';
@@ -26,22 +26,25 @@ export default function SignUpPage() {
    
    const router = useRouter();
 
-   const inputsWithErrors = new Map();
-   formErrors.forEach((errMsg) => {
-      if (errMsg.search(/first name/i) !== -1) {
-         inputsWithErrors.set('firstName', true);
-      } else if (errMsg.search(/last name/i) !== -1) {
-         inputsWithErrors.set('lastName', true);
-      } else if (errMsg.search(/role/i) !== -1) {
-         inputsWithErrors.set('role', true);
-      } else if (errMsg.search(/privilege/i) !== -1) {
-         inputsWithErrors.set('privilege', true);
-      } else if (errMsg.search(/username/i) !== -1) {
-         inputsWithErrors.set('username', true);
-      } else if (errMsg.search(/password/i) !== -1) {
-         inputsWithErrors.set('password', true);
-      }
-   });
+   const inputsWithErrors = useMemo(() => {
+      const errorMap = new Map();
+      formErrors.forEach((errMsg) => {
+         if (errMsg.search(/first name/i) !== -1) {
+            inputsWithErrors.set('firstName', true);
+         } else if (errMsg.search(/last name/i) !== -1) {
+            inputsWithErrors.set('lastName', true);
+         } else if (errMsg.search(/role/i) !== -1) {
+            inputsWithErrors.set('role', true);
+         } else if (errMsg.search(/privilege/i) !== -1) {
+            inputsWithErrors.set('privilege', true);
+         } else if (errMsg.search(/username/i) !== -1) {
+            inputsWithErrors.set('username', true);
+         } else if (errMsg.search(/password/i) !== -1) {
+            inputsWithErrors.set('password', true);
+         }
+      });
+      return errorMap;
+   }, [formErrors]);
 
    useEffect(() => {
       if (!formSubmitted) {
