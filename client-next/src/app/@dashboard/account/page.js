@@ -1,8 +1,31 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { DateTime } from 'luxon';
+import { styled } from '@mui/material/styles';
+import { TextField } from '@mui/material';
 import { apiURL } from '@/root/config.js';
+import styles from '@/app/_styles/accountPage.module.css';
+
+const CustomTextField = styled(TextField)({
+   'margin-top': '0',
+   'width': '100%',
+   'margin-bottom': '0.8em',
+   'max-width': '300px',
+   '& .MuiInputBase-input': {
+      'padding-top': '1.7em',
+      'padding-bottom': '0.4em'
+   },
+   '& .MuiFilledInput-root': {
+      fontSize: '1.1em',
+      borderRadius: '0.3em',
+      '&:before': { borderBottom: 'none' },
+      '&:after': { borderBottom: 'none' }
+   },
+   '& .MuiInputLabel-root': {
+      fontSize: '1.3em',
+   },
+});
 
 export default function AccountPage({ params }) {
    const [user, setUser] = useState();
@@ -16,6 +39,27 @@ export default function AccountPage({ params }) {
    if (error) {
       throw error;
    }
+
+   const inputsWithErrors = useMemo(() => {
+      const errorMap = new Map();
+      formErrors.forEach((errMsg) => {
+         if (errMsg.search(/first name/i) !== -1) {
+            errorMap.set('firstName', true);
+         } else if (errMsg.search(/last name/i) !== -1) {
+            errorMap.set('lastName', true);
+         } else if (errMsg.search(/role/i) !== -1) {
+            errorMap.set('role', true);
+         } else if (errMsg.search(/username/i) !== -1) {
+            errorMap.set('username', true);
+         } else if (errMsg.search(/new password/i) !== -1) {
+            errorMap.set('newPassword', true);
+            errorMap.set('confirmNewPassword', true);
+         } else if (errMsg.search(/incorrect password/i) !== -1) {
+            errorMap.set('currPassword', true);
+         }
+      });
+      return errorMap;
+   }, [formErrors]);
 
    useEffect(function getUser() {
       //only run on initial render and 
@@ -153,143 +197,144 @@ export default function AccountPage({ params }) {
    }
 
    return (
-      <main>
-         { 
-            user && 
-               <>
-                  <h1>Account</h1>
+      <main className={styles['account-page']}>
+         {user && 
+            <>
+               <h1>Account</h1>
 
-                  {
-                     inUpdateMode 
-                        ?
-                           <>
-                              {
-                                 formErrors.length > 0 &&
-                                    <div>
-                                       <p>Account edit unsuccessful: </p>
-                                       <ul>
-                                          {
-                                             formErrors.map((errMsg) => {
-                                                return <li key={errMsg}>{errMsg}</li>;
-                                             })
-                                          }
-                                       </ul>
-                                    </div>
-                              }
-
-                              <form onSubmit={ handleFormSubmit }>
-                                 <label>
-                                    First Name:
-                                    <input 
-                                       type='text' name='firstName' value={inputValues.firstName} 
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Last Name:
-                                    <input 
-                                       type='text' name='lastName' value={inputValues.lastName} 
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Role:
-                                    <input 
-                                       type='text' name='role' value={inputValues.role} 
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Username: 
-                                    <input 
-                                       type='text' name='username' value={inputValues.username}
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 {
-                                    changePassword 
-                                       ?
-                                          <>
-                                             <label>
-                                                New Password: 
-                                                <input 
-                                                   type='text' name='newPassword' value={inputValues.newPassword}
-                                                   onChange={ handleInputChange }
-                                                >
-                                                </input>
-                                             </label>
-                                             <br/>
-            
-                                             <label>
-                                                Confirm New Password: 
-                                                <input 
-                                                   type='text' name='confirmNewPassword' value={inputValues.confirmNewPassword}
-                                                   onChange={ handleInputChange }
-                                                >
-                                                </input>
-                                             </label>
-                                             <br/>
-
-                                             <div>
-                                                <button type='button' onClick={handleChangePassword}>Cancel</button>
-                                             </div>
-                                          </>    
-                                       :
-                                          <button type='button' onClick={handleChangePassword}>Change Password</button>                             
-                                 }
-
-                                 <div>
-                                    <br/>
-                                    <label>
-                                       Please Enter Current Password: 
-                                       <input 
-                                          type='text' name='currPassword' value={inputValues.currPassword}
-                                          onChange={ handleInputChange }
-                                       >
-                                       </input>
-                                    </label>
-                                 </div>
-                                
-                                 <div>
-                                    <button type='submit'>Save</button>
-                                    <button type='button' 
-                                       onClick={handleUpdateModeToggle}
-                                    >Cancel</button>
-                                 </div>                              
-                              </form>
-                           </>
-                        :
-                           <>
-                              <ul>
-                                 <li>First Name: {user.firstName}</li>
-                                 <li>Last Name: {user.lastName}</li>
-                                 <li>Username: {user.username}</li>
-                                 <li>
-                                    Date Joined:&nbsp; 
-                                    {DateTime.fromISO(user.dateJoined).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
-                                 </li>
-                                 <li>Role: {user.role}</li>
-                                 <li>Privilege: {user.privilege}</li>
-                              </ul>
-
-                              <div>
-                                 <button onClick={handleUpdateModeToggle}>Edit</button>
+               {inUpdateMode 
+                  ?
+                     <>
+                        {
+                           formErrors.length > 0 &&
+                              <div className={styles['error-container']}>
+                                 <p>Account edit unsuccessful: </p>
+                                 <ul>
+                                    {
+                                       formErrors.map((errMsg) => {
+                                          return <li key={errMsg}>{errMsg}</li>;
+                                       })
+                                    }
+                                 </ul>
                               </div>
-                           </>
-                  }         
-               </>
+                        }
+
+                        <form onSubmit={ handleFormSubmit }>
+                           <div className={styles['first-last-name-ctnr']}>
+                              <CustomTextField 
+                                 type='text' id='firstName' name='firstName'
+                                 required label='First Name' variant='filled' 
+                                 margin='normal' value={inputValues.firstName}
+                                 onChange={handleInputChange}
+                                 error={inputsWithErrors.has('firstName')}
+                              />
+   
+                              <CustomTextField 
+                                 type='text' id='lastName' name='lastName'
+                                 required label='Last Name' variant='filled' 
+                                 margin='normal' value={inputValues.lastName}
+                                 onChange={handleInputChange}
+                                 error={inputsWithErrors.has('lastName')}
+                              />
+                           </div>
+
+                           <CustomTextField
+                              type='text' id='username' name='username'
+                              required label='Username' variant='filled'
+                              margin='normal' value={inputValues.username}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('username')}
+                           />
+
+                           <CustomTextField 
+                              type='text' id='role' name='role'
+                              required label='Role' variant='filled' 
+                              margin='normal' value={inputValues.role}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('role')}
+                           />
+
+                           <div className={styles['change-password-ctnr']}>
+                              {changePassword
+                                 ?
+                                    <>
+                                       <div className={styles['new-password-inputs-ctnr']}>
+                                          <CustomTextField
+                                             type='password' id='newPassword' name='newPassword'
+                                             required label='New Password' variant='filled'
+                                             margin='normal' value={inputValues.newPassword}
+                                             onChange={handleInputChange}
+                                             error={inputsWithErrors.has('newPassword')}
+                                          />
+   
+                                          <CustomTextField
+                                             type='password' id='confirmNewPassword' name='confirmNewPassword'
+                                             required label='Confirm New Password' variant='filled'
+                                             margin='normal' value={inputValues.confirmNewPassword}
+                                             onChange={handleInputChange}
+                                             error={inputsWithErrors.has('confirmNewPassword')}
+                                          />   
+                                       </div>
+                                       <button type='button' onClick={handleChangePassword}>Cancel</button>
+                                    </>
+                                 :
+                                    <button type='button' onClick={handleChangePassword}>Change Password</button>                    
+                              }         
+                           </div>
+
+                           <CustomTextField
+                              type='password' id='currPassword' name='currPassword'
+                              required label='Current Password' variant='filled'
+                              margin='normal' value={inputValues.currPassword}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('currPassword')}
+                           />
+                           
+                           <div className={styles['form-controls-ctnr']}>
+                              <button type='submit' className={styles['submit-btn']}>Save</button>
+                              <button type='button' className={styles['cancel-btn']} 
+                                 onClick={handleUpdateModeToggle}
+                              >Cancel</button>
+                           </div>
+                        </form>
+                     </>
+                  :
+                     <>
+                        <ul className={styles['user-info']}>
+                           <li>
+                              <span className={styles['label']}>First Name:</span> 
+                              <span className={styles['info']}>{user.firstName}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Last Name:</span> 
+                              <span className={styles['info']}>{user.lastName}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Username:</span>
+                              <span className={styles['info']}>{user.username}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Date Joined:</span>
+                              <span className={styles['info']}>
+                                 {DateTime.fromISO(user.dateJoined).toLocaleString(DateTime.DATE_MED)}
+                              </span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Role:</span>
+                              <span className={styles['info']}>{user.role}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Privilege:</span>
+                              <span className={styles['info']}>{user.privilege}</span>
+                           </li>
+                        </ul>
+
+                        <div>
+                           <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>Edit</button>
+                        </div>
+                     </>
+               }
+            </>
          }
       </main>
    );
