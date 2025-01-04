@@ -30,17 +30,17 @@ export default function SignUpPage() {
       const errorMap = new Map();
       formErrors.forEach((errMsg) => {
          if (errMsg.search(/first name/i) !== -1) {
-            inputsWithErrors.set('firstName', true);
+            errorMap.set('firstName', true);
          } else if (errMsg.search(/last name/i) !== -1) {
-            inputsWithErrors.set('lastName', true);
+            errorMap.set('lastName', true);
          } else if (errMsg.search(/role/i) !== -1) {
-            inputsWithErrors.set('role', true);
+            errorMap.set('role', true);
          } else if (errMsg.search(/privilege/i) !== -1) {
-            inputsWithErrors.set('privilege', true);
+            errorMap.set('privilege', true);
          } else if (errMsg.search(/username/i) !== -1) {
-            inputsWithErrors.set('username', true);
+            errorMap.set('username', true);
          } else if (errMsg.search(/password/i) !== -1) {
-            inputsWithErrors.set('password', true);
+            errorMap.set('password', true);
          }
       });
       return errorMap;
