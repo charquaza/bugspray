@@ -1,0 +1,132 @@
+.member-details-page .user-info {
+   list-style-type: none;
+   padding: 0;
+}
+
+.member-details-page .user-info li {
+   display: flex;
+   gap: 1em;
+   margin-bottom: 0.3em;
+}
+
+.member-details-page span.label {
+   display: inline-block;
+   width: 7em;
+   flex-shrink: 0;
+}
+.member-details-page span.info {
+   font-size: 1.1em;
+   font-weight: 450;
+}
+
+.member-details-page .edit-btn {
+   margin-right: 1.5em;
+   background-color: rgb(210, 210, 210);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.member-details-page .edit-btn:hover {
+   background-color: rgb(180, 180, 180);
+}
+.member-details-page .edit-btn:active {
+   background-color: rgb(160, 160, 160);
+}
+
+.member-details-page .delete-btn {
+   background-color: rgb(255, 116, 116);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.member-details-page .delete-btn:hover {
+   background-color: rgb(265, 126, 126);
+   font-weight: 500;
+}
+.member-details-page .delete-btn:active {
+   background-color: rgb(215, 76, 76);
+}
+
+.member-details-page .error-container {
+   color: var(--color-error);
+}
+.member-details-page .error-container p {
+   margin-bottom: 0.5em;
+}
+.member-details-page .error-container ul {
+   margin-top: 0;
+   padding-left: 1.8em;
+}
+
+.member-details-page form {
+   display: flex;
+   flex-direction: column;
+}
+
+.member-details-page .change-password-ctnr {
+   margin: 0 0 1.2em;
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+}
+
+.member-details-page .change-password-ctnr button {
+   border: 0;
+   border-radius: 0.2em;
+   padding: 0.4em;
+   background-color: rgb(210, 210, 210);
+}
+.member-details-page .change-password-ctnr button:hover {
+   background-color: rgb(180, 180, 180);
+}
+.member-details-page .change-password-ctnr button:active {
+   background-color: rgb(160, 160, 160);
+}
+
+.member-details-page .form-controls-ctnr {
+   margin: 1.2em 0 0;
+}
+
+.member-details-page .form-controls-ctnr .submit-btn {
+   font-size: 1.2em;
+   border: 0;
+   border-radius: 0.2em;
+   padding: 0.3em 0.6em;
+   background-color: rgb(142 235 178);
+}
+.member-details-page .form-controls-ctnr .submit-btn:hover {
+   background-color: rgb(162 255 198);
+}
+.member-details-page .form-controls-ctnr .submit-btn:active {
+   background-color: rgb(122 215 158);
+}
+
+.member-details-page .form-controls-ctnr .cancel-btn {
+   font-size: 1.2em;
+   margin-left: 1em;
+   border: 0;
+   border-bottom: 1px solid black;
+   padding: 0;
+   background-color: transparent;
+}
+.member-details-page .form-controls-ctnr .cancel-btn:hover {
+   font-weight: 500;
+}
+.member-details-page .form-controls-ctnr .cancel-btn:active {
+   font-weight: 600;
+}
+
+@media (min-width: 425px) {
+   .member-details-page .first-last-name-ctnr {
+      display: flex;
+      gap: 2em;
+   }
+
+   .member-details-page .new-password-inputs-ctnr {
+      width: 100%;
+      display: flex;
+      gap: 2em;
+   }
+}

@@ -1,10 +1,34 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { DateTime } from 'luxon';
+import { styled } from '@mui/material/styles';
+import { TextField, MenuItem } from '@mui/material';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
+import styles from '@/app/_styles/memberDetailsPage.module.css';
+
+const CustomTextField = styled(TextField)({
+   'marginTop': '0',
+   'width': '100%',
+   'marginBottom': '0.8em',
+   'maxWidth': '300px',
+   'backgroundColor': '#f6fffb',
+   '& .MuiInputBase-input': {
+      'paddingTop': '1.7em',
+      'paddingBottom': '0.4em'
+   },
+   '& .MuiFilledInput-root': {
+      fontSize: '1.1em',
+      borderRadius: '0.3em',
+      '&:before': { borderBottom: 'none' },
+      '&:after': { borderBottom: 'none' }
+   },
+   '& .MuiInputLabel-root': {
+      fontSize: '1.3em',
+   },
+});
 
 export default function MemberDetailsPage({ params }) {
    const user = useUserData();
@@ -12,9 +36,10 @@ export default function MemberDetailsPage({ params }) {
    const [memberData, setMemberData] = useState();
    const [inUpdateMode, setInUpdateMode] = useState(false);
    const [inputValues, setInputValues] = useState();
+   const [changePassword, setChangePassword] = useState(false);
    const [updateMemberData, setUpdateMemberData] = useState(false);
    const [formErrors, setFormErrors] = useState([]);
-   const [deleteErrors, setDeleteErrors] = useState([]);
+   const [deleteErrors, setDeleteErrors] = useState(['test']);
    const [error, setError] = useState();
 
    const router = useRouter();
@@ -23,6 +48,27 @@ export default function MemberDetailsPage({ params }) {
       throw error;
    }
 
+   const inputsWithErrors = useMemo(() => {
+      const errorMap = new Map();
+      formErrors.forEach((errMsg) => {
+         if (errMsg.search(/first name/i) !== -1) {
+            errorMap.set('firstName', true);
+         } else if (errMsg.search(/last name/i) !== -1) {
+            errorMap.set('lastName', true);
+         } else if (errMsg.search(/username/i) !== -1) {
+            errorMap.set('username', true);
+         } else if (errMsg.search(/role/i) !== -1) {
+            errorMap.set('role', true);
+         } else if (errMsg.search(/privilege/i) !== -1) {
+            errorMap.set('privilege', true);
+         } else if (errMsg.search(/new password/i) !== -1) {
+            errorMap.set('newPassword', true);
+            errorMap.set('confirmNewPassword', true);
+         }
+      });
+      return errorMap;
+   }, [formErrors]);
+   
    useEffect(function fetchMemberData() {
       //only run on initial render and 
       //after each successful update call to api
@@ -68,7 +114,7 @@ export default function MemberDetailsPage({ params }) {
          var fetchOptions = {
             method: 'PUT',
             headers: { 
-                  'Content-Type': 'application/json',
+               'Content-Type': 'application/json',
             },
             body: JSON.stringify(fetchBody),
             mode: 'cors',
@@ -101,13 +147,23 @@ export default function MemberDetailsPage({ params }) {
             lastName: memberData.lastName,
             role: memberData.role,
             privilege: memberData.privilege,
-            username: memberData.username, 
-            password: '',
-            confirmPassword: '' 
+            username: memberData.username
          });
          //reset form errors
          setFormErrors([]);
          setDeleteErrors([]);
+      } else {
+         //clean up password change UI
+         if (changePassword) {
+            setInputValues(prevState => {
+               let copy = { ...prevState };
+               delete copy.newPassword;
+               delete copy.confirmNewPassword;
+   
+               return copy;
+            });     
+            setChangePassword(false);   
+         }
       }
 
       setInUpdateMode(prev => !prev);
@@ -119,6 +175,29 @@ export default function MemberDetailsPage({ params }) {
       setInputValues(prevState => {
          return { ...prevState, [inputElem.name]: inputElem.value };
       });   
+   }
+
+   function handleChangePassword(e) {
+      if (changePassword) {
+         //user canceled password change, remove fields from inputValues
+         setInputValues(prevState => {
+            let copy = { ...prevState };
+            delete copy.newPassword;
+            delete copy.confirmNewPassword;
+
+            return copy;
+         });     
+      } else {
+         setInputValues(prevState => {
+            return {
+               ...prevState,
+               newPassword: '',
+               confirmNewPassword: ''
+            };
+         });
+      }
+
+      setChangePassword(prevState => !prevState);
    }
 
    async function handleMemberDelete(e) {
@@ -146,148 +225,165 @@ export default function MemberDetailsPage({ params }) {
    }
 
    return (
-      <main>
-         { 
-            memberData && 
-               <>
-                  <h1>Member Details</h1>
+      <main className={styles['member-details-page']}>
+         {memberData && 
+            <>
+               <h1>Member Details</h1>
 
-                  {
-                     deleteErrors.length > 0 &&
-                        <div>
-                           <ul>
-                                 {
-                                    deleteErrors.map((errMsg) => {
-                                       return <li key={errMsg}>{errMsg}</li>;
-                                    })
-                                 }
-                           </ul>
-                        </div>
+               {deleteErrors.length > 0 &&
+                  <div className={styles['error-container']}>
+                     <p>Member remove unsuccessful: </p>
+                     <ul>
+                           {
+                              deleteErrors.map((errMsg) => {
+                                 return <li key={errMsg}>{errMsg}</li>;
+                              })
+                           }
+                     </ul>
+                  </div>
+               }
 
-                  }
-
-                  {
-                     inUpdateMode 
-                        ?
-                           <>
-                              {
-                                 formErrors.length > 0 &&
-                                    <div>
-                                       <p>Member edit unsuccessful: </p>
-                                       <ul>
-                                             {
-                                                formErrors.map((errMsg) => {
-                                                   return <li key={errMsg}>{errMsg}</li>;
-                                                })
-                                             }
-                                       </ul>
-                                    </div>
-                              }
-   
-                              <form onSubmit={ handleFormSubmit }>
-                                 <label>
-                                    First Name:
-                                    <input 
-                                       type='text' name='firstName' value={inputValues.firstName} 
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Last Name:
-                                    <input 
-                                       type='text' name='lastName' value={inputValues.lastName} 
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Role:
-                                    <input 
-                                       type='text' name='role' value={inputValues.role} 
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Privilege: 
-                                    <select 
-                                          name='privilege' value={inputValues.privilege} 
-                                          onChange={ handleInputChange }
-                                    >
-                                       <option value='user'>User</option>
-                                       <option value='admin'>Admin</option>
-                                    </select>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Username: 
-                                    <input 
-                                       type='text' name='username' value={inputValues.username}
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Password: 
-                                    <input 
-                                       type='text' name='password' value={inputValues.password}
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <label>
-                                    Confirm Password: 
-                                    <input 
-                                       type='text' name='confirmPassword' value={inputValues.confirmPassword}
-                                       onChange={ handleInputChange }
-                                    >
-                                    </input>
-                                 </label>
-                                 <br/>
-
-                                 <br/>
-                                 <button type='submit'>Save</button>
-                                 <button type='button' 
-                                    onClick={handleUpdateModeToggle}
-                                 >Cancel</button>
-                              </form>
-                           </>
-                        :
-                           <>
+               {inUpdateMode 
+                  ?
+                     <>
+                        {formErrors.length > 0 &&
+                           <div className={styles['error-container']}>
+                              <p>Member edit unsuccessful: </p>
                               <ul>
-                                 <li>First Name: {memberData.firstName}</li>
-                                 <li>Last Name: {memberData.lastName}</li>
-                                 <li>Username: {memberData.username}</li>
-                                 <li>
-                                    Date Joined:&nbsp; 
-                                    {DateTime.fromISO(memberData.dateJoined).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
-                                 </li>
-                                 <li>Role: {memberData.role}</li>
-                                 <li>Privilege: {memberData.privilege}</li>
+                                    {
+                                       formErrors.map((errMsg) => {
+                                          return <li key={errMsg}>{errMsg}</li>;
+                                       })
+                                    }
                               </ul>
+                           </div>
+                        }
 
-                              {
-                                 (user && user.privilege === 'admin') && 
-                                    <div>
-                                       <button onClick={handleUpdateModeToggle}>Edit</button>
-                                       <button onClick={handleMemberDelete}>Remove</button>
-                                    </div>
+                        <form onSubmit={ handleFormSubmit }>
+                           <div className={styles['first-last-name-ctnr']}>
+                              <CustomTextField 
+                                 type='text' id='firstName' name='firstName'
+                                 required label='First Name' variant='filled' 
+                                 margin='normal' value={inputValues.firstName}
+                                 onChange={handleInputChange}
+                                 error={inputsWithErrors.has('firstName')}
+                              />
+   
+                              <CustomTextField 
+                                 type='text' id='lastName' name='lastName'
+                                 required label='Last Name' variant='filled' 
+                                 margin='normal' value={inputValues.lastName}
+                                 onChange={handleInputChange}
+                                 error={inputsWithErrors.has('lastName')}
+                              />
+                           </div>
+
+                           <CustomTextField
+                              type='text' id='username' name='username'
+                              required label='Username' variant='filled'
+                              margin='normal' value={inputValues.username}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('username')}
+                           />
+
+                           <CustomTextField 
+                              type='text' id='role' name='role'
+                              required label='Role' variant='filled' 
+                              margin='normal' value={inputValues.role}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('role')}
+                           />
+
+                           <CustomTextField 
+                              select id='privilege' name='privilege'
+                              required label='Privilege' variant='filled' 
+                              margin='normal' value={inputValues.privilege}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('privilege')}
+                              sx={{'maxWidth': '100px'}}
+                           >
+                              {[
+                                 <MenuItem key='user' value='user'>User</MenuItem>,
+                                 <MenuItem key='admin' value='admin'>Admin</MenuItem>
+                              ]}
+                           </CustomTextField>
+
+                           <div className={styles['change-password-ctnr']}>
+                              {changePassword
+                                 ?
+                                    <>
+                                       <div className={styles['new-password-inputs-ctnr']}>
+                                          <CustomTextField
+                                             type='password' id='newPassword' name='newPassword'
+                                             required label='New Password' variant='filled'
+                                             margin='normal' value={inputValues.newPassword}
+                                             onChange={handleInputChange}
+                                             error={inputsWithErrors.has('newPassword')}
+                                          />
+   
+                                          <CustomTextField
+                                             type='password' id='confirmNewPassword' name='confirmNewPassword'
+                                             required label='Confirm New Password' variant='filled'
+                                             margin='normal' value={inputValues.confirmNewPassword}
+                                             onChange={handleInputChange}
+                                             error={inputsWithErrors.has('confirmNewPassword')}
+                                          />   
+                                       </div>
+                                       <button type='button' onClick={handleChangePassword}>Cancel</button>
+                                    </>
+                                 :
+                                    <button type='button' onClick={handleChangePassword}>Change Password</button>                    
                               }
-                           </>
-                  }           
-               </>
+                           </div>
+
+                           <div className={styles['form-controls-ctnr']}>
+                              <button type='submit' className={styles['submit-btn']}>Save</button>
+                              <button type='button' className={styles['cancel-btn']} 
+                                 onClick={handleUpdateModeToggle}
+                              >Cancel</button>
+                           </div>
+                        </form>
+                     </>
+                  :
+                     <>
+                        <ul className={styles['user-info']}>
+                           <li>
+                              <span className={styles['label']}>First Name:</span> 
+                              <span className={styles['info']}>{memberData.firstName}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Last Name:</span> 
+                              <span className={styles['info']}>{memberData.lastName}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Username:</span>
+                              <span className={styles['info']}>{memberData.username}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Date Joined:</span>
+                              <span className={styles['info']}>
+                                 {DateTime.fromISO(memberData.dateJoined).toLocaleString(DateTime.DATE_MED)}
+                              </span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Role:</span>
+                              <span className={styles['info']}>{memberData.role}</span>
+                           </li>
+                           <li>
+                              <span className={styles['label']}>Privilege:</span>
+                              <span className={styles['info']}>{memberData.privilege}</span>
+                           </li>
+                        </ul>
+
+                        {(user && user.privilege === 'admin') && 
+                           <div>
+                              <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>Edit</button>
+                              <button className={styles['delete-btn']} onClick={handleMemberDelete}>Remove</button>
+                           </div>
+                        }
+                     </>
+               }
+            </>
          }
       </main>
    );
