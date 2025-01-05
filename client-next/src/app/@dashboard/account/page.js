@@ -8,13 +8,14 @@ import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/accountPage.module.css';
 
 const CustomTextField = styled(TextField)({
-   'margin-top': '0',
+   'marginTop': '0',
    'width': '100%',
-   'margin-bottom': '0.8em',
-   'max-width': '300px',
+   'marginBottom': '0.8em',
+   'maxWidth': '300px',
+   'backgroundColor': '#f6fffb',
    '& .MuiInputBase-input': {
-      'padding-top': '1.7em',
-      'padding-bottom': '0.4em'
+      'paddingTop': '1.7em',
+      'paddingBottom': '0.4em'
    },
    '& .MuiFilledInput-root': {
       fontSize: '1.1em',
@@ -279,7 +280,7 @@ export default function AccountPage({ params }) {
                                     </>
                                  :
                                     <button type='button' onClick={handleChangePassword}>Change Password</button>                    
-                              }         
+                              }
                            </div>
 
                            <CustomTextField
