@@ -39,7 +39,7 @@ export default function MemberDetailsPage({ params }) {
    const [changePassword, setChangePassword] = useState(false);
    const [updateMemberData, setUpdateMemberData] = useState(false);
    const [formErrors, setFormErrors] = useState([]);
-   const [deleteErrors, setDeleteErrors] = useState(['test']);
+   const [deleteErrors, setDeleteErrors] = useState([]);
    const [error, setError] = useState();
 
    const router = useRouter();
