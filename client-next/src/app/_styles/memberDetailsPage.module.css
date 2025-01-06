@@ -5,13 +5,12 @@
 
 .member-details-page .user-info li {
    display: flex;
-   gap: 1em;
+   gap: 0.6em;
    margin-bottom: 0.3em;
 }
 
 .member-details-page span.label {
    display: inline-block;
-   width: 7em;
    flex-shrink: 0;
 }
 .member-details-page span.info {
@@ -119,6 +118,14 @@
 }
 
 @media (min-width: 425px) {
+   .member-details-page .user-info li {
+      gap: 1em;
+   }
+   
+   .member-details-page span.label {
+      width: 7em;
+   }
+   
    .member-details-page .first-last-name-ctnr {
       display: flex;
       gap: 2em;
