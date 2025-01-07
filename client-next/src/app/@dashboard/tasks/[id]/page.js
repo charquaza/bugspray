@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import TaskUpdateForm from '@/app/_components/TaskUpdateForm';
 import { apiURL } from '@/root/config.js';
+import styles from '@/app/_styles/taskDetailsPage.module.css';
 
 export default function TaskDetailsPage({ params }) {
    const user = useUserData();
@@ -89,7 +90,7 @@ export default function TaskDetailsPage({ params }) {
    }
 
    return (
-      <main>
+      <main className={styles['task-details-page']}>
          {
             (task && user) &&
                <>
@@ -102,62 +103,79 @@ export default function TaskDetailsPage({ params }) {
                               setUpdateTask={setUpdateTask}
                            />
                         :
-                           <ul>
-                              <li>Title: {task.title}</li>
-                              <li>Description: {task.description}</li>
-                              <li>Project:&nbsp;
-                                 <Link href={'/projects/' + task.project._id}>
-                                    {task.project.name}
-                                 </Link>
-                              </li>
-                              <li>Date Created:&nbsp;
-                                 {
-                                    DateTime.fromISO(task.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
-                                 }
-                              </li>
-                              <li>Created By:&nbsp;
-                                 <Link href={'/team/' + task.createdBy._id}>
-                                    {
-                                       task.createdBy.firstName + ' ' + 
-                                       task.createdBy.lastName
-                                    }
-                                 </Link>
-                              </li>
-                              <li>Status: {task.status}</li>
-                              <li>Priority: {task.priority}</li>
-                              <li>Sprint:&nbsp;
-                                 {
-                                    task.sprint 
-                                       ? <Link href={'/sprints/' + task.sprint._id}>{task.sprint.name}</Link> 
-                                       : 'N/A'
-                                 }
-                              </li>
-                              <li>
-                                 Assignees: 
-                                 <ul>
-                                    {
-                                       task.assignees.map((member) => {
-                                          return (
-                                             <li key={member._id}>
-                                                <Link href={'/team/' + member._id}>
-                                                   {member.firstName + ' ' + member.lastName}
-                                                </Link>                                                
-                                             </li>
-                                          );
-                                       })
-                                    }
-                                 </ul>
-                              </li>
+                           <>
+                              <ul className={styles['task-info']}>
+                                 <li>
+                                    <span className={styles['label']}>Title:</span> 
+                                    <span className={styles['info']}>{task.title}</span>
+                                 </li>
+                                 <li className={styles['description-ctnr']}>
+                                    <span className={styles['label']}>Description:</span> 
+                                    <p className={styles['description']}>{task.description}</p>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Project:</span> 
+                                    <span className={styles['info']}>
+                                       <Link href={'/projects/' + task.project._id}>
+                                          {task.project.name}
+                                       </Link>
+                                    </span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Date Created:</span> 
+                                    <span className={styles['info']}>
+                                       {DateTime.fromISO(task.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
+                                    </span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Created By:</span> 
+                                    <span className={styles['info']}>
+                                       <Link href={'/team/' + task.createdBy._id}>
+                                          {task.createdBy.firstName + ' ' + task.createdBy.lastName}
+                                       </Link>
+                                    </span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Status:</span> 
+                                    <span className={styles['info']}>{task.status}</span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Priority:</span> 
+                                    <span className={styles['info']}>{task.priority}</span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Sprint:</span> 
+                                    <span className={styles['info']}>
+                                       {task.sprint 
+                                          ? <Link href={'/sprints/' + task.sprint._id}>{task.sprint.name}</Link> 
+                                          : 'N/A'}
+                                    </span>
+                                 </li>
+                                 <li className={styles['assignees-list-ctnr']}>
+                                    <span className={styles['label']}>Assignees:</span> 
+                                    <ul className={styles['assignees-list']}>
+                                       {
+                                          task.assignees.map((member) => {
+                                             return (
+                                                <li key={member._id}>
+                                                   <Link href={'/team/' + member._id}>
+                                                      {member.firstName + ' ' + member.lastName}
+                                                   </Link>                                                
+                                                </li>
+                                             );
+                                          })
+                                       }
+                                    </ul>
+                                 </li>
+                              </ul>
 
-                              <br/>
                               <div>
-                                 <button onClick={handleUpdateModeToggle}>Update Task</button>
-                                 {
-                                    (user.privilege === 'admin') && 
-                                       <button onClick={handleTaskDelete}>Delete</button>
-                                 }
+                                 <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>Update Task</button>
+                                    {(user.privilege === 'admin') && 
+                                       <button className={styles['delete-btn']} onClick={handleTaskDelete}>Delete</button>
+                                    }
                               </div>
-                           </ul>
+                           </>
                   }
                </>
          }

@@ -1,0 +1,146 @@
+.task-details-page .task-info {
+   margin-bottom: 2em;
+   list-style-type: none;
+   padding: 0;
+}
+
+.task-details-page .task-info > li {
+   display: flex;
+   gap: 0.6em;
+   margin-bottom: 0.3em;
+}
+
+.task-details-page .task-info .description-ctnr,
+.task-details-page .task-info .assignees-list-ctnr {
+   display: block;
+}
+
+.task-details-page .task-info .assignees-list-ctnr {
+   max-width: 16em;
+}
+
+.task-details-page span.label {
+   display: inline-block;
+   flex-shrink: 0;
+}
+.task-details-page span.info {
+   font-size: 1.1em;
+   font-weight: 450;
+}
+
+.task-details-page .description {
+   margin: 0.3em 0 1em;
+   max-height: 30vh;
+   overflow: scroll;
+   padding-left: 0.2em;
+   border: 5px solid white;
+   border-radius: 0.2em;
+   outline: 1px solid rgb(160, 160, 160);
+}
+
+.task-details-page .assignees-list {
+   margin: 0.3em 0 1em;
+   max-height: 30vh;
+   overflow: scroll;
+   padding-left: 1.2em;
+   border: 5px solid white;
+   border-radius: 0.2em;
+   outline: 1px solid rgb(160, 160, 160);
+}
+
+.task-details-page .edit-btn {
+   margin-right: 1.5em;
+   margin-bottom: 1em;
+   background-color: rgb(210, 210, 210);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.task-details-page .edit-btn:hover {
+   background-color: rgb(180, 180, 180);
+}
+.task-details-page .edit-btn:active {
+   background-color: rgb(160, 160, 160);
+}
+
+.task-details-page .delete-btn {
+   background-color: rgb(255, 116, 116);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.task-details-page .delete-btn:hover {
+   background-color: rgb(265, 126, 126);
+   font-weight: 500;
+}
+.task-details-page .delete-btn:active {
+   background-color: rgb(215, 76, 76);
+}
+
+.task-details-page .error-container {
+   color: var(--color-error);
+}
+.task-details-page .error-container p {
+   margin-bottom: 0.5em;
+}
+.task-details-page .error-container ul {
+   margin-top: 0;
+   padding-left: 1.8em;
+}
+
+@media (min-width: 425px) {
+   .task-details-page .task-info > li {
+      gap: 1em;
+   }
+
+   .task-details-page .task-info .description-ctnr {
+      width: 100%;
+   }
+
+   .task-details-page span.label {
+      width: 7em;
+   }
+   
+   .task-details-page .first-last-name-ctnr {
+      display: flex;
+      gap: 2em;
+   }
+
+   .task-details-page .new-password-inputs-ctnr {
+      width: 100%;
+      display: flex;
+      gap: 2em;
+   }
+}
+
+@media (min-width: 545px) {
+   .task-details-page .task-info {
+      position: relative;
+   }
+
+   .task-details-page .task-info > li {
+      width: clamp(17em, 29vw, 20em);
+   }
+
+   .task-details-page .task-info .description-ctnr {
+      position: absolute;
+      top: 0;
+      left: clamp(19em, 34vw, 25em);
+      width: clamp(12em, calc(100vw - 21em), 35em);
+   }
+   .task-details-page .task-info .assignees-list-ctnr {
+      position: absolute;
+      top: 14em;
+      left: clamp(19em, 34vw, 25em);
+      width: clamp(11em, calc(100vw - 23em), 16em);
+   }
+
+   .task-details-page .description {
+      max-height: 10em;
+   }
+   .task-details-page .assignees-list {
+      max-height: 10em;
+   }
+}
