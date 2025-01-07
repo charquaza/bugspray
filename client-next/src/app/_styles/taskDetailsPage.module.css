@@ -115,30 +115,31 @@
    }
 }
 
-@media (min-width: 545px) {
+@media (min-width: 615px) {
    .task-details-page .task-info {
       position: relative;
    }
 
    .task-details-page .task-info > li {
-      width: clamp(17em, 29vw, 20em);
+      width: clamp(17em, 24.5vw, 20em);
    }
 
    .task-details-page .task-info .description-ctnr {
       position: absolute;
       top: 0;
-      left: clamp(19em, 34vw, 25em);
-      width: clamp(12em, calc(100vw - 21em), 35em);
+      left: clamp(19em, 28.5vw, 25em);
+      width: clamp(12em, calc(100vw - 21.5em), 47em);
    }
    .task-details-page .task-info .assignees-list-ctnr {
       position: absolute;
-      top: 14em;
-      left: clamp(19em, 34vw, 25em);
-      width: clamp(11em, calc(100vw - 23em), 16em);
+      top: 16.5em;
+      left: clamp(19em, 28.5vw, 25em);
+      width: clamp(12em, calc(100vw - 21.5em), 16em);
    }
 
    .task-details-page .description {
-      max-height: 10em;
+      max-height: revert;
+      height: 13em;
    }
    .task-details-page .assignees-list {
       max-height: 10em;
