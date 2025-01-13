@@ -1,7 +1,31 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { styled } from '@mui/material/styles';
+import { TextField, MenuItem } from '@mui/material';
 import { apiURL } from '@/root/config.js';
+import styles from '@/app/_styles/TaskUpdateForm.module.css';
+
+const CustomTextField = styled(TextField)({
+   'marginTop': '0',
+   'width': '100%',
+   'marginBottom': '0.8em',
+   'maxWidth': '300px',
+   'backgroundColor': '#f6fffb',
+   '& .MuiInputBase-input': {
+      'paddingTop': '1.7em',
+      'paddingBottom': '0.4em'
+   },
+   '& .MuiFilledInput-root': {
+      fontSize: '1.1em',
+      borderRadius: '0.3em',
+      '&:before': { borderBottom: 'none' },
+      '&:after': { borderBottom: 'none' }
+   },
+   '& .MuiInputLabel-root': {
+      fontSize: '1.3em',
+   },
+});
 
 export default function TaskUpdateForm({ taskId, setInUpdateMode, setUpdateTask }) {
    const [task, setTask] = useState();
@@ -19,6 +43,28 @@ export default function TaskUpdateForm({ taskId, setInUpdateMode, setUpdateTask 
    if (error) {
       throw error;
    }
+
+   const inputsWithErrors = useMemo(() => {
+      const errorMap = new Map();
+      formErrors.forEach((errMsg) => {
+         if (errMsg.search(/title/i) !== -1) {
+            errorMap.set('title', true);
+         } else if (errMsg.search(/description/i) !== -1) {
+            errorMap.set('description', true);
+         } else if (errMsg.search(/project/i) !== -1) {
+            errorMap.set('project', true);
+         } else if (errMsg.search(/status/i) !== -1) {
+            errorMap.set('status', true);
+         } else if (errMsg.search(/priority/i) !== -1) {
+            errorMap.set('priority', true);
+         } else if (errMsg.search(/sprint/i) !== -1) {
+            errorMap.set('sprint', true);
+         } else if (errMsg.search(/assignees/i) !== -1) {
+            errorMap.set('assignees', true);
+         }
+      });
+      return errorMap;
+   }, [formErrors]);
 
    useEffect(function getTask() {
       async function fetchTask() {
@@ -281,151 +327,171 @@ export default function TaskUpdateForm({ taskId, setInUpdateMode, setUpdateTask 
    }
 
    return (
-      <div>
-         {
-            (inputValues && task && sprintList && projectList) &&
-               <>
-                  {
-                     formErrors.length > 0 &&
-                        <div>
-                           <p>Task update unsuccessful: </p>
-                           <ul>
-                                 {
-                                    formErrors.map((errMsg) => {
-                                       return <li key={errMsg}>{errMsg}</li>;
-                                    })
-                                 }
-                           </ul>
-                        </div>
-                  }
+      <div className={styles['task-update-ctnr']}>
+         {(inputValues && task && sprintList && projectList) &&
+            <>
+               {
+                  formErrors.length > 0 &&
+                     <div className={styles['error-container']}>
+                        <p>Task update unsuccessful: </p>
+                        <ul>
+                           {
+                              formErrors.map((errMsg) => {
+                                 return <li key={errMsg}>{errMsg}</li>;
+                              })
+                           }
+                        </ul>
+                     </div>
+               }
 
-                  <form onSubmit={ handleFormSubmit }>
-                     <label>
-                        Title:
-                        <input 
-                           type='text' name='title' value={inputValues.title} 
-                           onChange={ handleInputChange }
-                        >
-                        </input>
-                     </label>
-                     <br/>
+               <form onSubmit={ handleFormSubmit }>
+                  <CustomTextField 
+                     type='text' id='title' name='title'
+                     required label='Title' variant='filled' 
+                     margin='normal' value={inputValues.title}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('title')}
+                  />
+                  
+                  <div className={styles['description-ctnr']}>
+                     <CustomTextField 
+                        type='text' id='description' name='description'
+                        required label='Description' variant='filled' 
+                        multiline maxRows={12}
+                        margin='normal' value={inputValues.description}
+                        onChange={handleInputChange}
+                        error={inputsWithErrors.has('description')}
+                        sx={{
+                           'maxWidth': '600px', 
+                           '& .MuiInputBase-input': {
+                              'paddingTop': '1em'
+                           }
+                        }}
+                     />
+                  </div>
 
-                     <label>
-                        Description:
-                        <input 
-                           type='text' name='description' value={inputValues.description} 
-                           onChange={ handleInputChange }
-                        >
-                        </input>
-                     </label>
-                     <br/>
+                  <CustomTextField 
+                     select id='project' name='project'
+                     required label='Project' variant='filled' 
+                     margin='normal' value={inputValues.project}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('project')}
+                     sx={{'maxWidth': '200px'}}
+                  >
+                     {projectList && projectList.map((project) => {
+                        return (
+                           <MenuItem value={project._id} key={project._id}>
+                              {project.name}
+                           </MenuItem>
+                        );
+                     }) }
+                  </CustomTextField>
+                  
+                  <CustomTextField 
+                     select id='status' name='status'
+                     required label='Status' variant='filled' 
+                     margin='normal' value={inputValues.status}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('status')}
+                     sx={{'maxWidth': '130px'}}
+                  >
+                     {[
+                        <MenuItem key='Open' value='Open'>Open</MenuItem>,
+                        <MenuItem key='In Progress' value='In Progress'>In Progress</MenuItem>,
+                        <MenuItem key='Complete' value='Complete'>Complete</MenuItem>,
+                        <MenuItem key='Closed' value='Closed'>Closed</MenuItem>,
+                     ]}
+                  </CustomTextField>
 
-                     <label>
-                        Project: 
-                        <select 
-                           name='project' value={inputValues.project} 
-                           onChange={ handleInputChange }
-                        >
-                           { projectList && projectList.map((project) => {
-                              return (
-                                 <option value={project._id} key={project._id}>
-                                    {project.name}
-                                 </option>
-                              );
-                           }) }
-                        </select>
-                     </label>
-                     <br/>
+                  <CustomTextField 
+                     select id='priority' name='priority'
+                     required label='Priority' variant='filled' 
+                     margin='normal' value={inputValues.priority}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('priority')}
+                     sx={{'maxWidth': '130px'}}
+                  >
+                     {[
+                        <MenuItem key='High' value='High'>High</MenuItem>,
+                        <MenuItem key='Medium' value='Medium'>Medium</MenuItem>,
+                        <MenuItem key='Low' value='Low'>Low</MenuItem>,
+                     ]}
+                  </CustomTextField>
 
-                     <label>
-                        Status: 
-                        <select 
-                           name='status' value={inputValues.status} 
-                           onChange={ handleInputChange }
-                        >
-                           <option value='Open'>Open</option>
-                           <option value='In Progress'>In Progress</option>
-                           <option value='Complete'>Complete</option>
-                           <option value='Closed'>Closed</option>
-                        </select>
-                     </label>
-                     <br/>
+                  <CustomTextField 
+                     select id='sprint' name='sprint'
+                     required label='Sprint' variant='filled' 
+                     margin='normal' value={inputValues.sprint}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('sprint')}
+                     sx={{'maxWidth': '130px'}}
+                  >
+                     {filteredSprintList && filteredSprintList.map((sprint) => {
+                        return (
+                           <MenuItem value={sprint._id} key={sprint._id}>
+                              {sprint.name}
+                           </MenuItem>
+                        );
+                     }) }
+                  </CustomTextField>
 
-                     <label>
-                        Priority: 
-                        <select 
-                           name='priority' value={inputValues.priority} 
-                           onChange={ handleInputChange }
-                        >
-                           <option value='High'>High</option>
-                           <option value='Medium'>Medium</option>
-                           <option value='Low'>Low</option>
-                        </select>
-                     </label>
-                     <br/>
-
-                     <label>
-                        Sprint:
-                        <select 
-                           name='sprint' value={inputValues.sprint} 
-                           onChange={ handleInputChange }
-                        >
-                           { 
-                              filteredSprintList && filteredSprintList.map((sprint) => {
+                  <div className={styles['assignees-list-ctnr']}>
+                     <p>Assignees:</p> 
+                     <ul className={styles['assignees-list']}>
+                        {inputValues.assignees.size > 0
+                           ? 
+                              Array.from(inputValues.assignees, ([ memberId, member ]) => {
                                  return (
-                                    <option value={sprint._id} key={sprint._id}>
-                                       {sprint.name}
-                                    </option>
+                                    <li key={memberId}>
+                                       {`${member.firstName} ${member.lastName} (${member.username})`}
+                                       <button type='button' data-member-id={memberId} onClick={handleRemoveAssignee}
+                                          className={styles['remove-assignee-btn']}
+                                       >Remove</button>
+                                    </li>
                                  );
                               }) 
-                           }
-                        </select>
-                     </label>
-                     <br/>
+                           : <li className={styles['no-assignees']}>No assignees</li>
+                        }
+                     </ul>
+                  </div>
 
-                     Assignees: 
-                     <ul>
-                        { Array.from(inputValues.assignees, ([ memberId, member ]) => {
+                  <div className={styles['add-assignee-ctnr']}>
+                     <p>Assign Members</p>
+                     <CustomTextField 
+                        select id='selectedAddMemberId' name='selectedAddMemberId'
+                        label='Selected Member' variant='filled' 
+                        margin='normal' value={inputValues.selectedAddMemberId || ''}
+                        onChange={handleInputChange}
+                        disabled={inputValues.assignees.size >= memberMap.size}
+                        sx={{'maxWidth': '200px'}}
+                     >
+                        {memberList && memberList.map((member) => {
+                           if (inputValues.assignees.has(member._id)) {
+                              return null;
+                           }
+
                            return (
-                              <li key={memberId}>
+                              <MenuItem value={member._id} key={member._id}>
                                  {`${member.firstName} ${member.lastName} (${member.username})`}
-                                 <button type='button' data-member-id={memberId} onClick={handleRemoveAssignee}>Remove</button>
-                              </li>
+                              </MenuItem>
                            );
                         }) }
-                     </ul>
-                     <label>
-                        Assign Members
-                        <br/> 
-                        <select 
-                           name='selectedAddMemberId' value={inputValues.selectedAddMemberId} 
-                           onChange={ handleInputChange }
-                        >
-                           { memberList && memberList.map((member) => {
-                              if (inputValues.assignees.has(member._id)) {
-                                 return null;
-                              }
+                     </CustomTextField>
 
-                              return (
-                                 <option value={member._id} key={member._id}>
-                                    {`${member.firstName} ${member.lastName} (${member.username})`}
-                                 </option>
-                              );
-                           }) }
-                        </select>
-                        <button type='button' onClick={handleAddAssignee}
-                           disabled={inputValues.assignees.size >= memberMap.size}
-                        >Add</button>
-                     </label>
-                     <br/>
+                     <button type='button' onClick={handleAddAssignee}
+                        className={styles['add-assignee-btn']}
+                        disabled={inputValues.assignees.size >= memberMap.size}
+                     >Add</button>
+                  </div>
 
-                     <br/>
-                     <button type='submit'>Update</button>
-                     <button type='button' 
+                  <div className={styles['form-controls-ctnr']}>
+                     <button type='submit' className={styles['submit-btn']}>Update</button>
+                     <button type='button' className={styles['cancel-btn']}
                         onClick={ handleUpdateCancel }
                      >Cancel</button>
-                  </form>
-               </>   
+                  </div>
+               </form>
+            </>   
          }
       </div>
    );
