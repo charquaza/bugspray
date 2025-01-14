@@ -1,0 +1,132 @@
+.sprint-details-page .sprint-info {
+   margin-bottom: 2em;
+   list-style-type: none;
+   padding: 0;
+}
+
+.sprint-details-page .sprint-info li {
+   display: flex;
+   gap: 0.6em;
+   margin-bottom: 0.3em;
+}
+
+.sprint-details-page span.label {
+   display: inline-block;
+   flex-shrink: 0;
+}
+.sprint-details-page span.info {
+   font-size: 1.1em;
+   font-weight: 450;
+}
+
+.sprint-details-page .edit-btn {
+   margin-right: 1.5em;
+   background-color: rgb(210, 210, 210);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.sprint-details-page .edit-btn:hover {
+   background-color: rgb(180, 180, 180);
+}
+.sprint-details-page .edit-btn:active {
+   background-color: rgb(160, 160, 160);
+}
+
+.sprint-details-page .delete-btn {
+   background-color: rgb(255, 116, 116);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.sprint-details-page .delete-btn:hover {
+   background-color: rgb(265, 126, 126);
+   font-weight: 500;
+}
+.sprint-details-page .delete-btn:active {
+   background-color: rgb(215, 76, 76);
+}
+
+.sprint-details-page .error-container {
+   color: var(--color-error);
+}
+.sprint-details-page .error-container p {
+   margin-bottom: 0.5em;
+}
+.sprint-details-page .error-container ul {
+   margin-top: 0;
+   padding-left: 1.8em;
+}
+
+.sprint-details-page form {
+   position: relative;
+   display: flex;
+   flex-direction: column;
+}
+
+.sprint-details-page .date-pickers-ctnr {
+   display: flex;
+   flex-wrap: wrap;
+   margin: 0.5em 0 0;
+}
+.sprint-details-page .date-pickers-ctnr p {
+   margin: 0 0 0.2em;
+   padding-left: 0.5em;
+}
+.sprint-details-page .date-pickers-ctnr p.date-error {
+   color: var(--color-error);
+}
+
+.sprint-details-page .form-controls-ctnr {
+   margin: 2em 0 0;
+}
+
+.sprint-details-page .form-controls-ctnr .submit-btn {
+   font-size: 1.2em;
+   border: 0;
+   border-radius: 0.2em;
+   padding: 0.3em 0.6em;
+   background-color: rgb(142 235 178);
+}
+.sprint-details-page .form-controls-ctnr .submit-btn:hover {
+   background-color: rgb(162 255 198);
+}
+.sprint-details-page .form-controls-ctnr .submit-btn:active {
+   background-color: rgb(122 215 158);
+}
+
+.sprint-details-page .form-controls-ctnr .cancel-btn {
+   font-size: 1.2em;
+   margin-left: 1em;
+   border: 0;
+   border-bottom: 1px solid black;
+   padding: 0;
+   background-color: transparent;
+}
+.sprint-details-page .form-controls-ctnr .cancel-btn:hover {
+   font-weight: 500;
+}
+.sprint-details-page .form-controls-ctnr .cancel-btn:active {
+   font-weight: 600;
+}
+
+@media (min-width: 425px) {
+   .sprint-details-page .sprint-info li {
+      gap: 1em;
+   }
+   
+   .sprint-details-page span.label {
+      width: 7em;
+   }
+}
+
+@media (min-width: 615px) {
+   .sprint-details-page .description-ctnr {
+      position: absolute;
+      top: 0;
+      left: clamp(22em, 35vw, 25em);
+      width: clamp(12em, calc(100vw - 25em), 47em);
+   }
+}
