@@ -21,7 +21,6 @@
 }
 .task-update-ctnr .assignees-list-ctnr p {
    font-size: 1.1em;
-   font-weight: 450;
 }
 
 .task-update-ctnr .assignees-list {
@@ -55,6 +54,11 @@
 }
 .task-update-ctnr .remove-assignee-btn:active {
    background-color: rgb(190, 140, 140);
+}
+
+.task-update-ctnr .add-assignee-ctnr p {
+   font-size: 1.1em;
+   margin-bottom: 0.15em;
 }
 
 .task-update-ctnr .add-assignee-btn {
@@ -119,7 +123,7 @@
 
    .task-update-ctnr .add-assignee-ctnr {
       position: absolute;
-      top: 24.8em;
+      top: 24.5em;
       left: clamp(22em, 35vw, 25em);
       width: clamp(12em, calc(100vw - 25em), 47em);
    }
