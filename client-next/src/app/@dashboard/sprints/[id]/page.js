@@ -342,9 +342,9 @@ export default function SprintDetailsPage({ params }) {
                               <span className={styles['label']}>Name:</span> 
                               <span className={styles['info']}>{sprint.name}</span>
                            </li>
-                           <li>
+                           <li className={styles['description-ctnr']}>
                               <span className={styles['label']}>Description:</span> 
-                              <span className={styles['info']}>{sprint.description}</span>
+                              <p className={styles['description']}>{sprint.description}</p>
                            </li>
                            <li>
                               <span className={styles['label']}>Project:</span> 
