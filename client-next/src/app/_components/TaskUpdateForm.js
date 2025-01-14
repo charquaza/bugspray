@@ -436,8 +436,8 @@ export default function TaskUpdateForm({ taskId, setInUpdateMode, setUpdateTask 
                   </CustomTextField>
 
                   <div className={styles['assignees-list-ctnr']}>
-                     <p>Assignees:</p> 
-                     <ul className={styles['assignees-list']}>
+                     <p className={styles[inputsWithErrors.has('assignees') ? 'assignees-error' : '']}>Assignees:</p> 
+                     <ul className={styles['assignees-list'] + ' ' + styles[inputsWithErrors.has('assignees') ? 'assignees-list-error' : '']}>
                         {inputValues.assignees.size > 0
                            ? 
                               Array.from(inputValues.assignees, ([ memberId, member ]) => {
