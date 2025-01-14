@@ -33,9 +33,10 @@
    max-height: 30vh;
    overflow: scroll;
    padding-left: 0.2em;
-   border: 5px solid white;
+   border: 8px solid white;
    border-radius: 0.2em;
    outline: 1px solid rgb(160, 160, 160);
+   font-size: 1.05em;
 }
 
 .task-details-page .assignees-list {
@@ -43,9 +44,10 @@
    max-height: 30vh;
    overflow: scroll;
    padding-left: 1.2em;
-   border: 5px solid white;
+   border: 8px solid white;
    border-radius: 0.2em;
    outline: 1px solid rgb(160, 160, 160);
+   font-size: 1.05em;
 }
 
 .task-details-page .edit-btn {
@@ -139,9 +141,9 @@
 
    .task-details-page .description {
       max-height: revert;
-      height: 13em;
+      height: 12em;
    }
    .task-details-page .assignees-list {
-      max-height: 10em;
+      max-height: 7em;
    }
 }

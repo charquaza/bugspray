@@ -29,9 +29,10 @@
    max-height: 30vh;
    overflow: scroll;
    padding-left: 0.2em;
-   border: 5px solid white;
+   border: 8px solid white;
    border-radius: 0.2em;
    outline: 1px solid rgb(160, 160, 160);
+   font-size: 1.05em;
 }
 
 .sprint-details-page .edit-btn {
@@ -151,7 +152,7 @@
 
    .sprint-details-page .sprint-info .description {
       max-height: revert;
-      height: 13em;
+      height: 15em;
    }
 
    .sprint-details-page form .description-ctnr {
