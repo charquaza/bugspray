@@ -444,7 +444,7 @@ export default function ProjectDetailsPage({ params }) {
                                  >Add</button>
                               </div>
                            </div>
-                           
+
                            <div className={styles['form-controls-ctnr']}>
                               <button type='submit' className={styles['submit-btn']}>Update</button>
                               <button type='button' className={styles['cancel-btn']}
@@ -455,64 +455,74 @@ export default function ProjectDetailsPage({ params }) {
                      </>
                   :
                      <>
-                        <ul className={styles['project-info']}>
-                           <li>
-                              <span className={styles['label']}>Date Created:</span> 
-                              <span className={styles['info']}>
-                                 {DateTime.fromISO(project.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
-                              </span>
-                           </li>
-                           <li>
-                              <span className={styles['label']}>Status:</span> 
-                              <span className={styles['info']}>{project.status}</span>
-                           </li>
-                           <li>
-                              <span className={styles['label']}>Priority:</span> 
-                              <span className={styles['info']}>{project.priority}</span>
-                           </li>
-                           <li>
-                              <span className={styles['label']}>Lead:</span> 
-                              <span className={styles['info']}>
-                                 <Link href={'/team/' + project.lead._id}>
-                                 {project.lead.firstName + ' ' + project.lead.lastName}
-                                 </Link>
-                              </span>
-                           </li>
-                           <li className={styles['team-list-ctnr']}>
-                              <span className={styles['label']}>Team Members:</span> 
-                              <ul className={styles['team-list']}>
-                                 {project.team.map((member) => {
-                                    return (
-                                       <li key={member._id}>
-                                          <Link href={'/team/' + member._id}>
-                                          {member.firstName + ' ' + member.lastName}
-                                          </Link>
-                                       </li>
-                                    );
-                                 })}
+                        <div className={styles['project-info-sprints-ctnr']}>
+                           <section className={styles['project-info-controls-ctnr']}>
+                              <h2>Project info</h2>
+
+                              <ul className={styles['project-info']}>
+                                 <li>
+                                    <span className={styles['label']}>Date Created:</span> 
+                                    <span className={styles['info']}>
+                                       {DateTime.fromISO(project.dateCreated).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
+                                    </span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Status:</span> 
+                                    <span className={styles['info']}>{project.status}</span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Priority:</span> 
+                                    <span className={styles['info']}>{project.priority}</span>
+                                 </li>
+                                 <li>
+                                    <span className={styles['label']}>Lead:</span> 
+                                    <span className={styles['info']}>
+                                       <Link href={'/team/' + project.lead._id}>
+                                       {project.lead.firstName + ' ' + project.lead.lastName}
+                                       </Link>
+                                    </span>
+                                 </li>
+                                 <li className={styles['team-list-ctnr']}>
+                                    <span className={styles['label']}>Team Members:</span> 
+                                    <ul className={styles['team-list']}>
+                                       {project.team.map((member) => {
+                                          return (
+                                             <li key={member._id}>
+                                                <Link href={'/team/' + member._id}>
+                                                {member.firstName + ' ' + member.lastName}
+                                                </Link>
+                                             </li>
+                                          );
+                                       })}
+                                    </ul>
+                                 </li>
                               </ul>
-                           </li>
-                        </ul>
+      
+                              {
+                                 (user && user.privilege === 'admin') && 
+                                    <div>
+                                       <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>
+                                          Update
+                                       </button>
+                                       <button className={styles['delete-btn']} onClick={handleProjectDelete}>
+                                          Delete
+                                       </button>
+                                    </div>
+                              }
+                           </section>
 
-                        {
-                           (user && user.privilege === 'admin') && 
-                              <div>
-                                 <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>
-                                    Update
-                                 </button>
-                                 <button className={styles['delete-btn']} onClick={handleProjectDelete}>
-                                    Delete
-                                 </button>
-                              </div>
-                        }
+                           <section className={styles['sprints-ctnr']}>
+                              <h2>Sprints</h2>
+                              <SprintCreateForm projectId={project._id} />
+                              <SprintList projectId={project._id} />
+                           </section>
+                        </div>
 
-                        <h2>Sprints</h2>
-                        <SprintCreateForm projectId={project._id} />
-                        <SprintList projectId={project._id} />
-
-                        <h2>Tasks</h2>
-                        <TaskCreateForm projectId={project._id} />
-                        <TaskList projectId={project._id} />
+                        <section className={styles['tasks-ctnr']}>
+                           <h2>Tasks</h2>
+                           <TaskCreateForm projectId={project._id} />
+                           <TaskList projectId={project._id} />
+                        </section>
                      </>
                }           
             </>

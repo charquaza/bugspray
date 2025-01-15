@@ -1,3 +1,17 @@
+.project-details-page h2 {
+   margin-top: 0;
+   font-size: 1.6em;
+   font-weight: 400;
+   text-decoration: underline;
+   text-underline-offset: 0.3em;
+   text-decoration-thickness: 0.05em;
+}
+
+.project-details-page .sprints-ctnr,
+.project-details-page .tasks-ctnr {
+   margin-top: 2.5em;
+}
+
 .project-details-page .project-info {
    position: relative;
    margin-bottom: 2em;
@@ -222,5 +236,16 @@
 
    .project-details-page form .form-controls-ctnr {
       margin-top: 3em;
+   }
+}
+
+@media (min-width: 1128px) {
+   .project-info-sprints-ctnr {
+      display: flex;
+      gap: 10em;
+   }
+
+   .project-details-page .sprints-ctnr {
+      margin-top: 0;
    }
 }
