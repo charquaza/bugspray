@@ -1,0 +1,79 @@
+.sprint-create-form-ctnr .create-btn {
+   margin-right: 1.5em;
+   margin-bottom: 1em;
+   background-color: rgb(200, 225, 185);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.sprint-create-form-ctnr .create-btn:hover {
+   background-color: rgb(220, 245, 205);
+}
+.sprint-create-form-ctnr .create-btn:active {
+   background-color: rgb(180, 195, 155);
+}
+
+.sprint-create-form-ctnr .error-container {
+   color: var(--color-error);
+}
+.sprint-create-form-ctnr .error-container p {
+   margin-bottom: 0.5em;
+}
+.sprint-create-form-ctnr .error-container ul {
+   margin-top: 0;
+   padding-left: 1.8em;
+}
+
+.sprint-create-form-ctnr form {
+   margin-bottom: 3em;
+   position: relative;
+   display: flex;
+   flex-direction: column;
+}
+
+.sprint-create-form-ctnr .date-pickers-ctnr {
+   display: flex;
+   flex-wrap: wrap;
+   margin: 0.5em 0 0;
+}
+.sprint-create-form-ctnr .date-pickers-ctnr p {
+   margin: 0 0 0.2em;
+   padding-left: 0.5em;
+}
+.sprint-create-form-ctnr .date-pickers-ctnr p.date-error {
+   color: var(--color-error);
+}
+
+.sprint-create-form-ctnr .form-controls-ctnr {
+   margin: 2em 0 0;
+}
+
+.sprint-create-form-ctnr .form-controls-ctnr .submit-btn {
+   font-size: 1.2em;
+   border: 0;
+   border-radius: 0.2em;
+   padding: 0.3em 0.6em;
+   background-color: rgb(142 235 178);
+}
+.sprint-create-form-ctnr .form-controls-ctnr .submit-btn:hover {
+   background-color: rgb(162 255 198);
+}
+.sprint-create-form-ctnr .form-controls-ctnr .submit-btn:active {
+   background-color: rgb(122 215 158);
+}
+
+.sprint-create-form-ctnr .form-controls-ctnr .cancel-btn {
+   font-size: 1.2em;
+   margin-left: 1em;
+   border: 0;
+   border-bottom: 1px solid black;
+   padding: 0;
+   background-color: transparent;
+}
+.sprint-create-form-ctnr .form-controls-ctnr .cancel-btn:hover {
+   font-weight: 500;
+}
+.sprint-create-form-ctnr .form-controls-ctnr .cancel-btn:active {
+   font-weight: 600;
+}
