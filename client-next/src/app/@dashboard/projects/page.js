@@ -1,9 +1,33 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { styled } from '@mui/material/styles';
+import { TextField, MenuItem } from '@mui/material';
 import { useUserData } from '@/app/_hooks/hooks';
 import ProjectList from '@/app/_components/ProjectList';
 import { apiURL } from '@/root/config.js';
+import styles from '@/app/_styles/projectsPage.module.css';
+
+const CustomTextField = styled(TextField)({
+   'marginTop': '0',
+   'width': '100%',
+   'marginBottom': '0.8em',
+   'maxWidth': '300px',
+   'backgroundColor': '#f6fffb',
+   '& .MuiInputBase-input': {
+      'paddingTop': '1.7em',
+      'paddingBottom': '0.4em'
+   },
+   '& .MuiFilledInput-root': {
+      fontSize: '1.1em',
+      borderRadius: '0.3em',
+      '&:before': { borderBottom: 'none' },
+      '&:after': { borderBottom: 'none' }
+   },
+   '& .MuiInputLabel-root': {
+      fontSize: '1.3em',
+   },
+});
 
 export default function ProjectsPage() {
    const user = useUserData();
@@ -18,6 +42,24 @@ export default function ProjectsPage() {
    if (error) {
       throw error;
    }
+
+   const inputsWithErrors = useMemo(() => {
+      const errorMap = new Map();
+      formErrors.forEach((errMsg) => {
+         if (errMsg.search(/name/i) !== -1) {
+            errorMap.set('name', true);
+         } else if (errMsg.search(/status/i) !== -1) {
+            errorMap.set('status', true);
+         } else if (errMsg.search(/priority/i) !== -1) {
+            errorMap.set('priority', true);
+         } else if (errMsg.search(/team/i) !== -1) {
+            errorMap.set('team', true);
+         } else if (errMsg.search(/lead/i) !== -1) {
+            errorMap.set('lead', true);
+         }
+      });
+      return errorMap;
+   }, [formErrors]);
 
    useEffect(function getAllMembers() {  
       //only run on initial render and 
@@ -173,130 +215,148 @@ export default function ProjectsPage() {
    }
 
    return (
-      <main>
+      <main className={styles['projects-page']}>
          <h1>Projects</h1>
 
-         {
-            (user && user.privilege === 'admin') &&
-               (
-                  showCreateForm 
-                     ?
-                        <>
-                           {
-                              formErrors.length > 0 &&
-                                 <div>
-                                    <p>Project creation unsuccessful: </p>
-                                    <ul>
-                                          {
-                                             formErrors.map((errMsg) => {
-                                                return <li key={errMsg}>{errMsg}</li>;
-                                             })
-                                          }
-                                    </ul>
-                                 </div>
-                           }
-
-                           <form onSubmit={ handleFormSubmit }>
-                              <label>
-                                 Name:
-                                 <input 
-                                    type='text' name='name' value={inputValues.name} 
-                                    onChange={ handleInputChange }
-                                 >
-                                 </input>
-                              </label>
-                              <br/>
-
-                              <label>
-                                 Status: 
-                                 <select 
-                                    name='status' value={inputValues.status} 
-                                    onChange={ handleInputChange }
-                                 >
-                                    <option value='Open'>Open</option>
-                                    <option value='In Progress'>In Progress</option>
-                                    <option value='Complete'>Complete</option>
-                                    <option value='Closed'>Closed</option>
-                                 </select>
-                              </label>
-                              <br/>
-
-                              <label>
-                                 Priority: 
-                                 <select 
-                                    name='priority' value={inputValues.priority} 
-                                    onChange={ handleInputChange }
-                                 >
-                                    <option value='High'>High</option>
-                                    <option value='Medium'>Medium</option>
-                                    <option value='Low'>Low</option>
-                                 </select>
-                              </label>
-                              <br/>
-
-                              <label>
-                                 Lead: 
-                                 <select 
-                                    name='lead' value={inputValues.lead} 
-                                    onChange={ handleInputChange }
-                                 >
-                                    { memberList && memberList.map((member, index) => {
-                                       return (
-                                          <option value={member._id} key={member._id}>
-                                             {`${member.firstName} ${member.lastName} (${member.username})`}
-                                          </option>
-                                       );
-                                    }) }
-                                 </select>
-                              </label>
-                              <br/>
-
-                              Team Members: 
+         {(user && user.privilege === 'admin') &&
+            (showCreateForm 
+               ?
+                  <>
+                     {
+                        formErrors.length > 0 &&
+                           <div className={styles['error-container']}>
+                              <p>Project creation unsuccessful: </p>
                               <ul>
-                                 { Array.from(inputValues.team, ([ memberId, member ]) => {
+                                    {
+                                       formErrors.map((errMsg) => {
+                                          return <li key={errMsg}>{errMsg}</li>;
+                                       })
+                                    }
+                              </ul>
+                           </div>
+                     }
+
+                     <form onSubmit={ handleFormSubmit }>
+                        <CustomTextField 
+                           type='text' id='name' name='name'
+                           required label='Name' variant='filled' 
+                           margin='normal' value={inputValues.name}
+                           onChange={handleInputChange}
+                           error={inputsWithErrors.has('name')}
+                        />
+
+                        <div className={styles['status-priority-ctnr']}>
+                           <CustomTextField 
+                              select id='status' name='status'
+                              required label='Status' variant='filled' 
+                              margin='normal' value={inputValues.status}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('status')}
+                              sx={{'maxWidth': '140px'}}
+                           >
+                              {[
+                                 <MenuItem key='Open' value='Open'>Open</MenuItem>,
+                                 <MenuItem key='In Progress' value='In Progress'>In Progress</MenuItem>,
+                                 <MenuItem key='Complete' value='Complete'>Complete</MenuItem>,
+                                 <MenuItem key='Closed' value='Closed'>Closed</MenuItem>,
+                              ]}
+                           </CustomTextField>
+
+                           <CustomTextField 
+                              select id='priority' name='priority'
+                              required label='Priority' variant='filled' 
+                              margin='normal' value={inputValues.priority}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('priority')}
+                              sx={{'maxWidth': '140px'}}
+                           >
+                              {[
+                                 <MenuItem key='High' value='High'>High</MenuItem>,
+                                 <MenuItem key='Medium' value='Medium'>Medium</MenuItem>,
+                                 <MenuItem key='Low' value='Low'>Low</MenuItem>,
+                              ]}
+                           </CustomTextField>
+                        </div>
+
+                        <CustomTextField 
+                           select id='lead' name='lead'
+                           required label='Lead' variant='filled' 
+                           margin='normal' value={inputValues.lead}
+                           onChange={handleInputChange}
+                           error={inputsWithErrors.has('lead')}
+                           sx={{'maxWidth': '200px'}}
+                        >
+                           { memberList && memberList.map((member, index) => {
+                              return (
+                                 <MenuItem value={member._id} key={member._id}>
+                                    {`${member.firstName} ${member.lastName} (${member.username})`}
+                                 </MenuItem>
+                              );
+                           }) }
+                        </CustomTextField>
+
+                        <div className={styles['team-list-add-member-ctnr']}>
+                           <div className={styles['team-list-ctnr']}>
+                              <p className={styles[inputsWithErrors.has('team') ? 'team-error' : '']}>Team Members:</p> 
+                              <ul className={styles['team-list'] + ' ' + styles[inputsWithErrors.has('team') ? 'team-list-error' : '']}>
+                                 {inputValues.team.size > 0
+                                    ? 
+                                       Array.from(inputValues.team, ([ memberId, member ]) => {
+                                          return (
+                                             <li key={memberId}>
+                                                {`${member.firstName} ${member.lastName} (${member.username})`}
+                                                <button type='button' data-team-member-id={memberId} onClick={handleTeamMemberRemove}
+                                                   className={styles['remove-team-member-btn']}
+                                                >Remove</button>
+                                             </li>
+                                          );
+                                       }) 
+                                    : <li className={styles['no-team-members']}>No team members</li>
+                                 }
+                              </ul>
+                           </div>
+
+                           <div className={styles['add-team-member-ctnr']}>
+                              <p>Add Members</p>
+                              <CustomTextField 
+                                 select id='selectedAddMemberId' name='selectedAddMemberId'
+                                 label='Selected Member' variant='filled' 
+                                 margin='normal' value={inputValues.selectedAddMemberId || ''}
+                                 onChange={handleInputChange}
+                                 disabled={inputValues.team.size >= memberMap.size}
+                                 sx={{'maxWidth': '200px'}}
+                              >
+                                 {memberList && memberList.map((member) => {
+                                    if (inputValues.team.has(member._id)) {
+                                       return null;
+                                    }
+
                                     return (
-                                       <li key={memberId}>
+                                       <MenuItem value={member._id} key={member._id}>
                                           {`${member.firstName} ${member.lastName} (${member.username})`}
-                                          <button type='button' data-team-member-id={memberId} onClick={handleTeamMemberRemove}>Remove</button>
-                                       </li>
+                                       </MenuItem>
                                     );
                                  }) }
-                              </ul>
-                              <label>
-                                 Add Members
-                                 <br/> 
-                                 <select 
-                                    name='selectedAddMemberId' value={inputValues.selectedAddMemberId} 
-                                    onChange={ handleInputChange }
-                                 >
-                                    { memberList && memberList.map((member, index) => {
-                                       if (inputValues.team.has(member._id)) {
-                                          return null;
-                                       }
+                              </CustomTextField>
 
-                                       return (
-                                          <option value={member._id} key={member._id}>
-                                             {`${member.firstName} ${member.lastName} (${member.username})`}
-                                          </option>
-                                       );
-                                    }) }
-                                 </select>
-                                 <button type='button' onClick={handleTeamMemberAdd}
-                                    disabled={inputValues.team.size >= memberMap.size}
-                                 >Add</button>
-                              </label>
-                              <br/>
+                              <button type='button' onClick={handleTeamMemberAdd}
+                                 className={styles['add-team-member-btn']}
+                                 disabled={inputValues.team.size >= memberMap.size}
+                              >Add</button>
+                           </div>
+                        </div>
 
-                              <br/>
-                              <button type='submit'>Create</button>
-                              <button type='button' 
-                                 onClick={handleCreateToggle}
-                              >Cancel</button>
-                           </form>
-                        </>
-                     :
-                        <button onClick={handleCreateToggle}>Create New Project</button>
-               )
+                        <div className={styles['form-controls-ctnr']}>
+                           <button type='submit' className={styles['submit-btn']}>Create</button>
+                           <button type='button' className={styles['cancel-btn']}
+                              onClick={handleCreateToggle}
+                           >Cancel</button>
+                        </div>
+                     </form>
+                  </>
+               :
+                  <button className={styles['create-btn']} onClick={handleCreateToggle}>Create New Project</button>
+            )
          }
 
          <ProjectList />

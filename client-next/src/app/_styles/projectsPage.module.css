@@ -1,0 +1,162 @@
+.projects-page .create-btn {
+   margin-right: 1.5em;
+   margin-bottom: 1em;
+   background-color: rgb(200, 225, 185);
+   font-size: 1.1em;
+   padding: 0.3em 0.7em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.projects-page .create-btn:hover {
+   background-color: rgb(220, 245, 205);
+}
+.projects-page .create-btn:active {
+   background-color: rgb(180, 195, 155);
+}
+
+.projects-page .error-container {
+   color: var(--color-error);
+}
+.projects-page .error-container p {
+   margin-bottom: 0.5em;
+}
+.projects-page .error-container ul {
+   margin-top: 0;
+   padding-left: 1.8em;
+}
+
+.projects-page form {
+   margin-bottom: 3em;
+   position: relative;
+   display: flex;
+   flex-direction: column;
+}
+
+.projects-page form .status-priority-ctnr > :first-child {
+   margin-right: 20px;
+}
+
+.projects-page form .team-list-ctnr {
+   margin-top: 1em;
+   max-width: 20em;
+}
+.projects-page form .team-list-ctnr p {
+   font-size: 1.1em;
+}
+.projects-page form .team-list-ctnr p.team-error {
+   color: var(--color-error);
+}
+
+.projects-page form .team-list {
+   margin: 0.3em 0 1em;
+   min-height: 5vh;
+   max-height: 30vh;
+   overflow: scroll;
+   padding-left: 1.4em;
+   border: 5px solid white;
+   border-radius: 0.2em;
+   outline: 1px solid rgb(160, 160, 160);
+}
+
+.projects-page form .team-list.team-list-error {
+   outline: 1px solid var(--color-error);
+}
+
+.projects-page form .team-list li {
+   margin: 0.5em 0;
+}
+
+.projects-page form .no-team-members {
+   font-style: italic;
+   color: rgb(90, 90, 90);
+}
+
+.projects-page form .remove-team-member-btn {
+   margin-left: 0.7em;
+   border: 0;
+   border-radius: 0.2em;
+   padding: 0.1em 0.4em;
+   background-color: rgb(240, 190, 190);
+}
+.projects-page form .remove-team-member-btn:hover {
+   background-color: rgb(220, 170, 170);
+}
+.projects-page form .remove-team-member-btn:active {
+   background-color: rgb(190, 140, 140);
+}
+
+.projects-page form .add-team-member-ctnr p {
+   font-size: 1.1em;
+   margin-bottom: 0.15em;
+}
+
+.projects-page form .add-team-member-btn {
+   font-size: 1.1em;
+   margin-left: 0.7em;
+   border: 0;
+   border-radius: 0.2em;
+   padding: 0.3em 0.9em;
+   background-color: rgb(200, 225, 185);
+}
+.projects-page form .add-team-member-btn:hover {
+   background-color: rgb(180, 205, 165);
+}
+.projects-page form .add-team-member-btn:active {
+   background-color: rgb(150, 175, 135);
+}
+
+.projects-page .form-controls-ctnr {
+   margin: 2em 0 0;
+}
+
+.projects-page .form-controls-ctnr .submit-btn {
+   font-size: 1.2em;
+   border: 0;
+   border-radius: 0.2em;
+   padding: 0.3em 0.6em;
+   background-color: rgb(142 235 178);
+}
+.projects-page .form-controls-ctnr .submit-btn:hover {
+   background-color: rgb(162 255 198);
+}
+.projects-page .form-controls-ctnr .submit-btn:active {
+   background-color: rgb(122 215 158);
+}
+
+.projects-page .form-controls-ctnr .cancel-btn {
+   font-size: 1.2em;
+   margin-left: 1em;
+   border: 0;
+   border-bottom: 1px solid black;
+   padding: 0;
+   background-color: transparent;
+}
+.projects-page .form-controls-ctnr .cancel-btn:hover {
+   font-weight: 500;
+}
+.projects-page .form-controls-ctnr .cancel-btn:active {
+   font-weight: 600;
+}
+
+@media (min-width: 615px) {
+   .projects-page form .team-list {
+      max-height: 10em;
+   }
+}
+
+@media (min-width: 675px) {
+   .projects-page form .team-list-add-member-ctnr {
+      position: absolute;
+      top: 0;
+      left: clamp(22em, 35vw, 25em);
+      width: clamp(12em, calc(100vw - 25em), 47em);
+   }
+
+   .projects-page form .team-list-ctnr {
+      margin-top: -0.3em;
+   }
+
+   .projects-page form .form-controls-ctnr {
+      margin-top: 3em;
+   }
+}
