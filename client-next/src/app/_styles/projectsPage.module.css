@@ -32,10 +32,6 @@
    flex-direction: column;
 }
 
-.projects-page form .status-priority-ctnr > :first-child {
-   margin-right: 20px;
-}
-
 .projects-page form .team-list-ctnr {
    margin-top: 1em;
    max-width: 20em;
@@ -136,6 +132,13 @@
 }
 .projects-page .form-controls-ctnr .cancel-btn:active {
    font-weight: 600;
+}
+
+@media (min-width: 312px) {
+   .projects-page form .status-priority-ctnr {
+      display: flex;
+      column-gap: 20px;
+   }
 }
 
 @media (min-width: 615px) {
