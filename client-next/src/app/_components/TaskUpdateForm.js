@@ -420,7 +420,7 @@ export default function TaskUpdateForm({ taskId, setInUpdateMode, setUpdateTask 
 
                   <CustomTextField 
                      select id='sprint' name='sprint'
-                     required label='Sprint' variant='filled' 
+                     label='Sprint' variant='filled' 
                      margin='normal' value={inputValues.sprint}
                      onChange={handleInputChange}
                      error={inputsWithErrors.has('sprint')}
