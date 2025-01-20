@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
@@ -10,6 +10,8 @@ import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/taskDetailsPage.module.css';
 
 export default function TaskDetailsPage({ params }) {
+   const taskId = use(params).id;
+   
    const user = useUserData();
    const [task, setTask] = useState();
 
@@ -39,7 +41,7 @@ export default function TaskDetailsPage({ params }) {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/tasks/' + params.id;
+            const fetchURL = apiURL + '/tasks/' + taskId;
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
@@ -58,7 +60,7 @@ export default function TaskDetailsPage({ params }) {
       }
 
       fetchTask();
-   }, [task, updateTask, params.id]);
+   }, [task, updateTask, taskId]);
 
    function handleUpdateModeToggle() {
       setInUpdateMode(true);
@@ -99,7 +101,7 @@ export default function TaskDetailsPage({ params }) {
                   {
                      inUpdateMode 
                         ?
-                           <TaskUpdateForm taskId={params.id} setInUpdateMode={setInUpdateMode} 
+                           <TaskUpdateForm taskId={taskId} setInUpdateMode={setInUpdateMode} 
                               setUpdateTask={setUpdateTask}
                            />
                         :

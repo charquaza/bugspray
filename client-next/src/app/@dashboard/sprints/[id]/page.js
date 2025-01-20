@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
@@ -38,6 +38,8 @@ const CustomDatePicker = styled(DatePicker)({
 });
 
 export default function SprintDetailsPage({ params }) {
+   const sprintId = use(params).id;
+   
    const user = useUserData();
    const [sprint, setSprint] = useState();
    const [projectList, setProjectList] = useState(); 
@@ -89,7 +91,7 @@ export default function SprintDetailsPage({ params }) {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/sprints/' + params.id;
+            const fetchURL = apiURL + '/sprints/' + sprintId;
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
@@ -108,7 +110,7 @@ export default function SprintDetailsPage({ params }) {
       }
 
       fetchSprint();
-   }, [sprint, updateSprint, params.id]);
+   }, [sprint, updateSprint, sprintId]);
 
    useEffect(function getAllProjects() {  
       //only run on initial render and 

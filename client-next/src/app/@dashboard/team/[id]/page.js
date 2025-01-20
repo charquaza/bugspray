@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { DateTime } from 'luxon';
 import { styled } from '@mui/material/styles';
@@ -31,6 +31,8 @@ const CustomTextField = styled(TextField)({
 });
 
 export default function MemberDetailsPage({ params }) {
+   const memberId = use(params).id;
+   
    const user = useUserData();
 
    const [memberData, setMemberData] = useState();
@@ -84,7 +86,7 @@ export default function MemberDetailsPage({ params }) {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/members/' + params.id;
+            const fetchURL = apiURL + '/members/' + memberId;
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
@@ -103,7 +105,7 @@ export default function MemberDetailsPage({ params }) {
       }
 
       getMemberData();
-   }, [memberData, updateMemberData, params.id]);
+   }, [memberData, updateMemberData, memberId]);
 
    async function handleFormSubmit(e) {
       e.preventDefault();

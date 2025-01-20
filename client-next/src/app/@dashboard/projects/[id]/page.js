@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
@@ -36,6 +36,8 @@ const CustomTextField = styled(TextField)({
 });
 
 export default function ProjectDetailsPage({ params }) {
+   const projectId = use(params).id;
+
    const user = useUserData();
 
    const [project, setProject] = useState();
@@ -87,7 +89,7 @@ export default function ProjectDetailsPage({ params }) {
                credentials: 'include',
                cache: 'no-store'
             };
-            const fetchURL = apiURL + '/projects/' + params.id;
+            const fetchURL = apiURL + '/projects/' + projectId;
 
             const res = await fetch(fetchURL, fetchOptions);
             const data = await res.json();
@@ -107,7 +109,7 @@ export default function ProjectDetailsPage({ params }) {
       }
 
       getProject();
-   }, [project, updateProject, params.id]);
+   }, [project, updateProject, projectId]);
 
    useEffect(function fetchAllMembers() {  
       //only run on initial render and 
