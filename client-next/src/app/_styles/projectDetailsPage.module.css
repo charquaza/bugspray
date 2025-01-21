@@ -241,11 +241,17 @@
 
 @media (min-width: 1128px) {
    .project-info-sprints-ctnr {
+      width: 100%;
       display: flex;
-      gap: 10em;
+      column-gap: 5em;
+   }
+
+   .project-info-controls-ctnr {
+      width: 310px;
    }
 
    .project-details-page .sprints-ctnr {
       margin-top: 0;
+      width: 70vw;
    }
 }

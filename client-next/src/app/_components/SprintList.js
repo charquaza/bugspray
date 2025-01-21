@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { DateTime } from 'luxon';
 import { DataGrid } from '@mui/x-data-grid';
 import { apiURL } from '@/root/config.js';
+import styles from '@/app/_styles/SprintList.module.css';
 
 export default function SprintList({ projectId }) {
    const [sprintList, setSprintList] = useState();
@@ -46,21 +47,23 @@ export default function SprintList({ projectId }) {
    }, [projectId]);
 
    var dataGridColumns = [
-      { field: 'name', headerName: 'Name', width: 200, renderCell: renderSprint },
-      { field: 'description', headerName: 'Description', width: 120 },
-      { field: 'startDate', headerName: 'Start Date', width: 150 },
-      { field: 'endDate', headerName: 'End Date', width: 150 }
+      { field: 'name', headerName: 'Name', flex: 2, minWidth: 150, 
+         renderCell: renderNameLink, valueGetter: (value) => value
+      },
+      { field: 'description', headerName: 'Description', flex: 4, minWidth: 150,
+         cellClassName: styles['description-cell']
+      },
+      { field: 'startDate', headerName: 'Start Date', flex: 1, minWidth: 140,
+         valueFormatter: (value) => DateTime.fromISO(value).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+      },
+      { field: 'endDate', headerName: 'End Date', flex: 1, minWidth: 140,
+         valueFormatter: (value) => DateTime.fromISO(value).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+      }
    ];
 
    var dataGridRows = (sprintList) 
       ?
-         sprintList.map(sprint => {
-            return ({
-               ...sprint,
-               startDate: DateTime.fromISO(sprint.startDate).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY),
-               endDate: DateTime.fromISO(sprint.endDate).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
-            });
-         })
+         sprintList.map(sprint => sprint)
       : 
          [];
 
@@ -68,26 +71,53 @@ export default function SprintList({ projectId }) {
       return row._id;
    }
 
-   function renderSprint(params) {
+   function renderNameLink(params) {
       return (
          <Link href={'/sprints/' + params.row._id}>{params.row.name}</Link>
       );
    }
 
+   function getRowHeight(params) {
+      const descriptionLength = params.model.description.length;
+
+      if (descriptionLength <= 50) {
+         return 45;
+      } else if (descriptionLength <= 100) {
+         return 65;
+      } else if (descriptionLength <= 150) {
+         return 85;
+      } else {
+         return 110;
+      }
+   }
+
    return (
       sprintList &&
-         <div style={{ width: '100%' }}>
+         <div style={{ width: '100%' }} className={styles['sprint-list-ctnr']}>
             <DataGrid
                getRowId={getRowId}
                rows={dataGridRows}
                columns={dataGridColumns}
-               autoHeight
+               columnHeaderHeight={50}
+               getRowHeight={getRowHeight}
                initialState={{
                   pagination: { paginationModel: { pageSize: 5 } },
                 }}
                pageSizeOptions={[5,10,25,50,100]}
                checkboxSelection
                localeText={{ noRowsLabel: 'No sprints to display' }}
+               sx={{
+                  '& .MuiDataGrid-columnHeader': {
+                    backgroundColor: 'rgb(222, 244, 230)',
+                    fontSize: '1.2em'
+                  },
+                  '& .MuiDataGrid-row': {
+                     fontSize: '1.1em'
+                  },
+                  '& .MuiDataGrid-footerContainer': {
+                     backgroundColor: 'rgb(229, 246, 235)',
+                  }
+               }}
             />
          </div>
    );

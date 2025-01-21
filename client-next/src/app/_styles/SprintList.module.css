@@ -1,0 +1,6 @@
+.sprint-list-ctnr .description-cell {
+   line-height: 1.5em !important;
+   text-wrap: wrap !important;
+   overflow: scroll !important;
+   padding-top: 0.8em !important;
+}
