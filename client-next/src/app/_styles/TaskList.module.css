@@ -1,0 +1,14 @@
+.task-list-ctnr .cell,
+.task-list-ctnr .description-cell,
+.task-list-ctnr .assignees-cell {
+   line-height: 1.5em !important;
+   text-wrap: wrap !important;
+   overflow: scroll !important;
+   padding-top: 0.7em !important;
+}
+
+.task-list-ctnr .assignees-cell ul {
+   margin: 0;
+   margin-bottom: 0.5em;
+   padding-left: 1em;
+}
