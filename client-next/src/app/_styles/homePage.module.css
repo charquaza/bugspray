@@ -1,7 +1,17 @@
+.home-container {
+   width: 100%;
+}
+
 .home-container .card-list-container {
    display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(0, 620px));
-   gap: 1rem;
+   grid-template-columns: minmax(200px, 1fr);
+   gap: 2.5em;
    place-items: start;
    place-content: center;
+}
+
+@media (min-width: 515px) {
+   .home-container .card-list-container {
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+   }
 }

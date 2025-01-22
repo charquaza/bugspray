@@ -55,16 +55,16 @@ export default function HomeProjectCard({ project }) {
       <article className={styles['card-container']}>
          <h2>{project.name}</h2>
 
-         <p>
+         <p className={styles['completion-rate']}>
             Task Completion Rate:&nbsp; 
-            {
+            <span>{
                taskList && 
                   taskList.length > 0 
                      ?
                         completedTaskCount + '/' + taskList.length + 
                         ` (${Math.round(completedTaskCount / taskList.length * 100)}%)`
                      : 'N/A'
-            }
+            }</span>
          </p>
 
          <h3>Upcoming Tasks</h3>

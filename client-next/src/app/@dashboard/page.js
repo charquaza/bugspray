@@ -29,7 +29,8 @@ export default function Home() {
 
             if (res.ok) {
                const projectListData = data.data;   
-               setProjectList(projectListData);
+               //limit to 6 projects
+               setProjectList(projectListData.slice(0, 6));
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));

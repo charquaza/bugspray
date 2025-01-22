@@ -1,3 +1,27 @@
 .card-container {
+   box-sizing: border-box;
    width: 100%;
+   border-bottom: 5px solid #95e1b2;
+   text-align: center;
+}
+
+.card-container h2 {
+   margin: 0.3em 0 0.5em;
+   padding: 0.2em;
+   border-radius: 0.2em;
+   font-weight: 550;
+   background-color: #95e1b2;
+}
+
+.card-container h3 {
+   margin: 1.1em 0 0.3em;
+   font-weight: 550;
+}
+
+.card-container .completion-rate {
+   font-size: 1.05em;
+}
+
+.card-container .completion-rate > span {
+   font-weight: 500;
 }
