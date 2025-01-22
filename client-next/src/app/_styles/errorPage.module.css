@@ -1,0 +1,27 @@
+.error-page p {
+   margin: 0.4em 0;
+   font-size: 1.05em;
+}
+
+.error-page .hint {
+   font-style: italic;
+}
+
+.error-page .error-msg {
+   color: var(--color-error);
+}
+
+.error-page button {
+   margin-top: 0.8em;
+   background-color: rgb(210, 210, 210);
+   font-size: 1.1em;
+   padding: 0.3em 0.6em;
+   border: 0;
+   border-radius: 0.4em;
+}
+.error-page button:hover {
+   background-color: rgb(180, 180, 180);
+}
+.error-page button:active {
+   background-color: rgb(160, 160, 160);
+}
