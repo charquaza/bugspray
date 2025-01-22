@@ -119,6 +119,10 @@ export default function ProjectList() {
                   '& .MuiDataGrid-row': {
                      fontSize: '1.1em'
                   },
+                  '& .MuiDataGrid-cell': {
+                     overflow: 'scroll',
+                     textOverflow: 'unset'
+                  },
                   '& .MuiDataGrid-footerContainer': {
                      backgroundColor: 'rgb(229, 246, 235)'
                   }

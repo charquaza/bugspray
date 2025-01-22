@@ -67,7 +67,7 @@ export default function MemberList() {
       },
       { 
          field: 'role', headerName: 'Role', 
-         flex: 1.2, minWidth: 100
+         flex: 1.2, minWidth: 150
       },
       { 
          field: 'dateJoined', headerName: 'Date Joined', 
@@ -118,6 +118,10 @@ export default function MemberList() {
                   },
                   '& .MuiDataGrid-row': {
                      fontSize: '1.1em'
+                  },
+                  '& .MuiDataGrid-cell': {
+                     overflow: 'scroll',
+                     textOverflow: 'unset'
                   },
                   '& .MuiDataGrid-footerContainer': {
                      backgroundColor: 'rgb(229, 246, 235)'
