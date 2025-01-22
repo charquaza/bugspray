@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import { styled } from '@mui/material/styles';
 import { TextField, MenuItem } from '@mui/material';
 import { useUserData } from '@/app/_hooks/hooks';
+import MemberList from '@/app/_components/MemberList';
 import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/teamPage.module.css';
 
@@ -266,7 +267,8 @@ export default function TeamPage() {
             )
          }
 
-         {memberList &&
+         <MemberList />
+         {/* {memberList &&
             <ol>
                {memberList.map((member) => {
                   //don't render self in list
@@ -294,7 +296,7 @@ export default function TeamPage() {
                   );
                })}
             </ol>
-         }
+         } */}
       </main>
    );
 };
