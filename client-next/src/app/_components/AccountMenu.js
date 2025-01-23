@@ -64,7 +64,7 @@ export default function AccountMenu() {
                <IconButton onClick={handleClick} size="small" 
                   aria-label='account menu'
                >
-                  <Avatar>{user ? user.username : 'User'}</Avatar>
+                  <Avatar>{user ? user.firstName[0] + user.lastName[0] : 'user'}</Avatar>
                </IconButton>
             </Tooltip>
          </div>
