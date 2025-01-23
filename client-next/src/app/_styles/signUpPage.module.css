@@ -55,7 +55,31 @@
     font-weight: 500;
 }
 
+.signup-container .log-in-link-ctnr {
+    margin: 2em 0 1em;
+    text-align: center;
+}
+
 @media (min-width: 600px) {
+    .signup-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100vw;
+        height: 100%;
+        background-image: url('/stacked-waves-haikei-wide.svg');
+        background-size: cover;
+    }
+
+    .signup-container {
+        width: 535px;
+        background-color: white;
+    }
+    
+    .signup-container main {
+        padding-bottom: 1em;
+    }
+
     .name-inputs-container {
         display: grid;
         grid-template-columns: 1fr 1fr;

@@ -99,113 +99,119 @@ export default function SignUpPage() {
    }
 
    return (
-      <div className={styles['signup-container']}>
-         <header>
-            <Link href='/'>
-               <div className={styles['logo-container']}>
-                  <Logo />
-               </div>
-            </Link>
-         </header>
-
-         <main>
-            <h1>Sign Up</h1>
-   
-            {
-               formErrors.length > 0 &&
-                  <div className={styles['error-container']}>
-                     <p>Sign up unsuccessful: </p>
-                     <ul>
-                        {
-                           formErrors.map((errMsg) => {
-                              return <li key={errMsg}>{errMsg}</li>;
-                           })
-                        }
-                     </ul>
+      <div className={styles['signup-page']}>
+         <div className={styles['signup-container']}>
+            <header>
+               <Link href='/'>
+                  <div className={styles['logo-container']}>
+                     <Logo />
                   </div>
-            }
+               </Link>
+            </header>
    
-            <form onSubmit={ handleFormSubmit }>
-               <div className={styles['name-inputs-container']}>
-                  <TextField 
-                        type='text' id='firstName' name='firstName'
-                        required label='First Name' variant='outlined' 
-                        margin='normal' value={inputValues.firstName}
-                        onChange={handleInputChange}
-                        error={inputsWithErrors.has('firstName')}
-                  />
-                  <TextField 
-                        type='text' id='lastName' name='lastName'
-                        required label='Last Name' variant='outlined' 
-                        margin='normal' value={inputValues.lastName}
-                        onChange={handleInputChange}
-                        error={inputsWithErrors.has('lastName')}
-                  />
-               </div>  
-                
-               <TextField 
-                  type='text' id='role' name='role'
-                  required label='Role' variant='outlined' 
-                  margin='normal' value={inputValues.role}
-                  onChange={handleInputChange}
-                  error={inputsWithErrors.has('role')}
-               />
-
-               <FormControl fullWidth margin='normal'>
-                  <InputLabel id='privilege'>Privilege</InputLabel>
-                  <Select
-                     labelId='privilege'
-                     value={inputValues.privilege}
-                     label='Privilege'
-                     name='privilege'
-                     onChange={handleInputChange}
-                     error={inputsWithErrors.has('privilege')}
-                  >
-                     <MenuItem value='user'>User</MenuItem>
-                     <MenuItem value='admin'>Admin</MenuItem>
-                  </Select>
-               </FormControl>
-
-               <TextField 
-                  type='text' id='username' name='username'
-                  required label='Username' variant='outlined' 
-                  margin='normal' value={inputValues.username}
-                  onChange={handleInputChange}
-                  error={inputsWithErrors.has('username')}
-               />
-
-               <TextField 
-                  type='password' id='password' name='password'
-                  required label='Password' variant='outlined' 
-                  margin='normal' value={inputValues.password}
-                  onChange={handleInputChange}
-                  error={inputsWithErrors.has('password')}
-               />
-
-               <TextField 
-                  type='password' id='confirmPassword' name='confirmPassword'
-                  required label='Confirm Password' variant='outlined' 
-                  margin='normal' value={inputValues.confirmPassword}
-                  onChange={handleInputChange}
-                  error={inputsWithErrors.has('password')}
-               />
+            <main>
+               <h1>Sign Up</h1>
       
-               {formSubmitted 
-                  ?
-                     <Button type='submit' variant='contained' size='large'
-                        disabled={true}
-                     >
-                        <CircularProgress size='1.4em' color='primary' 
-                           thickness={5}
-                        />
-                     </Button>
-                  :
-                     <Button type='submit' variant='contained' size='large'>
-                        Sign Up
-                     </Button>
+               {
+                  formErrors.length > 0 &&
+                     <div className={styles['error-container']}>
+                        <p>Sign up unsuccessful: </p>
+                        <ul>
+                           {
+                              formErrors.map((errMsg) => {
+                                 return <li key={errMsg}>{errMsg}</li>;
+                              })
+                           }
+                        </ul>
+                     </div>
                }
-            </form>
-         </main>
-      </div>   
+      
+               <form onSubmit={ handleFormSubmit }>
+                  <div className={styles['name-inputs-container']}>
+                     <TextField 
+                           type='text' id='firstName' name='firstName'
+                           required label='First Name' variant='outlined' 
+                           margin='normal' value={inputValues.firstName}
+                           onChange={handleInputChange}
+                           error={inputsWithErrors.has('firstName')}
+                     />
+                     <TextField 
+                           type='text' id='lastName' name='lastName'
+                           required label='Last Name' variant='outlined' 
+                           margin='normal' value={inputValues.lastName}
+                           onChange={handleInputChange}
+                           error={inputsWithErrors.has('lastName')}
+                     />
+                  </div>  
+                   
+                  <TextField 
+                     type='text' id='role' name='role'
+                     required label='Role' variant='outlined' 
+                     margin='normal' value={inputValues.role}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('role')}
+                  />
+   
+                  <FormControl fullWidth margin='normal'>
+                     <InputLabel id='privilege'>Privilege</InputLabel>
+                     <Select
+                        labelId='privilege'
+                        value={inputValues.privilege}
+                        label='Privilege'
+                        name='privilege'
+                        onChange={handleInputChange}
+                        error={inputsWithErrors.has('privilege')}
+                     >
+                        <MenuItem value='user'>User</MenuItem>
+                        <MenuItem value='admin'>Admin</MenuItem>
+                     </Select>
+                  </FormControl>
+   
+                  <TextField 
+                     type='text' id='username' name='username'
+                     required label='Username' variant='outlined' 
+                     margin='normal' value={inputValues.username}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('username')}
+                  />
+   
+                  <TextField 
+                     type='password' id='password' name='password'
+                     required label='Password' variant='outlined' 
+                     margin='normal' value={inputValues.password}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('password')}
+                  />
+   
+                  <TextField 
+                     type='password' id='confirmPassword' name='confirmPassword'
+                     required label='Confirm Password' variant='outlined' 
+                     margin='normal' value={inputValues.confirmPassword}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('password')}
+                  />
+         
+                  {formSubmitted 
+                     ?
+                        <Button type='submit' variant='contained' size='large'
+                           disabled={true}
+                        >
+                           <CircularProgress size='1.4em' color='primary' 
+                              thickness={5}
+                           />
+                        </Button>
+                     :
+                        <Button type='submit' variant='contained' size='large'>
+                           Sign Up
+                        </Button>
+                  }
+               </form>
+   
+               <div className={styles['log-in-link-ctnr']}>
+                  <Link href='/log-in'>Already have an account?</Link>
+               </div>
+            </main>
+         </div>
+      </div>
    );
 };
