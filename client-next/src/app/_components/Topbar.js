@@ -31,7 +31,7 @@ export default function Topbar(props) {
                      <div className={styles['logo-container']}>
                         <Logo />
                      </div>
-                     <p className={styles['brand-name'] + ' ' + styles['hide-mobile-1']}>MoveForward</p>
+                     <p className={styles['brand-name'] + ' ' + styles['hide-mobile-1']}>Bugspray</p>
                   </div>
                </Link>
             </li>

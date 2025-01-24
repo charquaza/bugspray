@@ -7,7 +7,7 @@ import ThemeRegistry from '@/app/_styles/ThemeRegistry';
 import '@/app/_styles/globals.css';
 
 export const metadata = {
-   title: 'Bug Tracker',
+   title: 'Bugspray',
    authors: [ { name: 'Jonathan Park' } ],
    description: 'Bug tracker created using create-next-app',
 };
