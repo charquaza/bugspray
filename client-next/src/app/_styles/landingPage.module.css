@@ -1,0 +1,138 @@
+.landing-page {
+   background-image: url('/stacked-waves-haikei-wide.svg');
+   background-size: cover;
+   min-height: 100vh;
+   height: 100%;
+   font-size: calc(0.63vw + 0.5em);
+}
+
+.landing-page header {
+   padding: 0 3vw 0 2vw;
+
+   display: flex;
+   justify-content: space-between;
+   background-color: rgb(241, 255, 248);
+}
+
+.landing-page .logo-brand-ctnr {
+   display: flex;
+   align-items: center;
+}
+
+.landing-page .logo-brand-ctnr h1 {
+   margin: 0 0 0 0.7em;
+   font-size: 1.7em;
+   font-weight: 650;
+}
+
+.landing-page .logo-ctnr {
+   width: 3.4em;
+   aspect-ratio: 1 / 1;
+}
+
+.landing-page nav ul {
+   display: flex;
+   padding: 0;
+   list-style-type: none;
+}
+.landing-page nav ul li {
+   margin: 0 0.7em;
+   font-weight: 450;
+}
+
+.landing-page .login-link {
+   display: block;
+   padding: 0.3em 0.8em;
+   font-size: 1em;
+   color: black;
+   text-decoration: none;
+   background-color: rgb(225, 225, 225);
+   border-radius: 1em;
+}
+.landing-page .login-link:hover {
+   background-color: rgb(205, 205, 205);
+}
+.landing-page .login-link:active {
+   background-color: rgb(170, 170, 170);
+}
+
+.landing-page .signup-link {
+   display: block;
+   padding: 0.3em 0.8em;
+   font-size: 1em;
+   color: black;
+   text-decoration: none;
+   background-color: rgb(94,198,134);
+   border-radius: 1em;
+}
+.landing-page .signup-link:hover {
+   background-color: rgb(114,218,154);
+}
+.landing-page .signup-link:active {
+   background-color: rgb(129,233,169);
+}
+
+.landing-page main {
+   padding: 0 3vw 0 2vw;
+
+   margin-top: 2em;
+}
+
+.landing-page main article {
+   margin-bottom: 4em;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+}
+
+.landing-page main article h2 {
+   margin: 0 0 0.5em;
+   font-size: 2.3em;
+   font-weight: 600;
+}
+
+.landing-page main article p {
+   margin: 0.5em 0;
+   font-size: 1.6em;
+   font-weight: 400;
+   padding: 0 0.2em;
+}
+
+.landing-page .move-forward-link {
+   align-self: center;
+   display: block;
+   margin-top: 1em;
+   padding: 0.4em 0.9em;
+   font-size: 1.35em;
+   font-weight: 500;
+   color: white;
+   text-decoration: none;
+   background-color: rgb(64, 128, 168);
+   border-radius: 1em;
+}
+.landing-page .move-forward-link:hover {
+   background-color: rgb(44, 108, 148);
+}
+.landing-page .move-forward-link:active {
+   background-color: rgb(24, 88, 128);
+}
+
+.landing-page .app-preview-ctnr {
+   padding-bottom: 4em;
+   width: 100%;
+}
+.landing-page .app-preview-ctnr img {
+   display: block;
+   width: 100%;
+   height: auto;
+   border-radius: 1em;
+}
+
+@media (min-width: 628px) {
+   .landing-page main {
+      display: grid;
+      grid-template-columns: 33vw 57vw;
+      column-gap: 5vw;   
+   }
+}
