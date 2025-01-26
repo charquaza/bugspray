@@ -17,7 +17,7 @@ const sourceSans3 = Source_Sans_3({
 });
 
 async function getUserData() {
-   const cookieStore = cookies();
+   const cookieStore = await cookies();
    const sessionCookie = cookieStore.get(apiSessionCookieName);
 
    if (!sessionCookie) {
