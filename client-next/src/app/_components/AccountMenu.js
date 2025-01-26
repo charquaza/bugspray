@@ -118,7 +118,7 @@ export default function AccountMenu() {
                   ?
                      <>
                         <CircularProgress size='1.4em' color='primary' 
-                           thickness={5} sx={{ 'margin-right': '0.8em' }}
+                           thickness={5} sx={{ 'marginRight': '0.8em' }}
                         />
                         Logging Out...
                      </>
