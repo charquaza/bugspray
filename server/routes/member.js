@@ -5,6 +5,7 @@ const memberController = require('../controllers/memberController');
 memberRouter.get('/', memberController.getAll);
 memberRouter.get('/curr-user', memberController.getCurrUser);
 
+memberRouter.post('/', memberController.create);
 memberRouter.post('/sign-up', memberController.signUp);
 memberRouter.post('/log-in', memberController.logIn);
 memberRouter.post('/log-out', memberController.logOut);

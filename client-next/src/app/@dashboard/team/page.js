@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
-import { DateTime } from 'luxon';
 import { styled } from '@mui/material/styles';
 import { TextField, MenuItem } from '@mui/material';
 import { useUserData } from '@/app/_hooks/hooks';
@@ -139,7 +137,7 @@ export default function TeamPage() {
             credentials: 'include',
             cache: 'no-store'
          }
-         const fetchURL = apiURL + '/members/sign-up';
+         const fetchURL = apiURL + '/members';
 
          const res = await fetch(fetchURL, fetchOptions);
          const data = await res.json();
@@ -268,35 +266,6 @@ export default function TeamPage() {
          }
 
          <MemberList />
-         {/* {memberList &&
-            <ol>
-               {memberList.map((member) => {
-                  //don't render self in list
-                  if (member._id === user._id) {
-                     return null;
-                  }
-
-                  return (
-                     <li key={member._id}>
-                        <ul>
-                           <li>
-                              <Link href={'/team/' + member._id}>
-                                 {member.firstName} {member.lastName}
-                              </Link>
-                           </li>
-                           <li>Username: {member.username}</li>
-                           <li>
-                              Date Joined:&nbsp; 
-                              {DateTime.fromISO(member.dateJoined).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
-                           </li>
-                           <li>Role: {member.role}</li>
-                           <li>Privilege: {member.privilege}</li>
-                        </ul>
-                     </li>
-                  );
-               })}
-            </ol>
-         } */}
       </main>
    );
 };

@@ -226,6 +226,82 @@ exports.getById = [
     }
 ];
 
+exports.create = [
+    body('firstName').isString().withMessage('Invalid value for First Name').bail()
+        .trim().notEmpty().withMessage('First name cannot be blank')
+        .isLength({ max: 100 }).withMessage('First name cannot be longer than 100 characters')
+        .escape(),
+    body('lastName').isString().withMessage('Invalid value for Last Name').bail()
+        .trim().notEmpty().withMessage('Last name cannot be blank')
+        .isLength({ max: 100 }).withMessage('Last name cannot be longer than 100 characters')
+        .escape(),
+    body('role').isString().withMessage('Invalid value for Role').bail()
+        .trim().notEmpty().withMessage('Role cannot be blank')
+        .isLength({ max: 100}).withMessage('Role cannot be longer than 100 characters')
+        .escape(),
+    body('privilege').isString().withMessage('Invalid value for Privilege').bail()
+        .trim().notEmpty().withMessage('Privilege cannot be blank').bail()
+        .custom((value) => {
+            const allowedValues = [ 'admin', 'user' ];
+            return allowedValues.includes(value); 
+        }).withMessage('Invalid value for Privilege'),
+    body('username').isString().withMessage('Invalid value for Username').bail()
+        .trim().notEmpty().withMessage('Username cannot be blank')
+        .isLength({ max: 100 }).withMessage('Username cannot be longer than 100 characters')
+        .not().matches(/[<>&'"/]/).withMessage('Username cannot contain the following characters: <, >, &, \', ", /')
+        .bail().custom(async (value) => {
+            try {
+                var member = await Member.findOne({ username: value }).exec();
+            } catch (err) {
+                throw new Error('Error in checking uniqueness of username. Please try again later, or report the issue.');
+            }
+
+            if (member) {
+                throw new Error('Username is already in use. Please enter a different username');
+            }
+        }),
+    body('password').isString().withMessage('Invalid value for Password').bail()
+        .trim().notEmpty().withMessage('Password cannot be blank')
+        .isLength({ min: 8 }).withMessage('Password cannot be shorter than 8 characters')
+        .isLength({ max: 15 }).withMessage('Password cannot be longer than 15 characters')
+        .isStrongPassword({ minLength: 0, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 0 })
+        .withMessage('Password must contain at least 1 lowercase letter, 1 uppercase letter, and 1 number')
+        .not().matches(/[<>&'"/]/).withMessage('Password cannot contain the following characters: <, >, &, \', ", /'),
+    body('confirmPassword').custom((value, { req }) => value === req.body.password)
+        .withMessage('Passwords do not match'),
+
+    async function (req, res, next) {
+        var validationErrors = validationResult(req);
+
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        } 
+
+        try {
+            let hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+            let newMember = new Member({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                dateJoined: Date.now(),
+                role: req.body.role,
+                privilege: req.body.privilege,
+                username: req.body.username,
+                password: hashedPassword
+            });
+
+            let newMemberData = await newMember.save();
+
+            let memberDataCopy = { ...newMemberData };
+            delete memberDataCopy.password;
+            res.json({ data: memberDataCopy });
+        } catch (err) {
+            return next(err);
+        }
+    }
+];
+
 exports.update = [
     param('memberId').isString().withMessage('Invalid value for memberId').bail()
         .trim().notEmpty().withMessage('memberId cannot be blank'),
