@@ -1,3 +1,7 @@
+.error-page {
+   padding-left: 3vw;
+}
+
 .error-page p {
    margin: 0.4em 0;
    font-size: 1.05em;
