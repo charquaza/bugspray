@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { apiURL } from '@/root/config.js';
 import TaskList from '@/app/_components/TaskList';
 import styles from '@/app/_styles/HomeProjectCard.module.css';
@@ -53,7 +54,7 @@ export default function HomeProjectCard({ project }) {
 
    return (
       <article className={styles['card-container']}>
-         <h2>{project.name}</h2>
+         <h2><Link href={'/projects/' + project._id}>{project.name}</Link></h2>
 
          <p className={styles['completion-rate']}>
             Task Completion Rate:&nbsp; 

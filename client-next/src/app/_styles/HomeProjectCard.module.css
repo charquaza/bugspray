@@ -13,6 +13,14 @@
    background-color: #95e1b2;
 }
 
+.card-container h2 a {
+   color: black;
+   text-decoration: none;
+}
+.card-container h2 a:hover {
+   text-decoration: underline;
+}
+
 .card-container h3 {
    margin: 1.1em 0 0.3em;
    font-weight: 550;
