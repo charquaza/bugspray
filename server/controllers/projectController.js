@@ -3,6 +3,7 @@ const Member = require('../models/member');
 const Task = require('../models/task');
 const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
+const { createSlackChannel } = require('../services/slackService');
 
 exports.getAll = [
     async function checkPermissions(req, res, next) {
@@ -148,6 +149,10 @@ exports.create = [
             });
 
             let newProjectData = await newProject.save();
+
+            //create Slack channel for project
+            createSlackChannel(newProjectData.name);
+
             res.json({ data: newProjectData });
         } catch (err) {
             return next(err);
