@@ -3,7 +3,7 @@ const Member = require('../models/member');
 const Task = require('../models/task');
 const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
-const { createSlackChannel } = require('../services/slackService');
+const { createSlackChannel, sendSlackMessage } = require('../services/slackService');
 
 exports.getAll = [
     async function checkPermissions(req, res, next) {
@@ -138,20 +138,20 @@ exports.create = [
                 );
             }
 
-            //lead and all team members exist, proceed with project creation
+            //create Slack channel for project
+            const channelId = await createSlackChannel(req.body.name);
+            sendSlackMessage(channelId, `Welcome to '${req.body.name}'! This channel will be home base for all communications related to this project.`);
+            
             let newProject = new Project({
                 name: req.body.name,
                 dateCreated: Date.now(),
                 status: req.body.status,
                 priority: req.body.priority,
                 lead: req.body.lead,
-                team: req.body.team
+                team: req.body.team,
+                slackChannelId: channelId
             });
-
             let newProjectData = await newProject.save();
-
-            //create Slack channel for project
-            createSlackChannel(newProjectData.name);
 
             res.json({ data: newProjectData });
         } catch (err) {
@@ -246,6 +246,19 @@ exports.update = [
             if (oldProjectData === null) {
                 res.status(404).json({ errors: ['Project not found'] });
             } else {
+                if (fieldsToUpdate.name !== oldProjectData.name) {
+                    sendSlackMessage(oldProjectData.slackChannelId, `Project name updated to '${fieldsToUpdate.name}'`);
+                }
+                if (fieldsToUpdate.status !== oldProjectData.status) {
+                    sendSlackMessage(oldProjectData.slackChannelId, `Project status updated to '${fieldsToUpdate.status}'`);
+                }
+                if (fieldsToUpdate.priority !== oldProjectData.priority) {
+                    sendSlackMessage(oldProjectData.slackChannelId, `Project priority updated to '${fieldsToUpdate.priority}'`);
+                }
+                if (fieldsToUpdate.lead !== oldProjectData.lead.toString()) {
+                    sendSlackMessage(oldProjectData.slackChannelId, `Project lead updated: ${leadMember.firstName} ${leadMember.lastName} is now project lead`);
+                }
+
                 res.json({ data: oldProjectData });
             }
         } catch (err) {
@@ -284,6 +297,8 @@ exports.delete = [
             if (deletedProjectData === null) {
                 return res.status(404).json({ errors: ['Project not found'] });
             }
+
+            sendSlackMessage(deletedProjectData.slackChannelId, `Project '${deletedProjectData.name}' has been removed from Bugspray. Please consult management for further direction.`);
 
             //delete tasks that reference deleted project
             let deletedTaskCount = await Task.deleteMany({ project: req.params.projectId }).exec();
