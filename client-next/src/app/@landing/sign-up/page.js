@@ -19,7 +19,8 @@ export default function SignUpPage() {
       privilege: 'user',
       username: '', 
       password: '',
-      confirmPassword: '' 
+      confirmPassword: '',
+      slackMemberId: ''
    });
    const [formSubmitted, setFormSubmitted] = useState(false);
    const [formErrors, setFormErrors] = useState([]);
@@ -41,6 +42,8 @@ export default function SignUpPage() {
             errorMap.set('username', true);
          } else if (errMsg.search(/password/i) !== -1) {
             errorMap.set('password', true);
+         } else if (errMsg.search(/slack member id/i) !== -1) {
+            errorMap.set('slackMemberId', true);
          }
       });
       return errorMap;
@@ -189,6 +192,14 @@ export default function SignUpPage() {
                      margin='normal' value={inputValues.confirmPassword}
                      onChange={handleInputChange}
                      error={inputsWithErrors.has('password')}
+                  />
+
+                  <TextField 
+                     type='text' id='slackMemberId' name='slackMemberId'
+                     label='Slack Member ID (optional)' variant='outlined' 
+                     margin='normal' value={inputValues.slackMemberId}
+                     onChange={handleInputChange}
+                     error={inputsWithErrors.has('slackMemberId')}
                   />
          
                   {formSubmitted 

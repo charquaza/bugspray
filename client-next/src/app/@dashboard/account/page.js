@@ -57,6 +57,8 @@ export default function AccountPage({ params }) {
             errorMap.set('confirmNewPassword', true);
          } else if (errMsg.search(/incorrect password/i) !== -1) {
             errorMap.set('currPassword', true);
+         } else if (errMsg.search(/slack member id/i) !== -1) {
+            errorMap.set('slackMemberId', true);
          }
       });
       return errorMap;
@@ -145,7 +147,8 @@ export default function AccountPage({ params }) {
             lastName: user.lastName,
             role: user.role,
             username: user.username, 
-            currPassword: ''
+            currPassword: '',
+            slackMemberId: user.slackMemberId || ''
          });
          //reset form errors
          setFormErrors([]);
@@ -255,6 +258,14 @@ export default function AccountPage({ params }) {
                               error={inputsWithErrors.has('role')}
                            />
 
+                           <CustomTextField 
+                              type='text' id='slackMemberId' name='slackMemberId'
+                              label='Slack Member ID' variant='filled' 
+                              margin='normal' value={inputValues.slackMemberId}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('slackMemberId')}
+                           />
+
                            <div className={styles['change-password-ctnr']}>
                               {changePassword
                                  ?
@@ -328,6 +339,12 @@ export default function AccountPage({ params }) {
                               <span className={styles['label']}>Privilege:</span>
                               <span className={styles['info']}>{user.privilege}</span>
                            </li>
+                           {user.slackMemberId &&
+                              <li>
+                                 <span className={styles['label']}>Slack Member ID:</span>
+                                 <span className={styles['info']}>{user.slackMemberId}</span>
+                              </li>
+                           }
                         </ul>
 
                         <div>

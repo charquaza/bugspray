@@ -66,6 +66,8 @@ export default function MemberDetailsPage({ params }) {
          } else if (errMsg.search(/new password/i) !== -1) {
             errorMap.set('newPassword', true);
             errorMap.set('confirmNewPassword', true);
+         } else if (errMsg.search(/slack member id/i) !== -1) {
+            errorMap.set('slackMemberId', true);
          }
       });
       return errorMap;
@@ -149,7 +151,8 @@ export default function MemberDetailsPage({ params }) {
             lastName: memberData.lastName,
             role: memberData.role,
             privilege: memberData.privilege,
-            username: memberData.username
+            username: memberData.username,
+            slackMemberId: memberData.slackMemberId || ''
          });
          //reset form errors
          setFormErrors([]);
@@ -310,6 +313,14 @@ export default function MemberDetailsPage({ params }) {
                               ]}
                            </CustomTextField>
 
+                           <CustomTextField 
+                              type='text' id='slackMemberId' name='slackMemberId'
+                              label='Slack Member ID' variant='filled' 
+                              margin='normal' value={inputValues.slackMemberId}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('slackMemberId')}
+                           />
+
                            <div className={styles['change-password-ctnr']}>
                               {changePassword
                                  ?
@@ -375,6 +386,12 @@ export default function MemberDetailsPage({ params }) {
                               <span className={styles['label']}>Privilege:</span>
                               <span className={styles['info']}>{memberData.privilege}</span>
                            </li>
+                           {memberData.slackMemberId &&
+                              <li>
+                                 <span className={styles['label']}>Slack Member ID:</span>
+                                 <span className={styles['info']}>{memberData.slackMemberId}</span>
+                              </li>
+                           }
                         </ul>
 
                         {(user && user.privilege === 'admin') && 

@@ -53,6 +53,8 @@ export default function MemberCreateForm({ setUpdateMemberList }) {
          } else if (errMsg.search(/password/i) !== -1) {
             errorMap.set('password', true);
             errorMap.set('confirmPassword', true);
+         } else if (errMsg.search(/slack member id/i) !== -1) {
+            errorMap.set('slackMemberId', true);
          }
       });
       return errorMap;
@@ -70,7 +72,8 @@ export default function MemberCreateForm({ setUpdateMemberList }) {
             privilege: 'user',
             username: '', 
             password: '',
-            confirmPassword: '' 
+            confirmPassword: '',
+            slackMemberId: ''
          });
          //reset form errors
          setFormErrors([]);
@@ -189,6 +192,14 @@ export default function MemberCreateForm({ setUpdateMemberList }) {
                            <MenuItem key='admin' value='admin'>Admin</MenuItem>
                         ]}
                      </CustomTextField>
+
+                     <CustomTextField 
+                        type='text' id='slackMemberId' name='slackMemberId'
+                        label='Slack Member ID' variant='filled' 
+                        margin='normal' value={inputValues.slackMemberId}
+                        onChange={handleInputChange}
+                        error={inputsWithErrors.has('slackMemberId')}
+                     />
 
                      <div className={styles['password-inputs-ctnr']}>
                         <CustomTextField

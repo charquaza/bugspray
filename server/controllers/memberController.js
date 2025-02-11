@@ -60,6 +60,9 @@ exports.signUp = [
         .not().matches(/[<>&'"/]/).withMessage('Password cannot contain the following characters: <, >, &, \', ", /'),
     body('confirmPassword').custom((value, { req }) => value === req.body.password)
         .withMessage('Passwords do not match'),
+    body('slackMemberId').isString().withMessage('Invalid value for Slack Member ID').bail()
+        .trim().isLength({ max: 50 }).withMessage('Slack Member ID cannot be longer than 50 characters')
+        .escape(),
 
     async function (req, res, next) {
         var validationErrors = validationResult(req);
@@ -88,7 +91,8 @@ exports.signUp = [
                 role: req.body.role,
                 privilege: req.body.privilege,
                 username: req.body.username,
-                password: hashedPassword
+                password: hashedPassword,
+                slackMemberId: req.body.slackMemberId
             });
 
             let newMemberData = await newMember.save();
@@ -269,6 +273,9 @@ exports.create = [
         .not().matches(/[<>&'"/]/).withMessage('Password cannot contain the following characters: <, >, &, \', ", /'),
     body('confirmPassword').custom((value, { req }) => value === req.body.password)
         .withMessage('Passwords do not match'),
+    body('slackMemberId').isString().withMessage('Invalid value for Slack Member ID').bail()
+        .trim().isLength({ max: 50 }).withMessage('Slack Member ID cannot be longer than 50 characters')
+        .escape(),
 
     async function (req, res, next) {
         var validationErrors = validationResult(req);
@@ -288,7 +295,8 @@ exports.create = [
                 role: req.body.role,
                 privilege: req.body.privilege,
                 username: req.body.username,
-                password: hashedPassword
+                password: hashedPassword,
+                slackMemberId: req.body.slackMemberId
             });
 
             let newMemberData = await newMember.save();
@@ -370,6 +378,9 @@ exports.update = [
         })
         .custom((value, { req }) => value === req.body.newPassword)
         .withMessage('New Passwords do not match'),
+    body('slackMemberId').isString().withMessage('Invalid value for Slack Member ID').bail()
+        .trim().isLength({ max: 50 }).withMessage('Slack Member ID cannot be longer than 50 characters')
+        .escape(),
 
     //fields to validate if curr user is update target
     body('currPassword')
@@ -409,7 +420,8 @@ exports.update = [
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 role: req.body.role,
-                username: req.body.username
+                username: req.body.username,
+                slackMemberId: req.body.slackMemberId
             };
 
             //update password if new password has been provided
