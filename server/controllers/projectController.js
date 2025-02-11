@@ -3,7 +3,9 @@ const Member = require('../models/member');
 const Task = require('../models/task');
 const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
-const { createSlackChannel, sendSlackMessage } = require('../services/slackService');
+const { 
+    createSlackChannel, inviteUsersToChannel, sendSlackMessage 
+} = require('../services/slackService');
 
 exports.getAll = [
     async function checkPermissions(req, res, next) {
@@ -128,11 +130,11 @@ exports.create = [
             }
 
             //check if team members exist
-            let teamMemberCount = await Member.countDocuments(
-                { _id: { $in: req.body.team } }
+            let teamMembers = await Member.find(
+                { _id: { $in: req.body.team } }, 'slackMemberId'
             ).exec();
 
-            if (teamMemberCount !== req.body.team.length) {
+            if (teamMembers.length !== req.body.team.length) {
                 return res.status(400).json(
                     { errors: ['Cannot create project: Team member(s) not found'] }
                 );
@@ -140,6 +142,12 @@ exports.create = [
 
             //create Slack channel for project
             const channelId = await createSlackChannel(req.body.name);
+
+            const slackMemberIdList = [ 
+                leadMember.slackMemberId, ...teamMembers.map(member => member.slackMemberId)
+            ];
+
+            inviteUsersToChannel(channelId, slackMemberIdList);
             sendSlackMessage(channelId, `Welcome to '${req.body.name}'! This channel will be home base for all communications related to this project.`);
             
             let newProject = new Project({

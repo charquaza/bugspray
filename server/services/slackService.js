@@ -15,6 +15,20 @@ exports.createSlackChannel = async function createSlackChannel(projectName) {
    }
 };
 
+exports.inviteUsersToChannel = async function inviteUsersToChannel(channelId, userIdList) {
+   try {
+      const response = await slackClient.conversations.invite({
+         channel: channelId,
+         users: userIdList.join()
+      });
+
+      console.log(`User(s) added to channel ${channelId}`);
+      return response;
+   } catch (error) {
+      console.error('Error inviting user(s) to Slack channel: ', error);
+   }
+}
+
 exports.sendSlackMessage = async function sendSlackMessage(channelId, message) {
    try {
       const response = await slackClient.chat.postMessage({
