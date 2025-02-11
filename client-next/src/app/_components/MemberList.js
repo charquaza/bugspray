@@ -65,7 +65,8 @@ export default function MemberList({ updateMemberList, setUpdateMemberList }) {
       { 
          field: 'name', headerName: 'Name', 
          flex: 1.5, minWidth: 150,
-         renderCell: renderNameLink, valueGetter: (value) => value
+         renderCell: renderNameLink, 
+         valueGetter: (value, row) => `${row.firstName} ${row.lastName}`
       },
       { 
          field: 'username', headerName: 'Username', 
