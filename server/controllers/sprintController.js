@@ -1,7 +1,7 @@
 const Sprint = require('../models/sprint');
 const Project = require('../models/project');
-const Member = require('../models/member');
 const { body, param, query, validationResult } = require('express-validator');
+const { sendSlackMessage } = require('../services/slackService');
 
 exports.getAll = [
    async function checkPermissions(req, res, next) {
@@ -194,6 +194,17 @@ exports.create = [
          });
 
          let newSprintData = await newSprint.save();
+
+         //send slack message to project channel
+         sendSlackMessage(
+            projectData.slackChannelId,
+            `New sprint created - \n
+            Name: ${newSprintData.name}\n
+            Start Date: ${newSprintData.startDate.toDateString()}\n
+            End Date: ${newSprintData.endDate.toDateString()}\n
+            Description: ${newSprintData.description}`
+         );
+
          res.json({ data: newSprintData });
       } catch (err) {
          return next(err);
@@ -279,6 +290,25 @@ exports.update = [
          if (oldSprintData === null) {
             res.status(404).json({ errors: ['Sprint not found'] });
          } else {
+            let slackMessage = [`Sprint '${oldSprintData.name}' has been updated - `];
+
+            if (fieldsToUpdate.name !== oldSprintData.name) {
+               slackMessage.push(`New Name: '${fieldsToUpdate.name}'`);
+            }
+            if (Date.parse(fieldsToUpdate.startDate) !== oldSprintData.startDate.valueOf()) {
+               let date = new Date(fieldsToUpdate.startDate);
+               slackMessage.push(`New Start Date: '${date.toDateString()}'`);
+            }
+            if (Date.parse(fieldsToUpdate.endDate) !== oldSprintData.endDate.valueOf()) {
+               let date = new Date(fieldsToUpdate.endDate);
+               slackMessage.push(`New End Date: '${date.toDateString()}'`);
+            }
+            if (fieldsToUpdate.description !== oldSprintData.description) {
+               slackMessage.push(`New Description: '${fieldsToUpdate.description}'`);
+            }
+
+            sendSlackMessage(projectData.slackChannelId, slackMessage.join('\n'));
+
             res.json({ data: oldSprintData });
          }
       } catch (err) {
@@ -313,25 +343,30 @@ exports.delete = [
          if (sprintData === null) {
             return res.status(404).json({ errors: ['Sprint not found'] });
          } else {
+            let projectData = await Project.findById(sprintData.project._id).exec();
+
+            if (projectData === null) {
+               return res.status(400).json({ errors: ['Parent project not found'] });
+            }
+
             //prevent sprint delete if
             //currUser is not admin or lead of parent project
-            if (req.user.privilege !== 'admin') {
-               let projectData = await Project.findById(sprintData.project._id).exec();
-
-               if (projectData === null) {
-                  return res.status(400).json({ errors: ['Parent project not found'] });
-               } else if (
-                  req.user._id.toString() !== projectData.lead._id.toString()
-               ) {
-                  return res.status(404).json({ errors: ['Sprint not found'] });
-               }  
-            }
+            if (
+               req.user.privilege !== 'admin' && 
+               req.user._id.toString() !== projectData.lead._id.toString()
+            ) {
+               return res.status(404).json({ errors: ['Sprint not found'] });
+            }  
 
             let deletedSprintData = await Sprint.findByIdAndDelete(req.params.sprintId).exec();
 
             if (deletedSprintData === null) {
                res.status(404).json({ errors: ['Sprint not found'] });
             } else {
+               sendSlackMessage(
+                  projectData.slackChannelId, 
+                  `Sprint '${deletedSprintData.name}' has been discontinued.`
+               );
                res.json({ data: deletedSprintData });
             }
          }
