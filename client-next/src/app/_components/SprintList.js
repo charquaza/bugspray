@@ -7,7 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/SprintList.module.css';
 
-export default function SprintList({ projectId }) {
+export default function SprintList({ projectId, updateSprintList, setUpdateSprintList }) {
    const [sprintList, setSprintList] = useState();
    const [error, setError] = useState();
 
@@ -16,6 +16,10 @@ export default function SprintList({ projectId }) {
    }
 
    useEffect(function getSprintList() {
+      if (sprintList && !updateSprintList) {
+         return;
+      }
+
       async function fetchSprintList() {
          try {
             const fetchOptions = {
@@ -34,6 +38,10 @@ export default function SprintList({ projectId }) {
             if (res.ok) {
                const sprintListData = data.data;
                setSprintList(sprintListData);
+
+               if (sprintList && setUpdateSprintList) {
+                  setUpdateSprintList(false);
+               }
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));
@@ -44,7 +52,7 @@ export default function SprintList({ projectId }) {
       }
 
       fetchSprintList();
-   }, [projectId]);
+   }, [projectId, updateSprintList]);
 
    var dataGridColumns = [
       { field: 'name', headerName: 'Name', flex: 2, minWidth: 150, 

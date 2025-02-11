@@ -27,7 +27,7 @@ const CustomTextField = styled(TextField)({
    },
 });
 
-export default function TaskCreateForm({ projectId }) {
+export default function TaskCreateForm({ projectId, setUpdateTaskList }) {
    const [sprintList, setSprintList] = useState();
    const [filteredSprintList, setFilteredSprintList] = useState();
    const [memberList, setMemberList] = useState(); 
@@ -232,6 +232,9 @@ export default function TaskCreateForm({ projectId }) {
          var data = await res.json();
 
          if (res.ok) {
+            if (setUpdateTaskList) {
+               setUpdateTaskList(true);
+            }
             setUpdateSprintList(true);
             setUpdateMemberList(true);
             setUpdateProjectList(true);

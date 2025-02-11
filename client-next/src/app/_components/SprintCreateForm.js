@@ -33,7 +33,7 @@ const CustomDatePicker = styled(DatePicker)({
    'width': '140px'
 });
 
-export default function SprintCreateForm({ projectId }) {
+export default function SprintCreateForm({ projectId, setUpdateSprintList }) {
    const [showCreateForm, setShowCreateForm] = useState(false);
    const [inputValues, setInputValues] = useState();
    const [formErrors, setFormErrors] = useState([]);
@@ -77,6 +77,9 @@ export default function SprintCreateForm({ projectId }) {
          var data = await res.json();
 
          if (res.ok) {
+            if (setUpdateSprintList) {
+               setUpdateSprintList(true);
+            }
             setFormErrors([]); 
             setShowCreateForm(false);
          } else {

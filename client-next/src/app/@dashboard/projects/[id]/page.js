@@ -48,6 +48,8 @@ export default function ProjectDetailsPage({ params }) {
    const [formErrors, setFormErrors] = useState([]);
    const [updateProject, setUpdateProject] = useState(false);
    const [updateMemberList, setUpdateMemberList] = useState(false);
+   const [updateSprintList, setUpdateSprintList] = useState(false);
+   const [updateTaskList, setUpdateTaskList] = useState(false);
    const [error, setError] = useState();
 
    const router = useRouter();
@@ -515,15 +517,25 @@ export default function ProjectDetailsPage({ params }) {
 
                            <section className={styles['sprints-ctnr']}>
                               <h2>Sprints</h2>
-                              <SprintCreateForm projectId={project._id} />
-                              <SprintList projectId={project._id} />
+                              <SprintCreateForm projectId={project._id} 
+                                 setUpdateSprintList={setUpdateSprintList} 
+                              />
+                              <SprintList projectId={project._id} 
+                                 updateSprintList={updateSprintList} 
+                                 setUpdateSprintList={setUpdateSprintList}
+                              />
                            </section>
                         </div>
 
                         <section className={styles['tasks-ctnr']}>
                            <h2>Tasks</h2>
-                           <TaskCreateForm projectId={project._id} />
-                           <TaskList projectId={project._id} />
+                           <TaskCreateForm projectId={project._id} 
+                              setUpdateTaskList={setUpdateTaskList}
+                           />
+                           <TaskList projectId={project._id}
+                              updateTaskList={updateTaskList}
+                              setUpdateTaskList={setUpdateTaskList}
+                           />
                         </section>
                      </>
                }           

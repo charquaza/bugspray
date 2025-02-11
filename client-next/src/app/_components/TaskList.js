@@ -9,7 +9,8 @@ import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/TaskList.module.css';
 
 export default function TaskList({ 
-   projectId, selectColumns, initialPageSize, filterByStatus 
+   projectId, selectColumns, initialPageSize, filterByStatus,
+   updateTaskList, setUpdateTaskList
 }) {
    const [taskList, setTaskList] = useState();
    const [error, setError] = useState();
@@ -19,6 +20,10 @@ export default function TaskList({
    }
 
    useEffect(function getTaskList() {
+      if (taskList && !updateTaskList) {
+         return;
+      }
+
       async function fetchTaskList() {
          try {
             const fetchOptions = {
@@ -44,6 +49,10 @@ export default function TaskList({
                }
 
                setTaskList(taskListData);
+
+               if (taskList && setUpdateTaskList) {
+                  setUpdateTaskList(false);
+               }
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));
@@ -54,7 +63,7 @@ export default function TaskList({
       }
 
       fetchTaskList();
-   }, [projectId, filterByStatus]);
+   }, [projectId, filterByStatus, updateTaskList]);
 
    var dataGridColumns = [
       { field: 'title', headerName: 'Title', flex: 0.7, minWidth: 200, 
