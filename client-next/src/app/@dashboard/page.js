@@ -51,13 +51,22 @@ export default function Home() {
                   <h1>Your Work, in Progress</h1>
 
                   <div className={styles['card-list-container']}>
-                     {
-                        projectList.map(project => {
-                           return <HomeProjectCard project={project} key={project._id} />;
-                        })
+                     {projectList.length > 0
+                        ?
+                           projectList.map(project => {
+                              return <HomeProjectCard project={project} key={project._id} />;
+                           })
+                        :
+                           <>
+                              <p>
+                                 You are not involved in any projects.
+                                 <br/>
+                                 If applicable, contact your team to be added to a project(s).
+                              </p>
+                           </>
                      }
-                  </div>               
-               </>   
+                  </div>
+               </>
          }
       </main>
    );
