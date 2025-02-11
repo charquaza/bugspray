@@ -7,7 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useUserData } from '@/app/_hooks/hooks';
 import { apiURL } from '@/root/config.js';
 
-export default function MemberList() {
+export default function MemberList({ updateMemberList, setUpdateMemberList }) {
    const user = useUserData();
    const [memberList, setMemberList] = useState();
    const [error, setError] = useState();
@@ -18,6 +18,9 @@ export default function MemberList() {
 
    useEffect(function getMemberList() {
       if (!user) {
+         return;
+      }
+      if (memberList && !updateMemberList) {
          return;
       }
 
@@ -42,6 +45,9 @@ export default function MemberList() {
                   member => member._id !== user._id
                );
                
+               if (setUpdateMemberList) {
+                  setUpdateMemberList(false);
+               }
                setMemberList(memberListData);
             } else {
                const errors = data.errors;
@@ -53,7 +59,7 @@ export default function MemberList() {
       }
 
       fetchMemberList();
-   }, [ user ]);
+   }, [ user, updateMemberList ]);
 
    var dataGridColumns = [
       { 
