@@ -17,10 +17,13 @@ exports.createSlackChannel = async function createSlackChannel(projectName) {
 
 exports.sendSlackMessage = async function sendSlackMessage(channelId, message) {
    try {
-      await slackClient.chat.postMessage({
+      const response = await slackClient.chat.postMessage({
          channel: channelId,
          text: message
       });
+      
+      console.log(`Message sent to Slack channel (channel ID: ${channelId})`);
+      return response;
    } catch (error) {
       console.error('Error sending message to Slack:', error);
    }
