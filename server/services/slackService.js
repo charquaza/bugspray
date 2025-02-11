@@ -11,7 +11,7 @@ exports.createSlackChannel = async function createSlackChannel(projectName) {
       console.log(`Slack channel created: ${response.channel.id}`);
       return response.channel.id;
    } catch (error) {
-      console.error('Error creating Slack channel:', error);
+      console.error('Error creating Slack channel: ', error);
    }
 };
 
@@ -25,9 +25,20 @@ exports.renameSlackChannel = async function renameSlackChannel(channelId, newNam
       console.log(`Slack channel renamed to ${response.channel.name}`);
       return response;
    } catch (error) {
-      console.error('Error renaming Slack channel:', error);
+      console.error('Error renaming Slack channel: ', error);
    }
 }
+
+exports.archiveSlackChannel = async function archiveSlackChannel(channelId) {
+   try {
+      const response = await slackClient.conversations.archive({ channel: channelId });
+      console.log(`Slack channel ${channelId} has been archived.`);
+      return response;
+   } catch (error) {
+      console.error('Error archiving Slack channel: ', error);
+   }
+}
+
 
 exports.inviteUsersToChannel = async function inviteUsersToChannel(channelId, userIdList) {
    try {
@@ -53,6 +64,6 @@ exports.sendSlackMessage = async function sendSlackMessage(channelId, message) {
       console.log(`Message sent to Slack channel (channel ID: ${channelId})`);
       return response;
    } catch (error) {
-      console.error('Error sending message to Slack:', error);
+      console.error('Error sending message to Slack: ', error);
    }
 };

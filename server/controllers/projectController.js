@@ -4,8 +4,8 @@ const Task = require('../models/task');
 const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
 const { 
-    createSlackChannel, renameSlackChannel,
-    inviteUsersToChannel, sendSlackMessage 
+    createSlackChannel, renameSlackChannel, inviteUsersToChannel,
+    sendSlackMessage, archiveSlackChannel
 } = require('../services/slackService');
 
 exports.getAll = [
@@ -309,6 +309,7 @@ exports.delete = [
             }
 
             sendSlackMessage(deletedProjectData.slackChannelId, `Project '${deletedProjectData.name}' has been removed from Bugspray. Please consult management for further direction.`);
+            archiveSlackChannel(deletedProjectData.slackChannelId);
 
             //delete tasks that reference deleted project
             let deletedTaskCount = await Task.deleteMany({ project: req.params.projectId }).exec();
