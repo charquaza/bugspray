@@ -27,7 +27,7 @@ const CustomTextField = styled(TextField)({
    },
 });
 
-export default function ProjectCreateForm() {
+export default function ProjectCreateForm({ setUpdateProjectList }) {
    const [memberList, setMemberList] = useState(); 
    const [memberMap, setMemberMap] = useState();
    const [showCreateForm, setShowCreateForm] = useState(false);
@@ -149,6 +149,9 @@ export default function ProjectCreateForm() {
          var data = await res.json();
 
          if (res.ok) {
+            if (setUpdateProjectList) {
+               setUpdateProjectList(true);
+            }
             setUpdateMemberList(true);
             setFormErrors([]); 
             setShowCreateForm(false);

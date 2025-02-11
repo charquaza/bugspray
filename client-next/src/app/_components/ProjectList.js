@@ -7,7 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import sortingComparators from '../_utils/sortingComparators';
 import { apiURL } from '@/root/config.js';
 
-export default function ProjectList() {
+export default function ProjectList({ updateProjectList, setUpdateProjectList }) {
    const [projectList, setProjectList] = useState();
    const [error, setError] = useState();
 
@@ -16,6 +16,10 @@ export default function ProjectList() {
    }
 
    useEffect(function getProjectList() {
+      if (projectList && !updateProjectList) {
+         return;
+      }
+
       async function fetchProjectList() {
          try {
             const fetchOptions = {
@@ -32,6 +36,10 @@ export default function ProjectList() {
             if (res.ok) {
                const projectListData = data.data;   
                setProjectList(projectListData);
+
+               if (projectList && setUpdateProjectList) {
+                  setUpdateProjectList(false);
+               }
             } else {
                const errors = data.errors;
                setError(new Error(errors[0]));
@@ -42,7 +50,7 @@ export default function ProjectList() {
       }
 
       fetchProjectList();
-   }, []);
+   }, [ updateProjectList ]);
 
    var dataGridColumns = [
       { 
