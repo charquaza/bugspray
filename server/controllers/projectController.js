@@ -141,7 +141,7 @@ exports.create = [
             }
 
             //create Slack channel for project
-            const channelId = await createSlackChannel(req.body.name);
+            const channelId = await createSlackChannel(`project-${req.body.name}`);
 
             const slackMemberIdList = [ 
                 leadMember.slackMemberId, ...teamMembers.map(member => member.slackMemberId)
