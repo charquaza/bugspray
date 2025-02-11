@@ -379,6 +379,11 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList }) {
       });
    }
 
+   //if user is not part of any projects, do not render form
+   if (!projectId && projectList && projectList.length === 0) {
+      return null;
+   }
+
    return (
       <div className={styles['task-create-ctnr']}>
          {showCreateForm 
