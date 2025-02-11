@@ -15,6 +15,20 @@ exports.createSlackChannel = async function createSlackChannel(projectName) {
    }
 };
 
+exports.renameSlackChannel = async function renameSlackChannel(channelId, newName) {
+   try {
+      const response = await slackClient.conversations.rename({
+         channel: channelId,
+         name: newName.toLowerCase().replace(/\s+/g, '-')
+      });
+
+      console.log(`Slack channel renamed to ${response.channel.name}`);
+      return response;
+   } catch (error) {
+      console.error('Error renaming Slack channel:', error);
+   }
+}
+
 exports.inviteUsersToChannel = async function inviteUsersToChannel(channelId, userIdList) {
    try {
       const response = await slackClient.conversations.invite({

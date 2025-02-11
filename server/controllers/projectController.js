@@ -4,7 +4,8 @@ const Task = require('../models/task');
 const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
 const { 
-    createSlackChannel, inviteUsersToChannel, sendSlackMessage 
+    createSlackChannel, renameSlackChannel,
+    inviteUsersToChannel, sendSlackMessage 
 } = require('../services/slackService');
 
 exports.getAll = [
@@ -255,6 +256,7 @@ exports.update = [
                 res.status(404).json({ errors: ['Project not found'] });
             } else {
                 if (fieldsToUpdate.name !== oldProjectData.name) {
+                    renameSlackChannel(oldProjectData.slackChannelId, `project-${fieldsToUpdate.name}`);
                     sendSlackMessage(oldProjectData.slackChannelId, `Project name updated to '${fieldsToUpdate.name}'`);
                 }
                 if (fieldsToUpdate.status !== oldProjectData.status) {
