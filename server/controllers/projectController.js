@@ -5,7 +5,7 @@ const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
 const { 
     createSlackChannel, renameSlackChannel, inviteUsersToChannel,
-    sendSlackMessage, archiveSlackChannel
+    sendSlackMessage, removeUserFromChannel, archiveSlackChannel
 } = require('../services/slackService');
 
 exports.getAll = [
@@ -267,6 +267,57 @@ exports.update = [
                 }
                 if (fieldsToUpdate.lead !== oldProjectData.lead.toString()) {
                     sendSlackMessage(oldProjectData.slackChannelId, `Project lead updated: ${leadMember.firstName} ${leadMember.lastName} is now project lead`);
+                }
+
+                //map old members (lead + team) to check for changes
+                let oldMembersMap = new Map();
+                oldProjectData.team.forEach(memberId => {
+                    oldMembersMap.set(memberId.toString(), true);
+                });
+                oldMembersMap.set(oldProjectData.lead.toString(), true);
+                
+                //members in new but not old - add to channel
+                //members in both - delete from oldMembersMap
+                let slackMembersToAdd = [];
+                fieldsToUpdate.team.forEach(memberId => {
+                    if (!oldMembersMap.has(memberId)) {
+                        slackMembersToAdd.push(memberId);
+                    } else {
+                        oldMembersMap.delete(memberId);
+                    }
+                });
+                //also check current lead
+                if (!oldMembersMap.has(fieldsToUpdate.lead)) {
+                    slackMembersToAdd.push(fieldsToUpdate.lead);
+                } else {
+                    oldMembersMap.delete(fieldsToUpdate.lead);
+                }
+
+                //members remaining in oldMembersMap are to be removed
+                let slackMembersToRemove = [];
+                for (let [memberId] of oldMembersMap) {
+                    slackMembersToRemove.push(memberId);
+                }
+
+                //remove obsolete members from channel
+                if (slackMembersToRemove.length > 0) {
+                    let oldTeamMembers = await Member.find(
+                        { _id: { $in: slackMembersToRemove } }, 'slackMemberId'
+                    ).exec();
+
+                    oldTeamMembers.forEach(member => {
+                        removeUserFromChannel(oldProjectData.slackChannelId, member.slackMemberId);
+                    });
+                }
+            
+                //add new members to channel
+                if (slackMembersToAdd.length > 0) {
+                    let newTeamMembers = await Member.find(
+                        { _id: { $in: slackMembersToAdd } }, 'slackMemberId'
+                    ).exec();
+
+                    let newSlackMemberIdList = newTeamMembers.map(member => member.slackMemberId);
+                    inviteUsersToChannel(oldProjectData.slackChannelId, newSlackMemberIdList);
                 }
 
                 res.json({ data: oldProjectData });
