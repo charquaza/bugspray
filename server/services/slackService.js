@@ -32,6 +32,7 @@ exports.renameSlackChannel = async function renameSlackChannel(channelId, newNam
 exports.archiveSlackChannel = async function archiveSlackChannel(channelId) {
    try {
       const response = await slackClient.conversations.archive({ channel: channelId });
+      
       console.log(`Slack channel ${channelId} has been archived.`);
       return response;
    } catch (error) {
@@ -47,12 +48,30 @@ exports.inviteUsersToChannel = async function inviteUsersToChannel(channelId, us
          users: userIdList.join()
       });
 
-      console.log(`User(s) added to channel ${channelId}`);
+      userIdList.length > 1
+         ? console.log(`${userIdList.length} Users added to channel ${channelId}`)
+         : console.log(`1 User added to channel ${channelId}`);
+
       return response;
    } catch (error) {
       console.error('Error inviting user(s) to Slack channel: ', error);
    }
 }
+
+exports.removeUserFromChannel = async function removeUserFromChannel(channelId, userId) {
+   try {
+      const response = await slackClient.conversations.kick({
+         channel: channelId,
+         user: userId
+      });
+
+      console.log(`User ${userId} removed from channel ${channelId}`);
+      return response;
+   } catch (error) {
+      console.error('Error removing user from Slack channel: ', error);
+   }
+}
+
 
 exports.sendSlackMessage = async function sendSlackMessage(channelId, message) {
    try {
