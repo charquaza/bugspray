@@ -3,7 +3,7 @@ const Project = require('../models/project');
 const Member = require('../models/member');
 const Sprint = require('../models/sprint');
 const { body, param, query, validationResult } = require('express-validator');
-const { sendChannelMessage } = require('../services/slackService');
+const { sendChannelMessage, sendDirectMessage } = require('../services/slackService');
 
 exports.getAll = [
    async function checkPermissions(req, res, next) {
@@ -260,6 +260,19 @@ exports.create = [
                return assignee.firstName + ' ' + assignee.lastName;
             }).join(', ')}`
          );
+
+         //send direct message to assignees
+         assigneesList.forEach(assignee => {
+            sendDirectMessage(
+               assignee.slackMemberId,
+               `You have been assigned to a new task - \n
+               Title: ${newTaskData.title}\n
+               Status: ${newTaskData.status}\n
+               Priority: ${newTaskData.priority}\n
+               Sprint: ${newTaskData.sprint ? sprintData.name : 'N/A'}\n
+               Description: ${newTaskData.description}`
+            );
+         });
          
          res.json({ data: newTaskData });
       } catch (err) {
@@ -392,9 +405,22 @@ exports.update = [
             if (fieldsToUpdate.priority !== oldTaskData.priority) {
                slackMessage.push(`New Priority: '${fieldsToUpdate.priority}'`);
             }
-            if (fieldsToUpdate.sprint && (fieldsToUpdate.sprint !== oldTaskData.sprint.toString())) {
-               slackMessage.push(`New Sprint: '${sprintData.name}'`);
+
+            if (oldTaskData.sprint) {
+               if (!fieldsToUpdate.sprint) {
+                  //send slack (Sprint -> unassigned)
+                  slackMessage.push(`New Sprint: N/A (unassigned)`);
+               } else if (oldTaskData.sprint.toString() !== fieldsToUpdate.sprint) {
+                  //send slack (Sprint -> new Sprint)
+                  slackMessage.push(`New Sprint: '${sprintData.name}'`);
+               }
+            } else {
+               if (fieldsToUpdate.sprint) {
+                  //send slack (unassigned -> Sprint)
+                  slackMessage.push(`New Sprint: '${sprintData.name}'`);
+               }
             }
+
             if (fieldsToUpdate.description !== oldTaskData.description) {
                slackMessage.push(`New Description: '${fieldsToUpdate.description}'`);
             }
@@ -420,29 +446,54 @@ exports.update = [
                removedAssignees.push(memberId);
             }
 
-            //construct Slack message for new assignees
+            //construct Slack channel message regarding new assignees
+            //and send direct message to new assignees
             if (newAssignees.length > 0) {
                let newMembers = await Member.find(
-                  { _id: { $in: newAssignees } }, 'firstName lastName'
+                  { _id: { $in: newAssignees } }, 'firstName lastName slackMemberId'
                ).exec();
 
                slackMessage.push(`New Assignees: ${newMembers.map(member => {
                   return member.firstName + ' ' + member.lastName;
                }).join(', ')}`);
+
+               //send direct message to new assignees
+               newMembers.forEach(assignee => {
+                  sendDirectMessage(
+                     assignee.slackMemberId,
+                     `You have been assigned to a new task - \n
+                     Title: ${fieldsToUpdate.title}\n
+                     Status: ${fieldsToUpdate.status}\n
+                     Priority: ${fieldsToUpdate.priority}\n
+                     Sprint: ${fieldsToUpdate.sprint ? sprintData.name : 'N/A'}\n
+                     Description: ${fieldsToUpdate.description}`
+                  );
+               });
             }
             
-            //construct Slack message for removed assignees
+            //construct Slack channel message regarding removed assignees
+            //and send direct message to removed assignees
             if (removedAssignees.length > 0) {
                let removedMembers = await Member.find(
-                  { _id: { $in: removedAssignees } }, 'firstName lastName'
+                  { _id: { $in: removedAssignees } }, 'firstName lastName slackMemberId'
                ).exec();
 
                slackMessage.push(`Removed Assignees: ${removedMembers.map(member => {
                   return member.firstName + ' ' + member.lastName;
                }).join(', ')}`);
+
+               //send direct message to removed members
+               removedMembers.forEach(member => {
+                  sendDirectMessage(
+                     member.slackMemberId,
+                     `You have been unassigned from the following task - \n
+                     Title: ${oldTaskData.title}\n
+                     Description: ${oldTaskData.description}`
+                  );
+               });
             }
 
-            //send Slack message if any changes were made
+            //send Slack channel message if any changes were made
             if (slackMessage.length > 1) {
                sendChannelMessage(projectData.slackChannelId, slackMessage.join('\n'));
             }

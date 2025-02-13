@@ -5,7 +5,8 @@ const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
 const { 
     createSlackChannel, renameSlackChannel, inviteUsersToChannel,
-    sendChannelMessage, removeUserFromChannel, archiveSlackChannel
+    removeUserFromChannel, archiveSlackChannel, sendChannelMessage, 
+    sendDirectMessage
 } = require('../services/slackService');
 
 exports.getAll = [
@@ -149,6 +150,9 @@ exports.create = [
             ];
 
             inviteUsersToChannel(channelId, slackMemberIdList);
+            slackMemberIdList.forEach(memberId => {
+                sendDirectMessage(memberId, `You have been added to the new project '${req.body.name}'`);
+            });
             sendChannelMessage(channelId, `Welcome to '${req.body.name}'! This channel will be home base for all communications related to this project.`);
             
             let newProject = new Project({
@@ -307,6 +311,7 @@ exports.update = [
 
                     oldTeamMembers.forEach(member => {
                         removeUserFromChannel(oldProjectData.slackChannelId, member.slackMemberId);
+                        sendDirectMessage(member.slackMemberId, `You have been removed from project '${oldProjectData.name}'`);
                     });
                 }
             
@@ -318,6 +323,9 @@ exports.update = [
 
                     let newSlackMemberIdList = newTeamMembers.map(member => member.slackMemberId);
                     inviteUsersToChannel(oldProjectData.slackChannelId, newSlackMemberIdList);
+                    newSlackMemberIdList.forEach(memberId => {
+                        sendDirectMessage(memberId, `You have been added to project '${fieldsToUpdate.name}'`);
+                    });
                 }
 
                 res.json({ data: oldProjectData });

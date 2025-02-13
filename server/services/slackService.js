@@ -84,3 +84,22 @@ exports.sendChannelMessage = async function sendChannelMessage(channelId, messag
       console.error('Error sending message to Slack: ', error);
    }
 };
+
+exports.sendDirectMessage = async function sendDirectMessage(userId, message) {
+   try {
+      // Open a DM with the user
+      const dmResponse = await slackClient.conversations.open({ users: userId });
+      const channelId = dmResponse.channel.id;
+
+      // Send a message in the DM
+      const messageResponse = await slackClient.chat.postMessage({
+         channel: channelId,
+         text: message
+      });
+
+      console.log(`Direct Message sent to ${userId}`);
+      return messageResponse;
+   } catch (error) {
+      console.error('Error sending DM: ', error);
+   }
+}
