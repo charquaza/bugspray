@@ -528,7 +528,9 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList, shouldUpd
                         </ul>
                      </div>
 
-                     <div className={styles['add-assignee-ctnr']}>
+                     <div className={styles['add-assignee-ctnr'] + 
+                        (projectId ? ` ${styles['in-project-id-page']}` : '')
+                     }>
                         <p>Assign Members</p>
                         <CustomTextField 
                            select id='selectedAddMemberId' name='selectedAddMemberId'

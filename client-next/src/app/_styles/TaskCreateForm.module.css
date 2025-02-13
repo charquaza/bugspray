@@ -151,4 +151,7 @@
       left: clamp(22em, 35vw, 25em);
       width: clamp(12em, calc(100vw - 25em), 47em);
    }
+   .task-create-ctnr .add-assignee-ctnr.in-project-id-page {
+      top: 19.8em;
+   }
 }
