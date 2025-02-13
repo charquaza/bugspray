@@ -5,7 +5,7 @@ const Sprint = require('../models/sprint');
 const { body, param, validationResult } = require('express-validator');
 const { 
     createSlackChannel, renameSlackChannel, inviteUsersToChannel,
-    sendSlackMessage, removeUserFromChannel, archiveSlackChannel
+    sendChannelMessage, removeUserFromChannel, archiveSlackChannel
 } = require('../services/slackService');
 
 exports.getAll = [
@@ -149,7 +149,7 @@ exports.create = [
             ];
 
             inviteUsersToChannel(channelId, slackMemberIdList);
-            sendSlackMessage(channelId, `Welcome to '${req.body.name}'! This channel will be home base for all communications related to this project.`);
+            sendChannelMessage(channelId, `Welcome to '${req.body.name}'! This channel will be home base for all communications related to this project.`);
             
             let newProject = new Project({
                 name: req.body.name,
@@ -257,16 +257,16 @@ exports.update = [
             } else {
                 if (fieldsToUpdate.name !== oldProjectData.name) {
                     renameSlackChannel(oldProjectData.slackChannelId, `project-${fieldsToUpdate.name}`);
-                    sendSlackMessage(oldProjectData.slackChannelId, `Project name updated to '${fieldsToUpdate.name}'`);
+                    sendChannelMessage(oldProjectData.slackChannelId, `Project name updated to '${fieldsToUpdate.name}'`);
                 }
                 if (fieldsToUpdate.status !== oldProjectData.status) {
-                    sendSlackMessage(oldProjectData.slackChannelId, `Project status updated to '${fieldsToUpdate.status}'`);
+                    sendChannelMessage(oldProjectData.slackChannelId, `Project status updated to '${fieldsToUpdate.status}'`);
                 }
                 if (fieldsToUpdate.priority !== oldProjectData.priority) {
-                    sendSlackMessage(oldProjectData.slackChannelId, `Project priority updated to '${fieldsToUpdate.priority}'`);
+                    sendChannelMessage(oldProjectData.slackChannelId, `Project priority updated to '${fieldsToUpdate.priority}'`);
                 }
                 if (fieldsToUpdate.lead !== oldProjectData.lead.toString()) {
-                    sendSlackMessage(oldProjectData.slackChannelId, `Project lead updated: ${leadMember.firstName} ${leadMember.lastName} is now project lead`);
+                    sendChannelMessage(oldProjectData.slackChannelId, `Project lead updated: ${leadMember.firstName} ${leadMember.lastName} is now project lead`);
                 }
 
                 //map old members (lead + team) to check for changes
@@ -359,7 +359,7 @@ exports.delete = [
                 return res.status(404).json({ errors: ['Project not found'] });
             }
 
-            sendSlackMessage(deletedProjectData.slackChannelId, `Project '${deletedProjectData.name}' has been removed from Bugspray. Please consult management for further direction.`);
+            sendChannelMessage(deletedProjectData.slackChannelId, `Project '${deletedProjectData.name}' has been removed from Bugspray. Please consult management for further direction.`);
             archiveSlackChannel(deletedProjectData.slackChannelId);
 
             //delete tasks that reference deleted project

@@ -40,7 +40,6 @@ exports.archiveSlackChannel = async function archiveSlackChannel(channelId) {
    }
 }
 
-
 exports.inviteUsersToChannel = async function inviteUsersToChannel(channelId, userIdList) {
    try {
       const response = await slackClient.conversations.invite({
@@ -72,8 +71,7 @@ exports.removeUserFromChannel = async function removeUserFromChannel(channelId, 
    }
 }
 
-
-exports.sendSlackMessage = async function sendSlackMessage(channelId, message) {
+exports.sendChannelMessage = async function sendChannelMessage(channelId, message) {
    try {
       const response = await slackClient.chat.postMessage({
          channel: channelId,

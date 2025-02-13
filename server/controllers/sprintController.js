@@ -1,7 +1,7 @@
 const Sprint = require('../models/sprint');
 const Project = require('../models/project');
 const { body, param, query, validationResult } = require('express-validator');
-const { sendSlackMessage } = require('../services/slackService');
+const { sendChannelMessage } = require('../services/slackService');
 
 exports.getAll = [
    async function checkPermissions(req, res, next) {
@@ -196,7 +196,7 @@ exports.create = [
          let newSprintData = await newSprint.save();
 
          //send slack message to project channel
-         sendSlackMessage(
+         sendChannelMessage(
             projectData.slackChannelId,
             `New sprint created - \n
             Name: ${newSprintData.name}\n
@@ -308,7 +308,7 @@ exports.update = [
             }
 
             if (slackMessage.length > 1) {
-               sendSlackMessage(projectData.slackChannelId, slackMessage.join('\n'));
+               sendChannelMessage(projectData.slackChannelId, slackMessage.join('\n'));
             }
 
             res.json({ data: oldSprintData });
@@ -365,7 +365,7 @@ exports.delete = [
             if (deletedSprintData === null) {
                res.status(404).json({ errors: ['Sprint not found'] });
             } else {
-               sendSlackMessage(
+               sendChannelMessage(
                   projectData.slackChannelId, 
                   `Sprint '${deletedSprintData.name}' has been discontinued.`
                );

@@ -3,7 +3,7 @@ const Project = require('../models/project');
 const Member = require('../models/member');
 const Sprint = require('../models/sprint');
 const { body, param, query, validationResult } = require('express-validator');
-const { sendSlackMessage } = require('../services/slackService');
+const { sendChannelMessage } = require('../services/slackService');
 
 exports.getAll = [
    async function checkPermissions(req, res, next) {
@@ -248,7 +248,7 @@ exports.create = [
          let newTaskData = await newTask.save();
 
          //send slack message to project channel
-         sendSlackMessage(
+         sendChannelMessage(
             projectData.slackChannelId,
             `New task created - \n
             Title: ${newTaskData.title}\n
@@ -444,7 +444,7 @@ exports.update = [
 
             //send Slack message if any changes were made
             if (slackMessage.length > 1) {
-               sendSlackMessage(projectData.slackChannelId, slackMessage.join('\n'));
+               sendChannelMessage(projectData.slackChannelId, slackMessage.join('\n'));
             }
       
             res.json({ data: oldTaskData });
@@ -499,7 +499,7 @@ exports.delete = [
             if (deletedTaskData === null) {
                res.status(404).json({ errors: ['Task not found'] });
             } else {
-               sendSlackMessage(
+               sendChannelMessage(
                   projectData.slackChannelId, 
                   `Task '${deletedTaskData.title}' has been deleted.`
                );
