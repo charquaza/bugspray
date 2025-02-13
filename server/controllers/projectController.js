@@ -210,6 +210,9 @@ exports.update = [
             return !leadIsInTeam;
         }).withMessage('Lead member cannot be assigned as a team member')
         .escape(),
+    body('slackChannelId').isString().withMessage('Invalid value for Slack Channel ID').bail()
+        .trim().isLength({ max: 50 }).withMessage('Slack Channel ID cannot be longer than 50 characters')
+        .escape(),
 
     param('projectId').isString().withMessage('Invalid value for projectId').bail()
         .trim().notEmpty().withMessage('projectId cannot be blank'),
@@ -249,7 +252,8 @@ exports.update = [
                 status: req.body.status,
                 priority: req.body.priority,
                 lead: req.body.lead,
-                team: req.body.team
+                team: req.body.team,
+                slackChannelId: req.body.slackChannelId
             };
 
             let oldProjectData = await 

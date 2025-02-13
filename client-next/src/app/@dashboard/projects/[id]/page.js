@@ -71,6 +71,8 @@ export default function ProjectDetailsPage({ params }) {
             errorMap.set('team', true);
          } else if (errMsg.search(/lead/i) !== -1) {
             errorMap.set('lead', true);
+         } else if (errMsg.search(/slack channel id/i) !== -1) {
+            errorMap.set('slackChannelId', true);
          }
       });
       return errorMap;
@@ -225,7 +227,8 @@ export default function ProjectDetailsPage({ params }) {
             priority: project.priority,
             lead: project.lead,
             team: teamMap,
-            selectedAddMemberId
+            selectedAddMemberId,
+            slackChannelId: project.slackChannelId || ''
          });
          //reset form errors
          setFormErrors([]);
@@ -398,6 +401,14 @@ export default function ProjectDetailsPage({ params }) {
                               }) }
                            </CustomTextField>
 
+                           <CustomTextField 
+                              type='text' id='slackChannelId' name='slackChannelId'
+                              label='Slack Channel ID' variant='filled' 
+                              margin='normal' value={inputValues.slackChannelId}
+                              onChange={handleInputChange}
+                              error={inputsWithErrors.has('slackChannelId')}
+                           />
+
                            <div className={styles['team-list-add-member-ctnr']}>
                               <div className={styles['team-list-ctnr']}>
                                  <p className={styles[inputsWithErrors.has('team') ? 'team-error' : '']}>Team Members:</p> 
@@ -478,6 +489,14 @@ export default function ProjectDetailsPage({ params }) {
                                     <span className={styles['label']}>Priority:</span> 
                                     <span className={styles['info']}>{project.priority}</span>
                                  </li>
+
+                                 {project.slackChannelId &&
+                                    <li>
+                                       <span className={styles['label']}>Slack Channel ID:</span> 
+                                       <span className={styles['info']}>{project.slackChannelId}</span>
+                                    </li>
+                                 }
+                                 
                                  <li>
                                     <span className={styles['label']}>Lead:</span> 
                                     <span className={styles['info']}>

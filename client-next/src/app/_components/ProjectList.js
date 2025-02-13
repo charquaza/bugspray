@@ -60,25 +60,30 @@ export default function ProjectList({ updateProjectList, setUpdateProjectList })
       },
       { 
          field: 'status', headerName: 'Status', 
-         flex: 1, minWidth: 100,
+         flex: 0.8, minWidth: 100,
          sortComparator: sortingComparators.status 
       },
       { 
          field: 'priority', headerName: 'Priority', 
-         flex: 1, minWidth: 80,
+         flex: 0.8, minWidth: 80,
          sortComparator: sortingComparators.priority 
       },
       { 
          field: 'dateCreated', headerName: 'Date Created', 
-         flex: 1.5, minWidth: 140,
+         flex: 1, minWidth: 140,
          valueFormatter: (value) => DateTime.fromISO(value).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
       },
       { 
          field: 'lead', headerName: 'Lead', 
-         flex: 2, minWidth: 150, 
+         flex: 1.5, minWidth: 150, 
          renderCell: renderLeadLink,
          valueGetter: (value) => `${value.firstName} ${value.lastName}` 
       },
+      { 
+         field: 'slackChannelId', headerName: 'Slack Channel ID', 
+         flex: 0.2, minWidth: 150,
+         valueFormatter: (value) => value ? value : 'N/A'
+      }
    ];
 
    var dataGridRows = (projectList) 
