@@ -531,6 +531,7 @@ export default function ProjectDetailsPage({ params }) {
                            <h2>Tasks</h2>
                            <TaskCreateForm projectId={project._id} 
                               setUpdateTaskList={setUpdateTaskList}
+                              shouldUpdateSprintList={updateSprintList} 
                            />
                            <TaskList projectId={project._id}
                               updateTaskList={updateTaskList}

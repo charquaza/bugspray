@@ -27,7 +27,7 @@ const CustomTextField = styled(TextField)({
    },
 });
 
-export default function TaskCreateForm({ projectId, setUpdateTaskList }) {
+export default function TaskCreateForm({ projectId, setUpdateTaskList, shouldUpdateSprintList }) {
    const [sprintList, setSprintList] = useState();
    const [filteredSprintList, setFilteredSprintList] = useState();
    const [memberList, setMemberList] = useState(); 
@@ -71,9 +71,10 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList }) {
    }, [formErrors]);
 
    useEffect(function getSprintList() {
-      //only run on initial render and 
-      //after each successful create call to api
-      if (sprintList && !updateSprintList) {
+      //only run on initial render, 
+      //after each successful create call to api,
+      //or when props.shouldUpdateSprintList is true
+      if (sprintList && !updateSprintList && !shouldUpdateSprintList) {
          return;
       }
 
@@ -109,7 +110,7 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList }) {
       }
 
       fetchSprintList();
-   }, [sprintList, updateSprintList, projectId]);
+   }, [sprintList, updateSprintList, projectId, shouldUpdateSprintList]);
 
    useEffect(function getAllMembers() { 
       //only fetch memberList if projectId is provided
