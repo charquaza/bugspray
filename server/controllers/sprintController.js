@@ -307,7 +307,9 @@ exports.update = [
                slackMessage.push(`New Description: '${fieldsToUpdate.description}'`);
             }
 
-            sendSlackMessage(projectData.slackChannelId, slackMessage.join('\n'));
+            if (slackMessage.length > 1) {
+               sendSlackMessage(projectData.slackChannelId, slackMessage.join('\n'));
+            }
 
             res.json({ data: oldSprintData });
          }
