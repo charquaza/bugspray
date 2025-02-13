@@ -3,6 +3,7 @@ const Project = require('../models/project');
 const Member = require('../models/member');
 const Sprint = require('../models/sprint');
 const { body, param, query, validationResult } = require('express-validator');
+const { sendSlackMessage } = require('../services/slackService');
 
 exports.getAll = [
    async function checkPermissions(req, res, next) {
@@ -210,11 +211,11 @@ exports.create = [
          }
 
          //check if assignees exist
-         let assigneesCount = await Member.countDocuments(
+         let assigneesList = await Member.find(
             { _id: { $in: req.body.assignees } }
          ).exec();
 
-         if (assigneesCount !== req.body.assignees.length) {
+         if (assigneesList.length !== req.body.assignees.length) {
             return res.status(400).json({ 
                errors: ['Cannot create task: Assignee(s) not found'] 
             });
@@ -222,7 +223,7 @@ exports.create = [
 
          //if sprint has been provided, check if sprint exists
          if (req.body.sprint) {
-            let sprintData = await Sprint.findById(req.body.sprint).exec();
+            var sprintData = await Sprint.findById(req.body.sprint).exec();
 
             if (sprintData === null) {
                return res.status(400).json({ 
@@ -245,6 +246,21 @@ exports.create = [
          });
 
          let newTaskData = await newTask.save();
+
+         //send slack message to project channel
+         sendSlackMessage(
+            projectData.slackChannelId,
+            `New task created - \n
+            Title: ${newTaskData.title}\n
+            Status: ${newTaskData.status}\n
+            Priority: ${newTaskData.priority}\n
+            Sprint: ${newTaskData.sprint ? sprintData.name : 'N/A'}\n
+            Description: ${newTaskData.description}\n
+            Assignees: ${assigneesList.map(assignee => {
+               return assignee.firstName + ' ' + assignee.lastName;
+            }).join(', ')}`
+         );
+         
          res.json({ data: newTaskData });
       } catch (err) {
          return next(err);
@@ -287,7 +303,6 @@ exports.update = [
 
    param('taskId').isString().withMessage('Invalid value for taskId').bail()
       .trim().notEmpty().withMessage('taskId cannot be blank'),
-
 
    async function (req, res, next) {
       var validationErrors = validationResult(req);
@@ -339,7 +354,7 @@ exports.update = [
 
          //if sprint has been provided, check if sprint exists
          if (req.body.sprint) {
-            let sprintData = await Sprint.findById(req.body.sprint).exec();
+            var sprintData = await Sprint.findById(req.body.sprint).exec();
 
             if (sprintData === null) {
                return res.status(400).json({ 
@@ -366,6 +381,72 @@ exports.update = [
          if (oldTaskData === null) {
             res.status(404).json({ errors: ['Task not found'] });
          } else {
+            let slackMessage = [`Task '${oldTaskData.title}' has been updated - `];
+
+            if (fieldsToUpdate.title !== oldTaskData.title) {
+               slackMessage.push(`New Title: '${fieldsToUpdate.title}'`);
+            }
+            if (fieldsToUpdate.status !== oldTaskData.status) {
+               slackMessage.push(`New Status: '${fieldsToUpdate.status}'`);
+            }
+            if (fieldsToUpdate.priority !== oldTaskData.priority) {
+               slackMessage.push(`New Priority: '${fieldsToUpdate.priority}'`);
+            }
+            if (fieldsToUpdate.sprint && (fieldsToUpdate.sprint !== oldTaskData.sprint.toString())) {
+               slackMessage.push(`New Sprint: '${sprintData.name}'`);
+            }
+            if (fieldsToUpdate.description !== oldTaskData.description) {
+               slackMessage.push(`New Description: '${fieldsToUpdate.description}'`);
+            }
+
+            //map old assignees to check for changes
+            let oldAssigneesMap = new Map();
+            oldTaskData.assignees.forEach(memberId => {
+               oldAssigneesMap.set(memberId.toString(), true);
+            });
+            
+            let newAssignees = [];
+            fieldsToUpdate.assignees.forEach(memberId => {
+               if (!oldAssigneesMap.has(memberId)) {
+                  newAssignees.push(memberId);
+               } else {
+                  oldAssigneesMap.delete(memberId);
+               }
+            });
+
+            //members remaining in oldAssigneesMap have been removed
+            let removedAssignees = [];
+            for (let [memberId] of oldAssigneesMap) {
+               removedAssignees.push(memberId);
+            }
+
+            //construct Slack message for new assignees
+            if (newAssignees.length > 0) {
+               let newMembers = await Member.find(
+                  { _id: { $in: newAssignees } }, 'firstName lastName'
+               ).exec();
+
+               slackMessage.push(`New Assignees: ${newMembers.map(member => {
+                  return member.firstName + ' ' + member.lastName;
+               }).join(', ')}`);
+            }
+            
+            //construct Slack message for removed assignees
+            if (removedAssignees.length > 0) {
+               let removedMembers = await Member.find(
+                  { _id: { $in: removedAssignees } }, 'firstName lastName'
+               ).exec();
+
+               slackMessage.push(`Removed Assignees: ${removedMembers.map(member => {
+                  return member.firstName + ' ' + member.lastName;
+               }).join(', ')}`);
+            }
+
+            //send Slack message if any changes were made
+            if (slackMessage.length > 1) {
+               sendSlackMessage(projectData.slackChannelId, slackMessage.join('\n'));
+            }
+      
             res.json({ data: oldTaskData });
          }
       } catch (err) {
@@ -395,6 +476,7 @@ exports.delete = [
 
       try {
          let taskData = await Task.findById(req.params.taskId).exec();
+         let projectData = await Project.findById(taskData.project._id).exec();
 
          if (taskData === null) {
             return res.status(404).json({ errors: ['Task not found'] });
@@ -402,8 +484,6 @@ exports.delete = [
             //prevent task delete if
             //currUser is not admin, lead, or team member of parent project
             if (req.user.privilege !== 'admin') {
-               let projectData = await Project.findById(taskData.project._id).exec();
-
                if (projectData === null) {
                   return res.status(400).json({ errors: ['Parent project not found'] });
                } else if (
@@ -419,6 +499,11 @@ exports.delete = [
             if (deletedTaskData === null) {
                res.status(404).json({ errors: ['Task not found'] });
             } else {
+               sendSlackMessage(
+                  projectData.slackChannelId, 
+                  `Task '${deletedTaskData.title}' has been deleted.`
+               );
+
                res.json({ data: deletedTaskData });
             }
          }
