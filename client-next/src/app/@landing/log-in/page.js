@@ -53,7 +53,7 @@ export default function LogInPage() {
       }
    
       sendFormData();
-   }, [formSubmitted]);
+   }, [formSubmitted, inputValues, router]);
 
    function handleFormSubmit(e) {
       e.preventDefault();
@@ -132,7 +132,7 @@ export default function LogInPage() {
                </form>
 
                <div className={styles['sign-up-link-ctnr']}>
-                  <Link href='/sign-up'>Don't have an account?</Link>
+                  <Link href='/sign-up'>Don&apos;t have an account?</Link>
                </div>
             </main>
          </div>

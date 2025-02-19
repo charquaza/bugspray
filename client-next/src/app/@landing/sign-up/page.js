@@ -87,7 +87,7 @@ export default function SignUpPage() {
       }
    
       sendFormData();
-   }, [formSubmitted]);
+   }, [formSubmitted, inputValues, router]);
 
    function handleFormSubmit(e) {
       e.preventDefault();

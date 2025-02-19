@@ -52,7 +52,7 @@ export default function SprintList({ projectId, updateSprintList, setUpdateSprin
       }
 
       fetchSprintList();
-   }, [projectId, updateSprintList]);
+   }, [projectId, sprintList, updateSprintList, setUpdateSprintList]);
 
    var dataGridColumns = [
       { field: 'name', headerName: 'Name', flex: 2, minWidth: 150, 

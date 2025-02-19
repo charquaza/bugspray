@@ -35,7 +35,9 @@ const priorityComparator = (priority1, priority2) => {
    return 0;
 };
 
-export default { 
+const sortingComparators = { 
    status: statusComparator, 
    priority: priorityComparator 
 };
+
+export default sortingComparators;

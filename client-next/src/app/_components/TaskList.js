@@ -63,7 +63,7 @@ export default function TaskList({
       }
 
       fetchTaskList();
-   }, [projectId, filterByStatus, updateTaskList]);
+   }, [projectId, filterByStatus, taskList, updateTaskList, setUpdateTaskList]);
 
    var dataGridColumns = [
       { field: 'title', headerName: 'Title', flex: 0.7, minWidth: 200, 

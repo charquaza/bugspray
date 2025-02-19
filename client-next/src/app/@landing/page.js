@@ -34,12 +34,12 @@ export default function LandingPage() {
          <main>
             <article>
                <h2>Manage Your Life.</h2>
-               <p>Don't let the (bed) bugs bite!</p>
+               <p>Don&apos;t let the (bed) bugs bite!</p>
                <p>Plan, track, and achieve.</p>
                <p>Progress is built-in.</p>
    
                <Link href='/sign-up' className={styles['move-forward-link']}>
-                  Let's Move Forward
+                  Let&apos;s Move Forward
                </Link>
             </article>
 

@@ -50,7 +50,7 @@ export default function ProjectList({ updateProjectList, setUpdateProjectList })
       }
 
       fetchProjectList();
-   }, [ updateProjectList ]);
+   }, [ projectList, updateProjectList, setUpdateProjectList ]);
 
    var dataGridColumns = [
       { 

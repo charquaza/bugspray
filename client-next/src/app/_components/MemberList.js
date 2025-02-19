@@ -59,7 +59,7 @@ export default function MemberList({ updateMemberList, setUpdateMemberList }) {
       }
 
       fetchMemberList();
-   }, [ user, updateMemberList ]);
+   }, [ user, memberList, updateMemberList, setUpdateMemberList ]);
 
    var dataGridColumns = [
       { 
