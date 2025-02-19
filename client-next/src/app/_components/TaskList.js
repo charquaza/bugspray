@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { DateTime } from 'luxon';
 import { DataGrid } from '@mui/x-data-grid';
 import sortingComparators from '../_utils/sortingComparators';
-import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/TaskList.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function TaskList({ 
    projectId, selectColumns, initialPageSize, filterByStatus,

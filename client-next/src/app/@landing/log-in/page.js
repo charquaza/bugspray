@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { apiURL } from '@/root/config.js';
 import { TextField, Button, CircularProgress } from '@mui/material';
 import Logo from '@/app/_components/Logo';
 import styles from '@/app/_styles/logInPage.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LogInPage() {
    const [inputValues, setInputValues] = useState({ username: '', password: '' });

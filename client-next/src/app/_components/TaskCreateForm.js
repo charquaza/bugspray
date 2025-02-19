@@ -3,8 +3,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { TextField, MenuItem } from '@mui/material';
-import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/TaskCreateForm.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 const CustomTextField = styled(TextField)({
    'marginTop': '0',

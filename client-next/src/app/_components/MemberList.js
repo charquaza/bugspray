@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { DateTime } from 'luxon';
 import { DataGrid } from '@mui/x-data-grid';
 import { useUserData } from '@/app/_hooks/hooks';
-import { apiURL } from '@/root/config.js';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function MemberList({ updateMemberList, setUpdateMemberList }) {
    const user = useUserData();

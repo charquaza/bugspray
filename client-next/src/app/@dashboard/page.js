@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { apiURL } from '@/root/config.js';
 import HomeProjectCard from '@/app/_components/HomeProjectCard';
 import styles from '@/app/_styles/homePage.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Home() {
    const [projectList, setProjectList] = useState();

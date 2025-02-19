@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { apiURL } from '@/root/config.js';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export function useUserData() {
    const [user, setUser] = useState();

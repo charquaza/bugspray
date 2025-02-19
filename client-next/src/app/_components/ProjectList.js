@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { DateTime } from 'luxon';
 import { DataGrid } from '@mui/x-data-grid';
 import sortingComparators from '../_utils/sortingComparators';
-import { apiURL } from '@/root/config.js';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ProjectList({ updateProjectList, setUpdateProjectList }) {
    const [projectList, setProjectList] = useState();

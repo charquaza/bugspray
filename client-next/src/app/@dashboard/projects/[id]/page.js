@@ -7,12 +7,13 @@ import { DateTime } from 'luxon';
 import { styled } from '@mui/material/styles';
 import { TextField, MenuItem } from '@mui/material';
 import { useUserData } from '@/app/_hooks/hooks';
-import { apiURL } from '@/root/config.js';
 import SprintList from '@/app/_components/SprintList';
 import SprintCreateForm from '@/app/_components/SprintCreateForm';
 import TaskList from '@/app/_components/TaskList';
 import TaskCreateForm from '@/app/_components/TaskCreateForm';
 import styles from '@/app/_styles/projectDetailsPage.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 const CustomTextField = styled(TextField)({
    'marginTop': '0',

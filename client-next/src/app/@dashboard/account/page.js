@@ -4,8 +4,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { DateTime } from 'luxon';
 import { styled } from '@mui/material/styles';
 import { TextField } from '@mui/material';
-import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/accountPage.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 const CustomTextField = styled(TextField)({
    'marginTop': '0',

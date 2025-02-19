@@ -4,13 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUserData } from '@/app/_hooks/hooks';
-import { apiURL } from '@/root/config.js';
 import { 
    Avatar, Menu, MenuItem, ListItemIcon, Divider, 
    IconButton, Tooltip, CircularProgress 
 } from '@mui/material';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function AccountMenu() {
    const [anchorEl, setAnchorEl] = useState(null);

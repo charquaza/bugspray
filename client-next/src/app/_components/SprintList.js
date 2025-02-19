@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
 import { DataGrid } from '@mui/x-data-grid';
-import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/SprintList.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SprintList({ projectId, updateSprintList, setUpdateSprintList }) {
    const [sprintList, setSprintList] = useState();

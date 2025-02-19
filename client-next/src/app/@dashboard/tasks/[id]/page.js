@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { DateTime } from 'luxon';
 import { useUserData } from '@/app/_hooks/hooks';
 import TaskUpdateForm from '@/app/_components/TaskUpdateForm';
-import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/taskDetailsPage.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function TaskDetailsPage({ params }) {
    const taskId = use(params).id;

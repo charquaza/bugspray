@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { apiURL } from '@/root/config.js';
 import TaskList from '@/app/_components/TaskList';
 import styles from '@/app/_styles/HomeProjectCard.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function HomeProjectCard({ project }) {
    const [taskList, setTaskList] = useState();

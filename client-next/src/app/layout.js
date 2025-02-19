@@ -1,10 +1,12 @@
 import { cookies } from 'next/headers';
 import { Source_Sans_3 } from 'next/font/google';
-import { apiURL, apiSessionCookieName } from '@/root/config.js';
 import DashboardContainer from '@/app/_components/DashboardContainer';
 import LandingContainer from '@/app/_components/LandingContainer';
 import ThemeRegistry from '@/app/_styles/ThemeRegistry';
 import '@/app/_styles/globals.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
+const apiSessionCookieName = process.env.NEXT_PUBLIC_SESSION_COOKIE_NAME;
 
 export const metadata = {
    title: 'Bugspray',

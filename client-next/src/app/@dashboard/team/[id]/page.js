@@ -6,8 +6,9 @@ import { DateTime } from 'luxon';
 import { styled } from '@mui/material/styles';
 import { TextField, MenuItem } from '@mui/material';
 import { useUserData } from '@/app/_hooks/hooks';
-import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/memberDetailsPage.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 const CustomTextField = styled(TextField)({
    'marginTop': '0',

@@ -3,13 +3,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { apiURL } from '@/root/config.js';
 import { 
    Button, TextField, FormControl, InputLabel, Select, MenuItem,
    CircularProgress
 } from '@mui/material';
 import Logo from '@/app/_components/Logo';
 import styles from '@/app/_styles/signUpPage.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SignUpPage() {
    const [inputValues, setInputValues] = useState({ 

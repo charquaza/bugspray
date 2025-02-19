@@ -4,8 +4,9 @@ import { useState, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { apiURL } from '@/root/config.js';
 import styles from '@/app/_styles/SprintCreateForm.module.css';
+
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 const CustomTextField = styled(TextField)({
    'marginTop': '0',
