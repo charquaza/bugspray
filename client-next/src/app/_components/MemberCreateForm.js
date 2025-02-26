@@ -99,8 +99,9 @@ export default function MemberCreateForm({ setUpdateMemberList }) {
 
          const fetchOptions = {
             method: 'POST',
-            headers: { 
-                  'Content-Type': 'application/json',
+            headers: {
+               'Authorization': 'Bearer ' + localStorage.getItem('token'),
+               'Content-Type': 'application/json'
             },
             body: JSON.stringify(fetchBody),
             mode: 'cors',

@@ -19,7 +19,7 @@ export default function DashboardContainer(props) {
    return (
       <LocalizationProvider dateAdapter={AdapterLuxon}>
          <div className={styles['dashboard-container']}>
-            <Topbar setSidebarOpen={setSidebarOpen} setCurrUser={props.setCurrUser} />
+            <Topbar setSidebarOpen={setSidebarOpen} />
 
             <div className={styles['main-container']}>
                {sidebarOpen && 

@@ -29,6 +29,9 @@ export default function MemberList({ updateMemberList, setUpdateMemberList }) {
          try {
             const fetchOptions = {
                method: 'GET',
+               headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+               },
                mode: 'cors',
                credentials: 'include',
                cache: 'no-store'

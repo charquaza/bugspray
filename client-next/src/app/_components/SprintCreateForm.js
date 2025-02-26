@@ -64,8 +64,9 @@ export default function SprintCreateForm({ projectId, setUpdateSprintList }) {
 
          var fetchOptions = {
             method: 'POST',
-            headers: { 
-                  'Content-Type': 'application/json',
+            headers: {
+               'Authorization': 'Bearer ' + localStorage.getItem('token'),
+               'Content-Type': 'application/json'
             },
             body: JSON.stringify(fetchBody),
             mode: 'cors',

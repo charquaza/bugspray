@@ -3,15 +3,13 @@ require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const cors = require('cors');
 const mongoose = require('mongoose');
-const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const bcrypt = require('bcryptjs');
 
 const indexRouter = require('./routes/index');
@@ -21,7 +19,7 @@ const app = express();
 
 //Configure cors
 const corsOptions = {
-  origin: 'http://localhost:3001', //restrict to frontend domain after deployment
+  origin: process.env.FRONTEND_DOMAIN,
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -31,18 +29,6 @@ const mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB)
   .catch((err) => console.error(err));
 mongoose.connection.on('error', (err) => console.error(err));
-
-//Set up connect-mongodb-session store
-const sessionStore = new MongoDBStore(
-  {
-    uri: mongoDB,
-    databaseName: 'bug_tracker',
-    collection: 'sessions',
-    expires: 1000 * 60 * 60 * 24 // 1 day in milliseconds
-  },
-  (err) => console.error(err)
-);
-sessionStore.on('error', (err) => console.error(err));
 
 //Configure passport
 passport.use(
@@ -65,40 +51,41 @@ passport.use(
     };
   })
 );
-passport.serializeUser((member, done) => {
-  done(null, member.id);
-});
-passport.deserializeUser(async (id, done) => {
-  try {
-    const member = await Member.findById(id);
-    done(null, member);
-  } catch(err) {
-    done(err);
-  };
-});
+
+passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey : process.env.JWT_SECRET
+    }, 
+    async function (payload, done) {
+      try {
+        const user = await Member.findById(payload.id).exec();
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
+    }
+  )
+);
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors(corsOptions));
 
-//Set up sessions and passport
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
-  },
-  store: sessionStore
-}));
-app.use(passport.session());
-
 //Set up router
-app.use('/', indexRouter);
+app.use('/',
+  (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+      req.user = user; // Attach user (may be falsy) to request
+      next();
+    })(req, res, next);
+  },
+  indexRouter
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

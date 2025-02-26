@@ -48,7 +48,7 @@ export default function Topbar(props) {
                <NotificationsMenu />   
             </li>
             <li>
-               <AccountMenu setCurrUser={props.setCurrUser} />
+               <AccountMenu />
             </li>
          </ul>
       </header>

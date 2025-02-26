@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/_contexts/AuthContext';
 import { TextField, Button, CircularProgress } from '@mui/material';
 import Logo from '@/app/_components/Logo';
 import styles from '@/app/_styles/logInPage.module.css';
@@ -10,6 +11,8 @@ import styles from '@/app/_styles/logInPage.module.css';
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LogInPage() {
+   const { setIsLoggedIn } = useAuth();
+
    const [inputValues, setInputValues] = useState({ username: '', password: '' });
    const [formSubmitted, setFormSubmitted] = useState(false);
    const [formErrors, setFormErrors] = useState([]);
@@ -25,8 +28,9 @@ export default function LogInPage() {
          try {
             var fetchOptions = {
                method: 'POST',
-               headers: { 
-                  'Content-Type': 'application/json',
+               headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                  'Content-Type': 'application/json'
                },
                body: JSON.stringify(inputValues),
                mode: 'cors',
@@ -39,8 +43,11 @@ export default function LogInPage() {
             var data = await res.json();
       
             if (res.ok) {
+               //store auth token in localStorage
+               localStorage.setItem('token', data.token);
+
+               setIsLoggedIn(true);
                router.push('/');
-               router.refresh();
                setFormErrors([]);
             } else {
                setFormErrors(data.errors);

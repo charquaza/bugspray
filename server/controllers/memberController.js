@@ -4,6 +4,7 @@ const Task = require('../models/task');
 const { body, param, validationResult } = require('express-validator');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 exports.getCurrUser = [
     function (req, res, next) {
@@ -72,15 +73,6 @@ exports.signUp = [
             return res.status(400).json({ errors: errorMessageList });
         } 
 
-        //if a user is logged in, log out before proceeding with new user sign up
-        if (req.user) {
-            req.logout(function (err) {
-                if (err) {
-                    return next(err);
-                }
-            });
-        }
-
         try {
             let hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -96,7 +88,8 @@ exports.signUp = [
             });
 
             let newMemberData = await newMember.save();
-            req.login(newMemberData, next);
+            req.user = newMemberData;
+            return next();
         } catch (err) {
             return next(err);
         }
@@ -104,8 +97,13 @@ exports.signUp = [
 
     function (req, res, next) {
         let memberDataCopy = { ...req.user._doc };
+        const token = jwt.sign(
+            { id: memberDataCopy._id }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: process.env.JWT_EXPIRES_IN }
+        );
         delete memberDataCopy.password;
-        res.json({ data: memberDataCopy });
+        res.json({ data: memberDataCopy, token });
     }
 ];
 
@@ -123,15 +121,6 @@ exports.logIn = [
             return res.status(400).json({ errors: errorMessageList });
         } 
 
-        //if a user is logged in, log out before proceeding with new log in
-        if (req.user) {
-            req.logout(function (err) {
-                if (err) {
-                    return next(err);
-                }
-            });
-        }
-
         passport.authenticate('local', function (err, user, info) {
             if (err) {
                 return next(err);
@@ -140,41 +129,27 @@ exports.logIn = [
             if (!user) {
                 res.status(401).json({ errors: [ info.message ] });
             } else {
-                req.login(user, next);
+                req.user = user;
+                return next();
             }
         })(req, res, next);
     },
     
     function (req, res, next) {
         let memberDataCopy = { ...req.user._doc };
+        const token = jwt.sign(
+            { id: memberDataCopy._id }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: process.env.JWT_EXPIRES_IN }
+        );
         delete memberDataCopy.password;
-        res.json({ data: memberDataCopy });
+        res.json({ data: memberDataCopy, token });
     }
 ];
 
 exports.logOut = [
     function (req, res, next) {
-        if (!req.user) {
-            return res.status(200).json({});
-        }
-
-        req.logout(function (err) {
-            if (err) {
-                return next(err);
-            }
-
-            // req.logout causes a new session object to be created
-            // (even if there is no authenticated user to log out),
-            // thus causing the new session to be stored
-            // even though it is devoid of any user info
-            req.session.destroy(function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                res.status(200).json({});
-            });
-        });
+        return res.status(200).json({});
     }
 ];
 

@@ -76,6 +76,9 @@ export default function AccountPage({ params }) {
          try {
             const fetchOptions = {
                method: 'GET',
+               headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+               },
                mode: 'cors',
                credentials: 'include',
                cache: 'no-store'
@@ -109,8 +112,9 @@ export default function AccountPage({ params }) {
 
          var fetchOptions = {
             method: 'PUT',
-            headers: { 
-                  'Content-Type': 'application/json',
+            headers: {
+               'Authorization': 'Bearer ' + localStorage.getItem('token'),
+               'Content-Type': 'application/json'
             },
             body: JSON.stringify(fetchBody),
             mode: 'cors',

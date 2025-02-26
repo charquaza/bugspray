@@ -38,6 +38,9 @@ export default function TaskDetailsPage({ params }) {
          try {
             const fetchOptions = {
                method: 'GET',
+               headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+               },
                mode:'cors',
                credentials: 'include',
                cache: 'no-store'
@@ -71,6 +74,9 @@ export default function TaskDetailsPage({ params }) {
       try {
          const fetchOptions = {
             method: 'DELETE',
+            headers: {
+               'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
             mode: 'cors',
             credentials: 'include',
             cache: 'no-store'

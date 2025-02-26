@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/_contexts/AuthContext';
 import { useUserData } from '@/app/_hooks/hooks';
 import { 
    Avatar, Menu, MenuItem, ListItemIcon, Divider, 
@@ -14,6 +15,8 @@ import Logout from '@mui/icons-material/Logout';
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function AccountMenu() {
+   const { setIsLoggedIn } = useAuth();
+
    const [anchorEl, setAnchorEl] = useState(null);
    const [loggingOut, setLoggingOut] = useState(false);
 
@@ -38,6 +41,9 @@ export default function AccountMenu() {
       try {
          const fetchOptions = {
             method: 'POST',
+            headers: {
+               'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
             mode: 'cors',
             credentials: 'include'
          }
@@ -46,8 +52,11 @@ export default function AccountMenu() {
          const res = await fetch(fetchURL, fetchOptions);
      
          if (res.ok) {
+            //delete auth token
+            localStorage.removeItem('token');
+
+            setIsLoggedIn(false);
             router.push('/');
-            router.refresh();
          } else {
             const data = await res.json();
             const errors = data.errors;

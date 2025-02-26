@@ -83,6 +83,9 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList, shouldUpd
          try {
             const fetchOptions = {
                method: 'GET',
+               headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+               },
                mode:'cors',
                credentials: 'include',
                cache: 'no-store'
@@ -129,6 +132,9 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList, shouldUpd
          try {
             const fetchOptions = {
                method: 'GET',
+               headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+               },
                mode:'cors',
                credentials: 'include',
                cache: 'no-store'
@@ -180,6 +186,9 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList, shouldUpd
          try {
             const fetchOptions = {
                method: 'GET',
+               headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+               },
                mode:'cors',
                credentials: 'include',
                cache: 'no-store'
@@ -220,8 +229,9 @@ export default function TaskCreateForm({ projectId, setUpdateTaskList, shouldUpd
 
          var fetchOptions = {
             method: 'POST',
-            headers: { 
-                  'Content-Type': 'application/json',
+            headers: {
+               'Authorization': 'Bearer ' + localStorage.getItem('token'),
+               'Content-Type': 'application/json'
             },
             body: JSON.stringify(fetchBody),
             mode: 'cors',
