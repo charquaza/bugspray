@@ -179,10 +179,18 @@ export default function TaskDetailsPage({ params }) {
                               </ul>
 
                               <div>
-                                 <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>Update Task</button>
-                                    {(user.privilege === 'admin') && 
-                                       <button className={styles['delete-btn']} onClick={handleTaskDelete}>Delete</button>
-                                    }
+                                 {
+                                    (
+                                       user.privilege === 'admin' ||
+                                       user._id === task.project.lead._id ||
+                                       user._id === task.createdBy._id ||
+                                       task.assignees.some((assignee) => assignee._id === user._id)
+                                    ) && 
+                                       <>
+                                          <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>Update Task</button>
+                                          <button className={styles['delete-btn']} onClick={handleTaskDelete}>Delete</button>
+                                       </>
+                                 }
                               </div>
                            </>
                   }

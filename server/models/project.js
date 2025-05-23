@@ -8,7 +8,7 @@ const ProjectSchema = new Schema({
     status: { type: String, required: true, maxLength: 100 },
     priority: { type: String, required: true, maxLength: 100 },
     lead: { type: Schema.Types.ObjectId, ref: 'Member', required: true },
-    team: [ { type: Schema.Types.ObjectId, ref: 'Member', required: true } ],
+    team: [ { type: Schema.Types.ObjectId, ref: 'Member' } ],
     slackChannelId: { type: String, maxLength: 50 }
 });
 

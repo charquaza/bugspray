@@ -81,10 +81,6 @@ exports.create = [
             return res.status(404).json({ errors: ['Project not found'] });
         }
 
-        if (req.user.privilege !== 'admin') {
-            return res.status(403).json({ errors: ['Not allowed'] });
-        }
-
         return next();
     },
 
@@ -104,10 +100,9 @@ exports.create = [
         .trim().notEmpty().withMessage('Lead cannot be blank')
         .escape(),
     body('team').isArray().withMessage('Invalid value for Team').bail()
-        .isArray({ min: 1 }).withMessage('Team cannot be empty').bail()
         .custom((value, { req }) => {
             const leadIsInTeam = value.some(member => {
-                return member === req.body.lead;                
+                return member === req.body.lead;
             });
             return !leadIsInTeam;
         }).withMessage('Lead member cannot be assigned as a team member')
@@ -174,13 +169,33 @@ exports.create = [
 ];
 
 exports.update = [
+    param('projectId').isString().withMessage('Invalid value for projectId').bail()
+        .trim().notEmpty().withMessage('projectId cannot be blank'),
+
     async function checkPermissions(req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+        
         if (!req.user) {
             return res.status(404).json({ errors: ['Project not found'] });
         }
 
-        if (req.user.privilege !== 'admin') {
-            return res.status(403).json({ errors: ['Not allowed'] });
+        try {
+            let projectToUpdate = await Project.findById(req.params.projectId).exec();
+
+            if (projectToUpdate === null) {
+                return res.status(404).json({ errors: ['Project not found'] });
+            } else if (
+                projectToUpdate.lead.toString() !== req.user._id.toString() &&
+                req.user.privilege !== 'admin'
+            ) {
+                return res.status(403).json({ errors: ['Not allowed'] });
+            }
+        } catch (err) {
+            return next(err);
         }
 
         return next();
@@ -202,10 +217,9 @@ exports.update = [
         .trim().notEmpty().withMessage('Lead cannot be blank')
         .escape(),
     body('team').isArray().withMessage('Invalid value for Team').bail()
-        .isArray({ min: 1 }).withMessage('Team cannot be empty')
         .custom((value, { req }) => {
             const leadIsInTeam = value.some(member => {
-                return member === req.body.lead;                
+                return member === req.body.lead;
             });
             return !leadIsInTeam;
         }).withMessage('Lead member cannot be assigned as a team member')
@@ -213,9 +227,6 @@ exports.update = [
     body('slackChannelId').isString().withMessage('Invalid value for Slack Channel ID').bail()
         .trim().isLength({ max: 50 }).withMessage('Slack Channel ID cannot be longer than 50 characters')
         .escape(),
-
-    param('projectId').isString().withMessage('Invalid value for projectId').bail()
-        .trim().notEmpty().withMessage('projectId cannot be blank'),
 
     async function (req, res, next) {
         var validationErrors = validationResult(req);
@@ -341,20 +352,37 @@ exports.update = [
 ];
 
 exports.delete = [
+    param('projectId').isString().withMessage('Invalid value for projectId').bail()
+        .trim().notEmpty().withMessage('projectId cannot be blank'),
+
     async function checkPermissions(req, res, next) {
+        var validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            let errorMessageList = validationErrors.array().map(err => err.msg);
+            return res.status(400).json({ errors: errorMessageList });
+        }
+        
         if (!req.user) {
             return res.status(404).json({ errors: ['Project not found'] });
         }
 
-        if (req.user.privilege !== 'admin') {
-            return res.status(403).json({ errors: ['Not allowed'] });
+        try {
+            let projectToUpdate = await Project.findById(req.params.projectId).exec();
+
+            if (projectToUpdate === null) {
+                return res.status(404).json({ errors: ['Project not found'] });
+            } else if (
+                projectToUpdate.lead.toString() !== req.user._id.toString() &&
+                req.user.privilege !== 'admin'
+            ) {
+                return res.status(403).json({ errors: ['Not allowed'] });
+            }
+        } catch (err) {
+            return next(err);
         }
 
         return next();
     },
-
-    param('projectId').isString().withMessage('Invalid value for projectId').bail()
-        .trim().notEmpty().withMessage('projectId cannot be blank'),
 
     async function (req, res, next) {
         var validationErrors = validationResult(req);

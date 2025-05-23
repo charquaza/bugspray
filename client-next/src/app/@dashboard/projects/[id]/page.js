@@ -533,7 +533,10 @@ export default function ProjectDetailsPage({ params }) {
                               </ul>
       
                               {
-                                 (user && user.privilege === 'admin') && 
+                                 (
+                                    user && 
+                                    (user._id.toString() === project.lead._id.toString() || user.privilege === 'admin')
+                                 ) && 
                                     <div>
                                        <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>
                                           Update

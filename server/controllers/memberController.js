@@ -164,8 +164,36 @@ exports.getAll = [
 
     async function (req, res, next) {
         try {
-            let memberList = await Member.find({}, '-password').exec();
-            res.json({ data: memberList });
+            if (req.user.privilege === 'admin') {
+                let memberList = await Member.find({}, '-password').exec();
+                res.json({ data: memberList });
+            } else {
+                //get all members that share a project with current user
+                const projectList = await Project.find(
+                    { $or: [{ lead: req.user._id }, { team: req.user._id }] },
+                    'lead team'
+                ).lean().exec();
+
+                const memberIdMap = new Map();
+
+                projectList.forEach(project => {
+                    if (!memberIdMap.has(project.lead.toString())) {
+                        memberIdMap.set(project.lead.toString(), true);
+                    }
+
+                    project.team.forEach(memberId => {
+                        if (!memberIdMap.has(memberId.toString())) {
+                            memberIdMap.set(memberId.toString(), true);
+                        }
+                    });
+                });
+
+                const memberIdList = Array.from(memberIdMap.keys());
+
+                const memberList = await Member.find({ _id: { $in: memberIdList } }, '-password').exec();
+
+                res.json({ data: memberList });
+            }
         } catch (err) {
             return next(err);
         }
@@ -206,6 +234,18 @@ exports.getById = [
 ];
 
 exports.create = [
+    async function checkPermissions(req, res, next) {
+        if (!req.user) {
+            return res.status(404).json({ errors: ['Member not found'] });
+        }
+
+        if (req.user.privilege !== 'admin') {
+            return res.status(403).json({ errors: ['Not allowed'] });
+        }
+
+        return next();
+    },
+
     body('firstName').isString().withMessage('Invalid value for First Name').bail()
         .trim().notEmpty().withMessage('First name cannot be blank')
         .isLength({ max: 100 }).withMessage('First name cannot be longer than 100 characters')
@@ -450,20 +490,14 @@ exports.delete = [
             return res.status(400).json({ errors: errorMessageList });
         }
 
-        //if memberToDelete is lead or sole team member of any project
+        //if memberToDelete is lead of any project
         //or is the createdBy or sole assignee of any task
         //prevent member delete until said roles are reassigned
         try {
             const searchResults = await Promise.all([
                 Project.find({
                     $or: [
-                        { lead: req.params.memberId },
-                        { team: 
-                            { 
-                                $elemMatch: { $eq: req.params.memberId }, 
-                                $size: 1 
-                            } 
-                        }
+                        { lead: req.params.memberId }
                     ]
                 })
                 .exec(),
@@ -487,7 +521,6 @@ exports.delete = [
                     [ 
                         'This member cannot be removed due to the following possibilities: ',
                         'Member is the lead of a project(s)',
-                        'Member is the only team member of a project(s)',
                         'Member is the creator of a task(s)',
                         'Member is the only assignee of a task(s)',
                         'Please reassign these roles before removing this member.'
