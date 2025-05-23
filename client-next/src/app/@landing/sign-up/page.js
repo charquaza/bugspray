@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/_contexts/AuthContext';
 import { 
-   Button, TextField, FormControl, InputLabel, Select, MenuItem,
-   CircularProgress
+   Button, TextField, CircularProgress
 } from '@mui/material';
 import Logo from '@/app/_components/Logo';
 import styles from '@/app/_styles/signUpPage.module.css';
@@ -20,7 +19,6 @@ export default function SignUpPage() {
       firstName: '',
       lastName: '',
       role: '',
-      privilege: 'user',
       username: '', 
       password: '',
       confirmPassword: '',
@@ -40,8 +38,6 @@ export default function SignUpPage() {
             errorMap.set('lastName', true);
          } else if (errMsg.search(/role/i) !== -1) {
             errorMap.set('role', true);
-         } else if (errMsg.search(/privilege/i) !== -1) {
-            errorMap.set('privilege', true);
          } else if (errMsg.search(/username/i) !== -1) {
             errorMap.set('username', true);
          } else if (errMsg.search(/password/i) !== -1) {
@@ -162,22 +158,7 @@ export default function SignUpPage() {
                      onChange={handleInputChange}
                      error={inputsWithErrors.has('role')}
                   />
-   
-                  <FormControl fullWidth margin='normal'>
-                     <InputLabel id='privilege'>Privilege</InputLabel>
-                     <Select
-                        labelId='privilege'
-                        value={inputValues.privilege}
-                        label='Privilege'
-                        name='privilege'
-                        onChange={handleInputChange}
-                        error={inputsWithErrors.has('privilege')}
-                     >
-                        <MenuItem value='user'>User</MenuItem>
-                        <MenuItem value='admin'>Admin</MenuItem>
-                     </Select>
-                  </FormControl>
-   
+      
                   <TextField 
                      type='text' id='username' name='username'
                      required label='Username' variant='outlined' 

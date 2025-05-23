@@ -291,7 +291,7 @@ export default function ProjectCreateForm({ setUpdateProjectList }) {
                         error={inputsWithErrors.has('lead')}
                         sx={{'maxWidth': '200px'}}
                      >
-                        { memberList && 
+                        { (memberList && user) &&
                            (user.privilege === 'admin')
                               ?
                                  memberList.map((member, index) => {
