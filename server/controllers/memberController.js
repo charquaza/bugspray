@@ -174,6 +174,10 @@ exports.getAll = [
                     'lead team'
                 ).lean().exec();
 
+                if (projectList.length === 0) {
+                    return res.json({ data: [ req.user ] });
+                }
+
                 const memberIdMap = new Map();
 
                 projectList.forEach(project => {
