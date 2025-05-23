@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react';
+import { useUserData } from '@/app/_hooks/hooks';
 import { styled } from '@mui/material/styles';
 import { TextField, MenuItem } from '@mui/material';
 import styles from '@/app/_styles/ProjectCreateForm.module.css';
@@ -36,6 +37,8 @@ export default function ProjectCreateForm({ setUpdateProjectList }) {
    const [formErrors, setFormErrors] = useState([]);
    const [updateMemberList, setUpdateMemberList] = useState(false);
    const [error, setError] = useState();
+
+   const user = useUserData();
 
    if (error) {
       throw error;
@@ -288,13 +291,21 @@ export default function ProjectCreateForm({ setUpdateProjectList }) {
                         error={inputsWithErrors.has('lead')}
                         sx={{'maxWidth': '200px'}}
                      >
-                        { memberList && memberList.map((member, index) => {
-                           return (
-                              <MenuItem value={member._id} key={member._id}>
-                                 {`${member.firstName} ${member.lastName} (${member.username})`}
-                              </MenuItem>
-                           );
-                        }) }
+                        { memberList && 
+                           (user.privilege === 'admin')
+                              ?
+                                 memberList.map((member, index) => {
+                                    return (
+                                       <MenuItem value={member._id} key={member._id}>
+                                          {`${member.firstName} ${member.lastName} (${member.username})`}
+                                       </MenuItem>
+                                    );
+                                 })
+                              :
+                                 <MenuItem value={user._id} key={user._id}>
+                                    {`${user.firstName} ${user.lastName} (${user.username})`}
+                                 </MenuItem>
+                        }
                      </CustomTextField>
 
                      <div className={styles['team-list-add-member-ctnr']}>
