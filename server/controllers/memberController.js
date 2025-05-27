@@ -169,7 +169,15 @@ exports.getAll = [
                 ).lean().exec();
 
                 if (projectList.length === 0) {
-                    return res.json({ data: [ req.user ] });
+                    if (req.user.privilege === 'demo') {
+                        let demoMemberIdList = process.env.DEMO_USER_ID_LIST.split(' ');
+                        demoMemberIdList.push(req.user._id.toString());
+                        
+                        const memberList = await Member.find({ _id: { $in: demoMemberIdList } }, '-password').exec();
+                        return res.json({ data: memberList });
+                    } else {
+                        return res.json({ data: [ req.user ] });
+                    }
                 }
 
                 const memberIdMap = new Map();
@@ -186,7 +194,12 @@ exports.getAll = [
                     });
                 });
 
-                const memberIdList = Array.from(memberIdMap.keys());
+                let memberIdList = Array.from(memberIdMap.keys());
+
+                if (req.user.privilege === 'demo') {
+                    const demoMemberIdList = process.env.DEMO_USER_ID_LIST.split(' ');
+                    memberIdList = [ ...new Set([ ...memberIdList, ...demoMemberIdList ]) ];
+                }
 
                 const memberList = await Member.find({ _id: { $in: memberIdList } }, '-password').exec();
 

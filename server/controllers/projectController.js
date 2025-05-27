@@ -21,7 +21,13 @@ exports.getAll = [
     async function (req, res, next) {
         const searchFilter = req.user.privilege === 'admin' 
             ? {}
-            : { $or: [ { lead: req.user._id }, { team: req.user._id } ] };
+            : req.user.privilege === 'demo'
+                ? { $or: [
+                    { _id: { $in: [ process.env.PROJ_ID_BUGSPRAY, process.env.PROJ_ID_PEARLION ] } },
+                    { lead: req.user._id },
+                    { team: req.user._id } 
+                ] }
+                : { $or: [ { lead: req.user._id }, { team: req.user._id } ] };
         
         try {
             let projectList = await Project.find(searchFilter)
@@ -60,10 +66,14 @@ exports.getById = [
                 res.status(404).json({ errors: ['Project not found'] });
             } else if (
                 //don't send project data if 
-                //currUser is not admin, lead, or team member of project
+                //  currUser is not admin, 
+                //  currUser is not lead or team member of project,
+                //  currUser is demo user and project is not Bugspray or Pearlion
                 req.user.privilege !== 'admin' &&
                 req.user._id.toString() !== projectData.lead._id.toString() &&
-                !projectData.team.some(member => req.user._id.toString() === member._id.toString())
+                !projectData.team.some(member => req.user._id.toString() === member._id.toString()) &&
+                !(req.user.privilege === 'demo' && 
+                    [ process.env.PROJ_ID_BUGSPRAY, process.env.PROJ_ID_PEARLION ].includes(req.params.projectId))
             ) {
                 res.status(404).json({ errors: ['Project not found'] });
             } else {

@@ -550,9 +550,17 @@ export default function ProjectDetailsPage({ params }) {
 
                            <section className={styles['sprints-ctnr']}>
                               <h2>Sprints</h2>
-                              <SprintCreateForm projectId={project._id} 
-                                 setUpdateSprintList={setUpdateSprintList} 
-                              />
+
+                              {
+                                 (
+                                    user.privilege === 'admin' || 
+                                    user._id === project.lead._id
+                                 ) &&
+                                    <SprintCreateForm projectId={project._id} 
+                                       setUpdateSprintList={setUpdateSprintList} 
+                                    />
+                              }
+
                               <SprintList projectId={project._id} 
                                  updateSprintList={updateSprintList} 
                                  setUpdateSprintList={setUpdateSprintList}
@@ -562,10 +570,19 @@ export default function ProjectDetailsPage({ params }) {
 
                         <section className={styles['tasks-ctnr']}>
                            <h2>Tasks</h2>
-                           <TaskCreateForm projectId={project._id} 
-                              setUpdateTaskList={setUpdateTaskList}
-                              shouldUpdateSprintList={updateSprintList} 
-                           />
+
+                           {
+                              ( //some users have view-only privileges, e.g. demo users
+                                 user.privilege === 'admin' ||
+                                 user._id === project.lead._id ||
+                                 project.team.some((teamMember) => teamMember._id === user._id)
+                              ) &&
+                                 <TaskCreateForm projectId={project._id} 
+                                    setUpdateTaskList={setUpdateTaskList}
+                                    shouldUpdateSprintList={updateSprintList} 
+                                 />
+                           }
+                           
                            <TaskList projectId={project._id}
                               updateTaskList={updateTaskList}
                               setUpdateTaskList={setUpdateTaskList}

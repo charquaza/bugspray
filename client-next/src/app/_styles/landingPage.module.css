@@ -99,25 +99,6 @@
    padding: 0 0.2em;
 }
 
-.landing-page .move-forward-link {
-   align-self: center;
-   display: block;
-   margin-top: 1em;
-   padding: 0.4em 0.9em;
-   font-size: 1.35em;
-   font-weight: 500;
-   color: white;
-   text-decoration: none;
-   background-color: rgb(64, 128, 168);
-   border-radius: 1em;
-}
-.landing-page .move-forward-link:hover {
-   background-color: rgb(44, 108, 148);
-}
-.landing-page .move-forward-link:active {
-   background-color: rgb(24, 88, 128);
-}
-
 .landing-page .app-preview-ctnr {
    padding-bottom: 4em;
    width: 100%;

@@ -386,10 +386,15 @@ export default function SprintDetailsPage({ params }) {
                         </ul>
 
                         <div>
-                           <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>Update Sprint</button>
-
-                           {(user.privilege === 'admin') && 
-                              <button className={styles['delete-btn']} onClick={handleSprintDelete}>Delete</button>
+                           {
+                              (
+                                 user.privilege === 'admin' || 
+                                 user._id === sprint.project.lead._id
+                              ) &&
+                                 <>
+                                    <button className={styles['edit-btn']} onClick={handleUpdateModeToggle}>Update Sprint</button> 
+                                    <button className={styles['delete-btn']} onClick={handleSprintDelete}>Delete</button>
+                                 </>
                            }
                         </div>
                      </>

@@ -28,11 +28,14 @@ exports.getAll = [
             let projectData = await Project.findById(req.query.projectId).exec();
 
             //do not send sprint data if requesting user is not admin or
-            //not involved in parent project
+            //not involved in parent project or
+            //user is demo user and project is not available to demo user
             if (
                req.user.privilege !== 'admin' &&
                req.user._id.toString() !== projectData.lead._id.toString() &&
-               !projectData.team.some(member => req.user._id.toString() === member._id.toString())
+               !projectData.team.some(member => req.user._id.toString() === member._id.toString()) &&
+               !(req.user.privilege === 'demo' && 
+                  [ process.env.PROJ_ID_BUGSPRAY, process.env.PROJ_ID_PEARLION ].includes(req.query.projectId))
             ) {
                return res.status(404).json({ errors: ['Sprint not found'] });
             } else {
@@ -56,9 +59,14 @@ exports.getAll = [
                   return res.json({ data: sprintList });
             } else {
                //send all sprints of only projects that user is involved in
-               let projectList = await Project.find({ 
-                  $or: [ { lead: req.user._id }, { team: req.user._id } ] 
-               }).exec();
+               // or if user is demo user, send sprints of projects available to demo user
+               const searchFilter = req.user.privilege === 'demo'
+                  ? { $or: [ 
+                     { _id: { $in: [ process.env.PROJ_ID_BUGSPRAY, process.env.PROJ_ID_PEARLION ] } }, 
+                     { lead: req.user._id }, { team: req.user._id } 
+                  ] }
+                  : { $or: [ { lead: req.user._id }, { team: req.user._id } ] };
+               let projectList = await Project.find(searchFilter).exec();
                projectIdList = projectList.map(project => project._id);
 
                let sprintList = await Sprint.find({ project: { $in: projectIdList } })
@@ -105,6 +113,7 @@ exports.getById = [
          } else {
             //don't send sprint data if 
             //currUser is not admin, lead, or team member of parent project
+            //or currUser is demo user and project is not available to demo user
             if (req.user.privilege !== 'admin') {
                let projectData = await Project.findById(sprintData.project._id).exec();
 
@@ -112,7 +121,9 @@ exports.getById = [
                   return res.status(400).json({ errors: ['Parent project not found'] });
                } else if (
                   req.user._id.toString() !== projectData.lead._id.toString() &&
-                  !projectData.team.some(member => req.user._id.toString() === member._id.toString())
+                  !projectData.team.some(member => req.user._id.toString() === member._id.toString()) &&
+                  !(req.user.privilege === 'demo' && 
+                     [ process.env.PROJ_ID_BUGSPRAY, process.env.PROJ_ID_PEARLION ].includes(projectData._id.toString()))
                ) {
                   return res.status(404).json({ errors: ['Sprint not found'] });
                }  

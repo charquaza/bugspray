@@ -118,7 +118,7 @@ export default function ProjectCreateForm({ setUpdateProjectList }) {
             name: '',
             status: 'Open',
             priority: 'High',
-            lead: memberList[0]._id,
+            lead: user.privilege === 'demo' ? user._id : memberList[0]._id,
             team: new Map(),
             selectedAddMemberId: memberList[0]._id
          });

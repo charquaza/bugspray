@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Logo from '@/app/_components/Logo';
+import DemoLoginButton from '@/app/_components/DemoLoginButton';
 import styles from '@/app/_styles/landingPage.module.css';
 import previewImage from '@/root/public/bugspray-cropped.png';
 
@@ -38,9 +39,7 @@ export default function LandingPage() {
                <p>Plan, track, and achieve.</p>
                <p>Progress is built-in.</p>
    
-               <Link href='/sign-up' className={styles['move-forward-link']}>
-                  Let&apos;s Move Forward
-               </Link>
+               <DemoLoginButton />
             </article>
 
             <section>
