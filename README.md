@@ -33,7 +33,9 @@
 
 Bugspray is a comprehensive bug-tracking platform that facilitates efficient issue reporting, assignment, and resolution. Built with a focus on scalability and user experience, it integrates seamlessly with Slack to provide real-time notifications, ensuring that teams stay informed and responsive.
 
-Built to be a central reference for managing my personal projects, I used Bugspray to track the development of my e-commerce platform, Pearlion, as well as the latter stages of development for Bugspray itself.
+Built as the primary tool for managing my personal projects, I used Bugspray to track the development of my e-commerce platform, Pearlion, as well as the later stages of development for Bugspray itself.
+
+Bugspray streamlines project management for both individuals and teams, and is currently being developed to support organization-scale multi-tenancy.
 
 ---
 
@@ -51,9 +53,9 @@ Built to be a central reference for managing my personal projects, I used Bugspr
 ## Features
 
 - **Project Management:** Create, update, and track projects with detailed descriptions and statuses. Add tasks and assign them to sprints for better organization.
-- **Team Collaboration:** Add team members to projects and assign them to tasks. Team members can communicate real-time on the dedicated project Slack channel.
-- **Real-Time Slack Notifications:** Receive instant Slack messages upon any project-related updates, such as new tasks added.
-- **User Authentication:** Secure login and registration using JWT and passwords encrypted with bcrypt.
+- **Team Collaboration:** Add team members to projects and assign them to tasks. Team members can communicate in real time on the dedicated project Slack channel.
+- **Real-Time Slack Notifications:** Receive instant Slack messages upon any project-related updates, such as when new tasks are added.
+- **Authentication and Authorization:** Secure login and registration using JWT and passwords hashed with bcrypt. Supports both broad role-based authorization and attribute-based authorization for granular control over access to sensitive data.
 - **Responsive Design:** Optimized for various devices with accessible UI components.
 - **Deployment:** Containerized backend deployed on Google Cloud Run, database on MongoDB Atlas, and frontend on Vercel.
 
@@ -61,7 +63,7 @@ Built to be a central reference for managing my personal projects, I used Bugspr
 
 ## System Architecture
 
-Bugspray employs a modular architecture adhering to the MVC (Model-View-Controller) pattern:
+Bugspray employs a modular architecture following the MVC (Model-View-Controller) pattern:
 
 - **Frontend:** Built with Next.js for server-side rendering and enhanced performance.
 - **Backend:** Express.js handles RESTful API requests and business logic.
@@ -140,7 +142,7 @@ Bugspray employs a modular architecture adhering to the MVC (Model-View-Controll
      npm run dev
      ```
 
-   Both the frontend and backend will be available at `localhost`, with the ports being dependent on your specific configuration.
+   Both the frontend and backend will be available on `localhost` (ports may vary based on your configuration).
 
 ---
 
